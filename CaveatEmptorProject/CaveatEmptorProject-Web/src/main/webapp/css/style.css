@@ -1,0 +1,8 @@
+
+.centeredPanelGrid {
+	position:relative;
+}
+.centeredLoginForm{
+	position:absolute;
+	margin:10% 40% auto;
+}
