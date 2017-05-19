@@ -12,35 +12,37 @@
 <h:head>
 	<link rel="stylesheet" href="css/style.css" />
 </h:head>
+
 <h:body>
 
 	<h:form id="loginForm" styleClass="centeredLoginForm">
-		<p:growl id="growlLogin" showDetail="true" sticky="true" />
-		<p:panel id="panelLogin" header="Sign In">
+
+		<p:panel id="panelLogin" header="Sign In" styleClass="panelLogin">
 			<p:messages id="messages" />
 
-			<h:panelGrid styleClass="centeredPanelGrid">
-				<p:inputText id="username" required="true" label="username"
+			<h:panelGrid columns="1" cellspacing="3">
+				<p:inputText id="username" label="username"
 					requiredMessage="Please enter your username."
-					value="#{userLogin.username}">
+					value="#{userlogin.username}" required="true">
+					<f:validateLength minimum="1" />
 				</p:inputText>
 				<p:watermark for="username" value="Username *" />
 
-
 				<p:password id="password" required="true" label="password"
 					requiredMessage="Please enter your password."
-					match="confirmPassword" value="#{userLogin.password}"
-					maxlength="20">
+					value="#{userlogin.password}" maxlength="20">
+					<f:validateLength minimum="1" />
 				</p:password>
 				<p:watermark for="password" value="Password *" />
 
+				<p:commandButton value="Login" action="#{userlogin.login}"
+					update="panelLogin" />
 
-				<p:commandButton value="login" action="#{userLogin.login}" />
+
+				<p:link outcome="register" value="Create account"></p:link>
 			</h:panelGrid>
 		</p:panel>
 	</h:form>
-
-
 
 </h:body>
 </html>

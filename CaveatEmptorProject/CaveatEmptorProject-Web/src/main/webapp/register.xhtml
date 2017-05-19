@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<h:head>
+	<link rel="stylesheet" href="css/style.css" />
+</h:head>
+
+<h:body>
+	<p:growl id="growl" showDetail="true" />
+
+	<h:form id="registerForm" styleClass="centeredregisterForm">
+		<p:panel id="panelRegister" header="Sign Up"
+			styleClass="panelRegister">
+
+
+			<h:panelGrid columns="1" cellspacing="2">
+
+				<h:outputLabel for="firstname" value="FirstName: " />
+				<p:inputText id="firstname" value="#{registerBean.firstname}"
+					label="firstname" />
+				<p:message for="firstname" />
+
+
+				<h:outputLabel for="lastname" value="LastName: " />
+				<p:inputText id="lastname" value="#{registerBean.lastname}"
+					label="lastname" />
+				<p:message for="lastname" />
+
+				<h:outputLabel for="username" value="UserName: " />
+				<p:inputText id="username" value="#{registerBean.username}"
+					label="username" />
+				<p:message for="username" />
+
+				<h:outputLabel for="email" value="Email: " />
+				<p:inputText id="email" value="#{registerBean.email}" label="email"
+					validatorMessage="Email is invalid.">
+					<f:validateRegex
+						pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+				</p:inputText>
+				<p:message for="email" />
+
+				<h:outputLabel for="phoneNumber" value="Phone Number: " />
+				<p:inputText id="phoneNumber" value="#{registerBean.phoneNumber}"
+					label="phoneNumber" />
+				<p:message for="phoneNumber" />
+
+				<h:outputLabel for="password" value="Password: " />
+				<p:inputText id="password" value="#{registerBean.password}"
+					label="password" />
+				<p:message for="password" />
+
+				<h:outputLabel for="password" value="Repeat Password: " />
+				<p:inputText id="repeatPassword"
+					value="#{registerBean.repeatPassword}" label="repeatPassword" />
+				<p:message for="repeatPassword" />
+
+
+
+
+				<p:commandButton value="Register" action="#{registerBean.register}"
+					update="panelRegister growl" resetValues="true">
+				</p:commandButton>
+
+
+
+
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+
+
+</h:body>
+</html>

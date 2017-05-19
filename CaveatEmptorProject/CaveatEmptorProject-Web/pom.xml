@@ -35,22 +35,21 @@
 			<artifactId>primefaces</artifactId>
 			<version>6.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.faces/jsf-api -->
 
-		
+
 
 		<dependency>
 			<groupId>com.CaveatEmptorProject</groupId>
 			<artifactId>CaveatEmptorProject-Common</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
-		 <dependency>
- 		 <groupId>com.CaveatEmptorProject</groupId>
- 		<artifactId>CaveatEmptorProject-Service</artifactId>
-		 <version>1.0</version>
- </dependency>
 
-		
+		<dependency>
+			<groupId>com.CaveatEmptorProject</groupId>
+			<artifactId>CaveatEmptorProject-Service</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
 	</dependencies>
 </project>

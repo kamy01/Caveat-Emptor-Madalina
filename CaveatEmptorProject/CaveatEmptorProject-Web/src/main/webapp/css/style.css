@@ -1,8 +1,21 @@
-
-.centeredPanelGrid {
-	position:relative;
+body {
+    background-size:100%;
+    background-position: center;
 }
+
 .centeredLoginForm{
-	position:absolute;
-	margin:10% 40% auto;
+	
+	width: 25%; 
+	margin:13% 35%;
+}
+
+.centeredregisterForm{
+	
+	width:40%; 
+	margin:10% 25%;
+}
+
+.activationPanel{
+	width:40%; 
+	margin:10% 25%;
 }
