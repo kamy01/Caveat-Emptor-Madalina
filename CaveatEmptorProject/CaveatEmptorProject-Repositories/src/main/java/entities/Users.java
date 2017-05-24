@@ -1,7 +1,7 @@
 package entities;
 
 import java.io.Serializable;
-
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,23 +9,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 
-import Constants.Constants;
+import utils.Constants;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = Constants.FIND_USER_BY_USERNAME, query = Constants.FIND_USER_BY_USERNAME_QUERY),
-				@NamedQuery(name = Constants.FIND_USER_BY_EMAIL, query = Constants.FIND_USER_BY_EMAIL_QUERY) 
+				@NamedQuery(name = Constants.FIND_USER_BY_EMAIL, query = Constants.FIND_USER_BY_EMAIL_QUERY) 			
 })
-
 public class Users implements Serializable {
-
 	private static final long serialVersionUID = 3436918407169441316L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long user_id;
-
+	private long user_id;
 	@Column
 	private String firstname;
 	@Column
@@ -42,9 +38,13 @@ public class Users implements Serializable {
 	private boolean admin = false;
 	@Column
 	private String phoneNumber;
-
 	@Column
 	private boolean enabled = false;
+	@Column
+	private String activationKey = null;
+	@Column
+	private Timestamp dateRegistered = null;
+	
 
 	public Users(String username, String password) {
 		this.username = username;
@@ -132,6 +132,30 @@ public class Users implements Serializable {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getActivationKey() {
+		return activationKey;
+	}
+
+	public void setActivationKey(String activationKey) {
+		this.activationKey = activationKey;
+	}
+
+	public Timestamp getDateRegistered() {
+		return dateRegistered;
+	}
+
+	public void setDateRegistered(Timestamp dateRegistered) {
+		this.dateRegistered = dateRegistered;
 	}
 
 }

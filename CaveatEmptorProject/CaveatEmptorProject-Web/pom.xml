@@ -17,6 +17,18 @@
 		<finalName>CaveatEmptorProject-Web</finalName>
 	</build>
 
+
+	<repositories>
+		<repository>
+			<!-- PrimeFaces -->
+			<id>prime-repo</id>
+			<name>PrimeFaces Maven Repository</name>
+			<url>http://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
@@ -35,8 +47,6 @@
 			<artifactId>primefaces</artifactId>
 			<version>6.0</version>
 		</dependency>
-
-
 
 		<dependency>
 			<groupId>com.CaveatEmptorProject</groupId>

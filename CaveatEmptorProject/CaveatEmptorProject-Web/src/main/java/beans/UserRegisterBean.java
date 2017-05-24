@@ -2,23 +2,27 @@ package beans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Size;
-import Utils.FacesMessages;
-import Utils.SessionUtils;
 import com.dtos.UserDTO;
-import exceptions.CaveatEmptorException;
+import exceptions.UsersException;
 import service.IUserService;
+import service.SendEmailService;
+import utils.FacesMessagesUtil;
+import utils.SessionUtils;
 
 @ManagedBean(name = "registerBean")
 public class UserRegisterBean implements Serializable {
 
 	private static final long serialVersionUID = 1283704450092269442L;
-	FacesMessages facesMessages;
 
 	@Size(min = 3)
 	private String firstname;
@@ -45,6 +49,8 @@ public class UserRegisterBean implements Serializable {
 
 	@EJB
 	IUserService userService;
+	
+	HttpSession session = SessionUtils.getSession();
 
 	public String getFirstname() {
 		return firstname;
@@ -102,10 +108,9 @@ public class UserRegisterBean implements Serializable {
 		this.repeatPassword = repeatPassword;
 	}
 
-	public void register() throws CaveatEmptorException {
+	public void register() throws UsersException {
 		try {
 			userDto = new UserDTO();
-			facesMessages = new FacesMessages();
 			String newUser;
 
 			userDto.setFirstname(firstname);
@@ -116,25 +121,20 @@ public class UserRegisterBean implements Serializable {
 			userDto.setPassword(password);
 
 			newUser = userService.createUser(userDto);
-
 			if (newUser.equals("emailExist")) {
-				facesMessages.message_info("Cannot register!", "Email already exist!");
+				FacesMessagesUtil.message_info("Cannot register!", "Email already exist!");
 			} else if (newUser.equals("usernameExist")) {
-				facesMessages.message_info("Cannot register!", "Username already exist!");
+				FacesMessagesUtil.message_info("Cannot register!", "Username already exist!");
 			} else {
-				try {
-
-					ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-					HttpSession session = SessionUtils.getSession();
-					session.setAttribute("userDto", userDto);
-					context.redirect("activationAccount.xhtml");
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				String key=SendEmailService.sendEmail(userDto);
+					if(key!=null){
+						userService.insertKeyForUser(userDto,key);
+						FacesMessagesUtil.message_info("An email was sent to your email address", "Please confirm it!");
+					}	
+					
+					session.setAttribute("userDto", userDto);	
 			}
-
-		} catch (CaveatEmptorException e) {
+		} catch (UsersException e) {
 			e.getMessage();
 		}
 	}

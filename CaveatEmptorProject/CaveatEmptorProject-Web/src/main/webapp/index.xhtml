@@ -11,19 +11,21 @@
 
 <h:head>
 	<link rel="stylesheet" href="css/style.css" />
+
 </h:head>
 
-<h:body>
+<h:body >
+<!-- style="background-image: url(../images/background.jpg)" > -->
 
 	<h:form id="loginForm" styleClass="centeredLoginForm">
 
-		<p:panel id="panelLogin" header="Sign In" styleClass="panelLogin">
+		<p:panel id="panelLogin" header="Sign In" >
 			<p:messages id="messages" />
 
-			<h:panelGrid columns="1" cellspacing="3">
+			<h:panelGrid columns="1" cellspacing="3"  styleClass="panelGridLogin" style="width:100%">
 				<p:inputText id="username" label="username"
 					requiredMessage="Please enter your username."
-					value="#{userlogin.username}" required="true">
+					value="#{userlogin.username}" required="true" >
 					<f:validateLength minimum="1" />
 				</p:inputText>
 				<p:watermark for="username" value="Username *" />
@@ -36,7 +38,7 @@
 				<p:watermark for="password" value="Password *" />
 
 				<p:commandButton value="Login" action="#{userlogin.login}"
-					update="panelLogin" />
+					update="panelLogin"  />
 
 
 				<p:link outcome="register" value="Create account"></p:link>

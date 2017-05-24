@@ -3,10 +3,12 @@ body {
     background-position: center;
 }
 
+
 .centeredLoginForm{
 	
 	width: 25%; 
 	margin:13% 35%;
+	
 }
 
 .centeredregisterForm{
@@ -15,7 +17,18 @@ body {
 	margin:10% 25%;
 }
 
+.panelLogin {
+	 font-size: 75% !important;
+      font-family: Arial,Verdana,sans-serif;
+}
+
 .activationPanel{
 	width:40%; 
 	margin:10% 25%;
 }
+
+.layoutHome{
+	height: 800px;
+ 	
+}
+

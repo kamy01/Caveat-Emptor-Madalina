@@ -4,10 +4,9 @@ import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpSession;
-
 import com.dtos.UserDTO;
 
-import Utils.SessionUtils;
+import utils.SessionUtils;
 
 @ManagedBean(name = "homeBean")
 public class HomeBean implements Serializable{

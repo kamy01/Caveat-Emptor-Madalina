@@ -13,6 +13,35 @@
 	<link rel="stylesheet" href="css/style.css" />
 </h:head>
 <h:body>
-	<p>Welcome #{homeBean.userDto.username}</p>
+	<p>
+		<img src="images/logo.png" />
+	</p>
+
+	<p:layout styleClass="layoutHome">
+	
+<!-- TREE MENU (WEST LAYOUT) -->
+		<p:layoutUnit position="west" resizable="true" styleClass="westUnit"
+			size="400">
+			<h:form>
+				<h3>Categories</h3>
+				<p:tree value="#{categoriesBean.root}" var="node" dynamic="true">
+					<p:treeNode>
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+				</p:tree>
+			</h:form>
+		</p:layoutUnit>
+		
+		
+<!-- CONTENT		 -->
+		<p:layoutUnit position="center">
+        	Center
+   		 </p:layoutUnit>
+		<p:layoutUnit position="south">
+        	Footer
+   		 </p:layoutUnit>
+	</p:layout>
+
+
 </h:body>
 </html>

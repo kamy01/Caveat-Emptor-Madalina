@@ -5,17 +5,15 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import com.dtos.UserDTO;
 
-import Utils.SessionUtils;
-import exceptions.CaveatEmptorException;
+import exceptions.UsersException;
 import service.IUserService;
+import utils.FacesMessagesUtil;
+import utils.SessionUtils;
 
 @ManagedBean(name = "userlogin")
 public class UserLoginBean implements Serializable {
@@ -23,8 +21,8 @@ public class UserLoginBean implements Serializable {
 	private static final long serialVersionUID = 951727265860837267L;
 	private String username;
 	private String password;
-
 	private UserDTO userDto;
+	
 
 	@EJB
 	IUserService userService;
@@ -33,6 +31,7 @@ public class UserLoginBean implements Serializable {
 	public void init() {
 		userDto = new UserDTO();
 	}
+	
 
 	public String getUsername() {
 		return username;
@@ -50,28 +49,28 @@ public class UserLoginBean implements Serializable {
 		this.password = password;
 	}
 
-	public void login() throws CaveatEmptorException {
-
+	public void login() throws UsersException {
 		try {
 			userDto = userService.getUserByUsername(username);
-		} catch (CaveatEmptorException e) {
+		} catch (UsersException e) {
 			e.getMessage();
 		}
-
 		if (userDto != null && password.equals(userDto.getPassword())) {
-			ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-
 			try {
 				HttpSession session = SessionUtils.getSession();
 				session.setAttribute("userDto", userDto);
-				context.redirect("home.xhtml");
+				if(userDto.isEnabled()){
+					FacesMessagesUtil.redirectPage("home.xhtml");
+				}
+				else{
+					FacesMessagesUtil.message_info("Account not activated! ", "Please confirm your email to activate this account!");
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, "Invalid Login!", "Please Try Again!"));
+			FacesMessagesUtil.message_info("Invalid Login!", "Please Try Again!");
 		}
 	}
 }

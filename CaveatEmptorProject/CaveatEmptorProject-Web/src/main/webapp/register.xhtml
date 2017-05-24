@@ -13,8 +13,12 @@
 	<link rel="stylesheet" href="css/style.css" />
 </h:head>
 
-<h:body>
-	<p:growl id="growl" showDetail="true" />
+<h:body >
+<!-- style="background-image: url(../images/background.jpg)"> -->
+
+
+	<p:messages id="messages" showDetail="true" autoUpdate="true"
+		closable="true" />
 
 	<h:form id="registerForm" styleClass="centeredregisterForm">
 		<p:panel id="panelRegister" header="Sign Up"
@@ -26,18 +30,18 @@
 				<h:outputLabel for="firstname" value="FirstName: " />
 				<p:inputText id="firstname" value="#{registerBean.firstname}"
 					label="firstname" />
-				<p:message for="firstname" />
+				
 
 
 				<h:outputLabel for="lastname" value="LastName: " />
 				<p:inputText id="lastname" value="#{registerBean.lastname}"
 					label="lastname" />
-				<p:message for="lastname" />
+				
 
 				<h:outputLabel for="username" value="UserName: " />
 				<p:inputText id="username" value="#{registerBean.username}"
 					label="username" />
-				<p:message for="username" />
+				
 
 				<h:outputLabel for="email" value="Email: " />
 				<p:inputText id="email" value="#{registerBean.email}" label="email"
@@ -45,28 +49,25 @@
 					<f:validateRegex
 						pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
 				</p:inputText>
-				<p:message for="email" />
+				
 
 				<h:outputLabel for="phoneNumber" value="Phone Number: " />
 				<p:inputText id="phoneNumber" value="#{registerBean.phoneNumber}"
 					label="phoneNumber" />
-				<p:message for="phoneNumber" />
-
+				
 				<h:outputLabel for="password" value="Password: " />
-				<p:inputText id="password" value="#{registerBean.password}"
+				<p:password id="password" value="#{registerBean.password}"
 					label="password" />
-				<p:message for="password" />
+				
 
 				<h:outputLabel for="password" value="Repeat Password: " />
-				<p:inputText id="repeatPassword"
+				<p:password id="repeatPassword"
 					value="#{registerBean.repeatPassword}" label="repeatPassword" />
-				<p:message for="repeatPassword" />
-
-
+				
 
 
 				<p:commandButton value="Register" action="#{registerBean.register}"
-					update="panelRegister growl" resetValues="true">
+					update="panelRegister messages">
 				</p:commandButton>
 
 

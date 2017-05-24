@@ -1,10 +1,10 @@
 package exceptions;
 
-public class CaveatEmptorException extends Exception{
+public class UsersException extends Exception{
 
 	private static final long serialVersionUID = 6844703856998242174L;
 
-	public CaveatEmptorException(String message){
+	public UsersException(String message){
 		super(message);
 	}
 
