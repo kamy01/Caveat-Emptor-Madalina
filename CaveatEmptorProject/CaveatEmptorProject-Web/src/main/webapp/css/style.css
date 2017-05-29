@@ -37,13 +37,11 @@
 	width: 20%;
 	padding-top: 2%;
 }
-
-
-.username {
-	background-color: transparent !important;
+#tabView{
+	padding-left: 38%;
 }
-.password {
-	background-color: transparent !important;
+#frmContent{
+	height: 400px;
 }
 
 h1 {
@@ -96,4 +94,12 @@ h1 {
 
 .layoutHome{
 	height: 830px;	
+}
+.tabView{
+	height: 830px;	
+	padding: 0px;
+	
+}
+.frmContent{
+	padding-top: 0px;
 }

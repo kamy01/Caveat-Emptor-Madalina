@@ -24,7 +24,7 @@
 			<h:form id="loginForm">
 				<h1>Login</h1>
 				<br />
-				<p:inputText id="username" label="username" styleClass="username"
+				<p:inputText id="username" label="username"
 					requiredMessage="Please enter your username."
 					value="#{userlogin.username}" required="true">
 					<f:validateLength minimum="1" />
@@ -33,7 +33,7 @@
 				<p:watermark for="username" value="Username *" />
 
 				<p:password id="password" required="true" label="password"
-					styleClass="password" requiredMessage="Please enter your password."
+					 requiredMessage="Please enter your password."
 					value="#{userlogin.password}" maxlength="20">
 					<f:validateLength minimum="1" />
 				</p:password>

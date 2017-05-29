@@ -17,14 +17,12 @@
 
 	<p:layout styleClass="layoutHome">
 	
-	
+
 		<p:layoutUnit position="west" resizable="true" styleClass="westUnit"
 			size="400">
 			<h:form>
-				<h3>Categories</h3>
+				<h3>Categories</h3>		
 				
-				
-						<!-- ... -->
 		<p:growl id="message" showDetail="true" />
 			<p:tree value="#{categoriesBeanTree.root}" var="node" selectionMode="single"
 				selection="#{categoriesBeanTree.selectedNode}" id="tree">
@@ -33,29 +31,35 @@
 				<p:ajax event="collapse"
 					listener="#{categoriesBeanTree.onNodeCollapse}" />
 				<p:ajax event="select"
-					listener="#{categoriesBeanTree.onNodeSelect}" update=":frmContent:pnlContent"  />
+					listener="#{categoriesBeanTree.onNodeSelect}" update=":frmContent:tabView"  />
 				<p:ajax event="unselect"
 					listener="#{categoriesBeanTree.onNodeUnSelect}" />
 				<p:treeNode>
 					<h:outputText value="#{node.getNameCategory()}" />
 				</p:treeNode>
-			</p:tree>
-					
+			</p:tree>				
 			</h:form>
 		</p:layoutUnit>
-
 	
 		<p:layoutUnit position="center">
-        	 <h:form id="frmContent">
-                    <p:panel id="pnlContent">
-                        <ui:include src="contentLayout.xhtml" />
-                    </p:panel>
+        	 <h:form id="frmContent" styleClass="frmContent" >
+        	  		<p:tabView id="tabView" styleClass="tabView" >
+								<p:tab title="tab1"  >
+										<ui:include src="contentLayout.xhtml" />
+								</p:tab>
+							</p:tabView>
                 </h:form>
    		 </p:layoutUnit>
+   		 
+   		
+   		 
+   		 
 		<p:layoutUnit position="south" size="36">
         	<div id="footerDiv">By Madalina Palade</div>
    		 </p:layoutUnit>
+   		 
 	</p:layout>
+	
 
 </h:body>
 </html>
