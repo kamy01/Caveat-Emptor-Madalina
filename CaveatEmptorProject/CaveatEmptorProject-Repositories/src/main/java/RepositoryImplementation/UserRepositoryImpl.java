@@ -1,18 +1,22 @@
-package dta;
+package RepositoryImplementation;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.logging.Level;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import com.dtos.UserDTO;
 
+import RepositoryInterfaces.UserRepository;
 import entities.Users;
-import exceptions.UsersException;
+import exceptions.CaveatEmptorException;
 import utils.Constants;
+import RepositoryConstants.*;
 
 @Stateless
-public class UserDTAImpl implements UserDTA {
+public class UserRepositoryImpl implements UserRepository {
 
 	@PersistenceContext(unitName = "persistenceUnit")
 	private EntityManager entityManager;
@@ -23,31 +27,31 @@ public class UserDTAImpl implements UserDTA {
 	}
 
 	@Override
-	public Users findUserByUsername(String username) throws UsersException {
+	public Users findUserByUsername(String username) throws CaveatEmptorException {
 		try {
-			return (Users) entityManager.createNamedQuery(Constants.FIND_USER_BY_USERNAME)
+			return (Users) entityManager.createNamedQuery(QueryConstants.FIND_USER_BY_USERNAME)
 					.setParameter("username", username).getSingleResult();
-
 		} catch (Exception ex) {
+			Constants.getLogger().log( Level.INFO, "Exception in findUserByUsername method from UserRepositoryImpl" ,ex.getMessage());		
 			return null;
-
 		}
 	}
 
 	@Override
-	public Users findUserByEmail(String email) throws UsersException {
+	public Users findUserByEmail(String email) throws CaveatEmptorException {
 		try {
-			return (Users) entityManager.createNamedQuery(Constants.FIND_USER_BY_EMAIL).setParameter("email", email)
+			return (Users) entityManager.createNamedQuery(QueryConstants.FIND_USER_BY_EMAIL).setParameter("email", email)
 					.getSingleResult();
 
 		} catch (Exception ex) {
+			Constants.getLogger().log( Level.INFO, "Exception in findUserByEmail method from UserRepositoryImpl" ,ex.getMessage());		
 			return null;
 
 		}
 	}
 
 	@Override
-	public String createUser(UserDTO userDto) throws UsersException {
+	public String createUser(UserDTO userDto) throws CaveatEmptorException {
 		Date date = new Date();
 
 		user = new Users();
@@ -70,7 +74,7 @@ public class UserDTAImpl implements UserDTA {
 	}
 
 	@Override
-	public void insertKeyForUser(UserDTO userDto, String key) throws UsersException {
+	public void insertKeyForUser(UserDTO userDto, String key) throws CaveatEmptorException {
 		user = findUserByUsername(userDto.getUsername());
 		if (user != null) {
 			user.setActivationKey(key);
@@ -79,7 +83,7 @@ public class UserDTAImpl implements UserDTA {
 	}
 
 	@Override
-	public boolean enableAndRegisterUser(UserDTO userDto) throws UsersException {
+	public boolean enableAndRegisterUser(UserDTO userDto) throws CaveatEmptorException {
 		user = findUserByUsername(userDto.getUsername());
 		if(!user.isEnabled()){
 			user.setEnabled(true);

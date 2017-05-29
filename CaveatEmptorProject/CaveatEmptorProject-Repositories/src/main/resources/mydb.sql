@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(25) DEFAULT NULL,
   `lastname` varchar(25) DEFAULT NULL,
   `username` varchar(25) DEFAULT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE `users` (
   `enabled` tinyint(1) DEFAULT NULL,
   `activationKey` varchar(50) DEFAULT NULL,
   `dateRegistered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`userId`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -47,7 +47,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Madalina','Palade','MadalinaP','madalina','madalina.palade@fortech.ro',0,0,9999999999999,1,NULL,'2017-05-24 08:19:00');
+INSERT INTO `users` VALUES (1,'Madalina','Palade','Madalina','madalina','madalina.palade@fortech.ro',0,0,761444651,1,NULL,'2017-05-26 13:17:21');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -60,13 +60,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-24 18:37:11
-
-
-
-
-
-
+-- Dump completed on 2017-05-29  9:53:33
 
 
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
@@ -94,12 +88,12 @@ DROP TABLE IF EXISTS `categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `categories` (
-  `id_category` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
-  `name_category` varchar(20) DEFAULT NULL,
+  `categoryId` int(11) NOT NULL AUTO_INCREMENT,
+  `parentId` int(11) DEFAULT NULL,
+  `nameCategory` varchar(20) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id_category`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`categoryId`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +102,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (0,NULL,'root','root description');
+INSERT INTO `categories` VALUES (1,NULL,'',''),(2,NULL,'Desktop PC','Deskktop PC description'),(3,NULL,'PC Components','PC Components description'),(4,NULL,'Laptops','Laptops description'),(5,NULL,'Laptop accessories','Laptop accessories description'),(6,3,'CPUs','CPUs description'),(7,3,'Storage','Storage description'),(8,3,'RAM','RAM description'),(9,6,'AMD','AMD description'),(10,6,'Intel','Intel description');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -121,5 +115,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-24 18:37:12
+-- Dump completed on 2017-05-29  9:53:33
 

@@ -1,9 +1,9 @@
-package service;
+package ServiceImplementation;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,16 +11,14 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import com.dtos.UserDTO;
-
-import exceptions.UsersException;
+import exceptions.CaveatEmptorException;
 import utils.Constants;
 import utils.SessionUtils;
 
 public class SendEmailService {
 
-	public static String sendEmail(UserDTO userDto) throws UsersException {
+	public static String sendEmail(UserDTO userDto) throws CaveatEmptorException {
 		try {
 			Properties properties = getProperties();
 			Session session = SessionUtils.createSession(properties);
@@ -29,13 +27,14 @@ public class SendEmailService {
 			Transport.send(message);
 			return key;
 
-		} catch (MessagingException | IOException e) {
-			throw new UsersException("Exception in sendEmail method from Service");
+		} catch (MessagingException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in sendEmail method from SendEmailService" ,e.getMessage());		
+			throw new CaveatEmptorException();
 		}
 	}
 
 	private static Message buildMessage(Session session, Properties properties, UserDTO userDto, String key)
-			throws UsersException {
+			throws CaveatEmptorException {
 		String link = Constants.MAIL_REGISTRATION_SITE_LINK + "?username="+userDto.getUsername()+"&key=" + key;
 
 		Message message = new MimeMessage(session);
@@ -46,18 +45,22 @@ public class SendEmailService {
 			message.setText("Hello " + userDto.getFirstname() + " " + userDto.getLastname() + ", "
 					+ System.lineSeparator() + "Please confirm the following link " + System.lineSeparator() + link);
 		} catch (MessagingException e) {
-			throw new UsersException("Exception in buildMessage method from Service");
+			Constants.getLogger().log( Level.INFO, "Exception in buildMessage method from SendEmailService" ,e.getMessage());		
+			throw new CaveatEmptorException();
 		}
 		return message;
 
 	}
 
-	private static Properties getProperties() throws IOException {
+	private static Properties getProperties() throws CaveatEmptorException {
 		Properties properties = new Properties();
 		String filename = "config.properties";
 
 		try (InputStream input = SendEmailService.class.getClassLoader().getResourceAsStream(filename)) {
 			properties.load(input);
+		}catch (Exception e) {
+			Constants.getLogger().log( Level.INFO, "Exception in getProperties method from SendEmailService" ,e.getMessage());		
+			throw new CaveatEmptorException();
 		}
 		return properties;
 	}

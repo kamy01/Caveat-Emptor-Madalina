@@ -1,103 +1,44 @@
 package beans;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.logging.Level;
 
+
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Size;
 import com.dtos.UserDTO;
-import exceptions.UsersException;
-import service.IUserService;
-import service.SendEmailService;
+import ServiceImplementation.SendEmailService;
+import ServiceInterfaces.UserService;
+import exceptions.CaveatEmptorException;
+import utils.Constants;
 import utils.FacesMessagesUtil;
 import utils.SessionUtils;
 
 @ManagedBean(name = "registerBean")
+@SessionScoped
 public class UserRegisterBean implements Serializable {
 
 	private static final long serialVersionUID = 1283704450092269442L;
 
-	@Size(min = 3)
-	private String firstname;
-
-	@Size(min = 3)
-	private String lastname;
-
-	@Size(min = 3)
-	private String username;
-
-	@Size(min = 3)
-	private String email;
-
-	@Size(min = 10)
-	private String phoneNumber;
-
-	@Size(min = 3)
-	private String password;
-
-	@Size(min = 3)
-	private String repeatPassword;
 
 	private UserDTO userDto;
+	private String repeatPassword;
 
 	@EJB
-	IUserService userService;
-	
+	UserService userService;
+
 	HttpSession session = SessionUtils.getSession();
 
-	public String getFirstname() {
-		return firstname;
+	@PostConstruct
+	public void init() {
+		userDto = new UserDTO();
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	public UserDTO getUserDto() {
+		return userDto;
 	}
 
 	public String getRepeatPassword() {
@@ -108,34 +49,52 @@ public class UserRegisterBean implements Serializable {
 		this.repeatPassword = repeatPassword;
 	}
 
-	public void register() throws UsersException {
+	public void getNewUser() {
+		userDto.setFirstname(getUserDto().getFirstname());
+		userDto.setLastname(getUserDto().getLastname());
+		userDto.setEmail(getUserDto().getEmail());
+		userDto.setUsername(getUserDto().getUsername());
+		userDto.setPhoneNumber(getUserDto().getPhoneNumber());
+		userDto.setPassword(getUserDto().getPassword());
+	}
+
+	public void register() throws CaveatEmptorException {
 		try {
-			userDto = new UserDTO();
-			String newUser;
+			getNewUser();
+			String newUser = userService.createUser(userDto);
 
-			userDto.setFirstname(firstname);
-			userDto.setLastname(lastname);
-			userDto.setEmail(email);
-			userDto.setUsername(username);
-			userDto.setPhoneNumber(phoneNumber);
-			userDto.setPassword(password);
-
-			newUser = userService.createUser(userDto);
 			if (newUser.equals("emailExist")) {
 				FacesMessagesUtil.message_info("Cannot register!", "Email already exist!");
 			} else if (newUser.equals("usernameExist")) {
 				FacesMessagesUtil.message_info("Cannot register!", "Username already exist!");
 			} else {
-				String key=SendEmailService.sendEmail(userDto);
-					if(key!=null){
-						userService.insertKeyForUser(userDto,key);
-						FacesMessagesUtil.message_info("An email was sent to your email address", "Please confirm it!");
-					}	
-					
-					session.setAttribute("userDto", userDto);	
+				String key = SendEmailService.sendEmail(userDto);
+				if (key != null) {
+					userService.insertKeyForUser(userDto, key);
+					FacesMessagesUtil.message_info("An email was sent to your email address", "Please confirm it!");
+				}
+
+				session.setAttribute("userDto", userDto);
 			}
-		} catch (UsersException e) {
-			e.getMessage();
+		} catch (CaveatEmptorException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in register method from UserRegisterBean" ,e.getMessage());	
 		}
+		catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
+		}
+		
+	}
+	
+	public void cancelRegister() throws CaveatEmptorException {
+		try {
+			FacesMessagesUtil.redirectPage("index.xhtml");
+		} catch (CaveatEmptorException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in cancelRegister method from UserRegisterBean" ,e.getMessage());	
+		}
+		catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
+		}
+		
+		
 	}
 }

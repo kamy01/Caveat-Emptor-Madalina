@@ -1,17 +1,15 @@
 package beans;
 
-import java.io.IOException;
 import java.io.Serializable;
-
+import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpSession;
-
 import com.dtos.UserDTO;
-
-import exceptions.UsersException;
-import service.IUserService;
+import ServiceInterfaces.UserService;
+import exceptions.CaveatEmptorException;
+import utils.Constants;
 import utils.FacesMessagesUtil;
 import utils.SessionUtils;
 
@@ -22,17 +20,16 @@ public class UserLoginBean implements Serializable {
 	private String username;
 	private String password;
 	private UserDTO userDto;
-	
+
 
 	@EJB
-	IUserService userService;
+	UserService userService;
 
 	@PostConstruct
 	public void init() {
 		userDto = new UserDTO();
 	}
 	
-
 	public String getUsername() {
 		return username;
 	}
@@ -49,11 +46,14 @@ public class UserLoginBean implements Serializable {
 		this.password = password;
 	}
 
-	public void login() throws UsersException {
+	public void login() throws CaveatEmptorException {
 		try {
 			userDto = userService.getUserByUsername(username);
-		} catch (UsersException e) {
-			e.getMessage();
+		} catch (CaveatEmptorException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in login method from UserLoginBean" ,e.getMessage());	
+		}
+		catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
 		}
 		if (userDto != null && password.equals(userDto.getPassword())) {
 			try {
@@ -65,8 +65,11 @@ public class UserLoginBean implements Serializable {
 				else{
 					FacesMessagesUtil.message_info("Account not activated! ", "Please confirm your email to activate this account!");
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (CaveatEmptorException e) {
+				Constants.getLogger().log( Level.INFO, "Exception in login method from UserLoginBean" ,e.getMessage());	
+			}
+			catch (Exception e) {
+				FacesMessagesUtil.redirectPage("error.xhtml");
 			}
 
 		} else {

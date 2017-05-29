@@ -1,25 +1,92 @@
-body {
-    background-size:100%;
-    background-position: center;
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
+
+.index-bg {
+	background: url(../images/bg_image.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.register-bg {
+	background: url(../images/bg_image.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.error-bg {
+	background: url(../images/err.png) no-repeat center center fixed; 
+}
+
+#divLogin {
+	padding-left: 38%;
+	width: 20%;
+	padding-top: 9%;
+}
+
+#footerDiv{
+	margin-left: 40%;
+	font-style:italic;
+	font-size:12pt;
+	font-family:times new roman;
+}
+#divRegister {
+	padding-left: 38%;
+	width: 20%;
+	padding-top: 2%;
 }
 
 
-.centeredLoginForm{
-	
-	width: 25%; 
-	margin:13% 35%;
-	
+.username {
+	background-color: transparent !important;
+}
+.password {
+	background-color: transparent !important;
 }
 
-.centeredregisterForm{
-	
-	width:40%; 
-	margin:10% 25%;
+h1 {
+	color: #00004d;
+	text-shadow: 2px 2px;
 }
 
-.panelLogin {
-	 font-size: 75% !important;
-      font-family: Arial,Verdana,sans-serif;
+#loginForm {
+	margin-left: auto;
+	margin-right: auto;
+	width: 343px;
+	height: 333px;
+	padding: 30px;
+	border: 1px solid rgba(0, 0, 0, .2);
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	background: rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	overflow: hidden;
+}
+
+#registerForm{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 30px;
+	border: 1px solid rgba(0, 0, 0, .2);
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	background: rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	overflow: hidden;
 }
 
 .activationPanel{
@@ -28,7 +95,5 @@ body {
 }
 
 .layoutHome{
-	height: 800px;
- 	
+	height: 830px;	
 }
-

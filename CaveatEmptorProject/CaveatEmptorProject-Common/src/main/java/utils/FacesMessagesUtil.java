@@ -1,16 +1,17 @@
 package utils;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import exceptions.UsersException;
+import exceptions.CaveatEmptorException;
 
 public class FacesMessagesUtil {
 
-	public static void redirectPage(String page) throws IOException, UsersException{
+	public static void redirectPage(String page) throws  CaveatEmptorException{
 		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 		try{
 
@@ -22,7 +23,8 @@ public class FacesMessagesUtil {
 			    }
 
 		}catch(IOException ex){
-			throw new UsersException("Redirect page exception"+ ex);
+			Constants.getLogger().log( Level.INFO, "Redirect page exception" ,ex.getMessage());		
+			throw new CaveatEmptorException();
 		}
 	}
 	

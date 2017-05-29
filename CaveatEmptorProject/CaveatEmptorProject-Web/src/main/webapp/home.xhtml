@@ -13,35 +13,49 @@
 	<link rel="stylesheet" href="css/style.css" />
 </h:head>
 <h:body>
-	<p>
-		<img src="images/logo.png" />
-	</p>
+	<p><img src="images/logo.png" /></p>
 
 	<p:layout styleClass="layoutHome">
 	
-<!-- TREE MENU (WEST LAYOUT) -->
+	
 		<p:layoutUnit position="west" resizable="true" styleClass="westUnit"
 			size="400">
 			<h:form>
 				<h3>Categories</h3>
-				<p:tree value="#{categoriesBean.root}" var="node" dynamic="true">
-					<p:treeNode>
-						<h:outputText value="#{node}" />
-					</p:treeNode>
-				</p:tree>
+				
+				
+						<!-- ... -->
+		<p:growl id="message" showDetail="true" />
+			<p:tree value="#{categoriesBeanTree.root}" var="node" selectionMode="single"
+				selection="#{categoriesBeanTree.selectedNode}" id="tree">
+				<p:ajax event="expand"
+					listener="#{categoriesBeanTree.onNodeExpand}" />
+				<p:ajax event="collapse"
+					listener="#{categoriesBeanTree.onNodeCollapse}" />
+				<p:ajax event="select"
+					listener="#{categoriesBeanTree.onNodeSelect}" update=":frmContent:pnlContent"  />
+				<p:ajax event="unselect"
+					listener="#{categoriesBeanTree.onNodeUnSelect}" />
+				<p:treeNode>
+					<h:outputText value="#{node.getNameCategory()}" />
+				</p:treeNode>
+			</p:tree>
+					
 			</h:form>
 		</p:layoutUnit>
-		
-		
-<!-- CONTENT		 -->
+
+	
 		<p:layoutUnit position="center">
-        	Center
+        	 <h:form id="frmContent">
+                    <p:panel id="pnlContent">
+                        <ui:include src="contentLayout.xhtml" />
+                    </p:panel>
+                </h:form>
    		 </p:layoutUnit>
-		<p:layoutUnit position="south">
-        	Footer
+		<p:layoutUnit position="south" size="36">
+        	<div id="footerDiv">By Madalina Palade</div>
    		 </p:layoutUnit>
 	</p:layout>
-
 
 </h:body>
 </html>

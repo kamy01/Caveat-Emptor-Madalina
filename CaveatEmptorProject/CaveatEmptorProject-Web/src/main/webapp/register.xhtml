@@ -13,70 +13,84 @@
 	<link rel="stylesheet" href="css/style.css" />
 </h:head>
 
-<h:body >
-<!-- style="background-image: url(../images/background.jpg)"> -->
-
-
+<h:body class="register-bg">
+	<p>
+		<img src="images/logo.png" />
+	</p>
 	<p:messages id="messages" showDetail="true" autoUpdate="true"
 		closable="true" />
 
-	<h:form id="registerForm" styleClass="centeredregisterForm">
-		<p:panel id="panelRegister" header="Sign Up"
-			styleClass="panelRegister">
+	<div id="divRegister">
 
 
-			<h:panelGrid columns="1" cellspacing="2">
+		<h:form id="registerForm">
+			<h1>Sign Up</h1>
+			<br />
 
-				<h:outputLabel for="firstname" value="FirstName: " />
-				<p:inputText id="firstname" value="#{registerBean.firstname}"
-					label="firstname" />
-				
+			<p:inputText id="firstname" value="#{registerBean.userDto.firstname}"
+				label="firstname" />
+			<p:watermark for="firstname" value="First Name *" />
+			<br />
+			<br />
+			<br />
 
+			<p:inputText id="lastname" value="#{registerBean.userDto.lastname}"
+				label="lastname" />
+			<p:watermark for="lastname" value="Last Name *" />
+			<br />
+			<br />
+			<br />
 
-				<h:outputLabel for="lastname" value="LastName: " />
-				<p:inputText id="lastname" value="#{registerBean.lastname}"
-					label="lastname" />
-				
+			<p:inputText id="username" value="#{registerBean.userDto.username}"
+				label="username" />
+			<p:watermark for="username" value="User Name *" />
+			<br />
+			<br />
+			<br />
 
-				<h:outputLabel for="username" value="UserName: " />
-				<p:inputText id="username" value="#{registerBean.username}"
-					label="username" />
-				
+			<p:inputText id="email" value="#{registerBean.userDto.email}"
+				label="email" validatorMessage="Email is invalid.">
+				<f:validateRegex
+					pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+			</p:inputText>
+			<p:watermark for="email" value="Email *" />
+			<br />
+			<br />
+			<br />
 
-				<h:outputLabel for="email" value="Email: " />
-				<p:inputText id="email" value="#{registerBean.email}" label="email"
-					validatorMessage="Email is invalid.">
-					<f:validateRegex
-						pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-				</p:inputText>
-				
+			<p:inputText id="phoneNumber"
+				value="#{registerBean.userDto.phoneNumber}" label="phoneNumber" />
+			<p:watermark for="phoneNumber" value="Phone Number *" />
+			<br />
+			<br />
+			<br />
 
-				<h:outputLabel for="phoneNumber" value="Phone Number: " />
-				<p:inputText id="phoneNumber" value="#{registerBean.phoneNumber}"
-					label="phoneNumber" />
-				
-				<h:outputLabel for="password" value="Password: " />
-				<p:password id="password" value="#{registerBean.password}"
-					label="password" />
-				
-
-				<h:outputLabel for="password" value="Repeat Password: " />
-				<p:password id="repeatPassword"
-					value="#{registerBean.repeatPassword}" label="repeatPassword" />
-				
-
-
-				<p:commandButton value="Register" action="#{registerBean.register}"
-					update="panelRegister messages">
-				</p:commandButton>
-
-
-
-
-			</h:panelGrid>
-		</p:panel>
-	</h:form>
+			<p:password id="password" value="#{registerBean.userDto.password}"
+				label="password" />
+			<p:watermark for="password" value="Password *" />
+			<br />
+			<br />
+			<br />
 
 
+			<p:password id="repeatPassword"
+				value="#{registerBean.repeatPassword}" label="repeatPassword" />
+			<p:watermark for="repeatPassword" value="Repeat password *" />
+			<br />
+			<br />
+			<br />
+			<br />
+
+
+			<p:commandButton value="Sign Up" action="#{registerBean.register}"
+				update=" messages">
+			</p:commandButton>
+			
+			<h:form >
+     			 <p:commandButton value="Cancel" action="#{registerBean.cancelRegister}" immediate="true" />
+   			 </h:form>
+			
+		</h:form>
+	</div>
 </h:body>
 </html>

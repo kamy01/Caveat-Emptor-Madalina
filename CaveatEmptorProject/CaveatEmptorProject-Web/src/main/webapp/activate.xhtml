@@ -14,19 +14,22 @@
 </h:head>
 <h:body>
 
-<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-<h:form>
-	<p:panel id="activationPanel" styleClass="activationPanel">
-		<p>Hello  <h:outputText value="#{activationAccount.usernameURL}"  /> ,</p>
-		<p>Please enter in your account by clicking this </p>
-
-
-				<h:commandButton value="Caveat Emptor page" action="#{activationAccount.validateKey}"
-					update="activationPanel messages" > 
-					 <f:param name="username" value="#{activationAccount.usernameURL}" />
-				</h:commandButton>
-					
-	</p:panel>
-</h:form>
+	<p:messages id="messages" showDetail="true" autoUpdate="true"
+		closable="true" />
+	<h:form>
+		<p:panel id="activationPanel" styleClass="activationPanel">
+			<p>
+				Hello
+				<h:outputText value="#{activationAccount.usernameURL}" />
+				,
+			</p>
+			<p>Please enter in your account by clicking this</p>
+			<h:commandButton value="Caveat Emptor page"
+				action="#{activationAccount.validateKey}"
+				update="activationPanel messages">
+				<f:param name="username" value="#{activationAccount.usernameURL}" />
+			</h:commandButton>
+		</p:panel>
+	</h:form>
 </h:body>
 </html>

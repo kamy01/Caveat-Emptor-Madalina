@@ -1,22 +1,22 @@
 package beans;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Level;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+
 import com.dtos.UserDTO;
 
-import exceptions.UsersException;
-import service.IUserService;
+import ServiceInterfaces.UserService;
+import exceptions.CaveatEmptorException;
+import utils.Constants;
 import utils.FacesMessagesUtil;
 
 @ManagedBean(name ="activationAccount")
@@ -30,9 +30,10 @@ public class ActivationAccount implements Serializable {
 	private Timestamp current_timestamp;
 	private Timestamp registeredDate;
 	Date date = new Date();
+	
 
 	@EJB
-	IUserService userService;
+	UserService userService;
 	
 		
 	public String getUsernameURL() {
@@ -44,7 +45,7 @@ public class ActivationAccount implements Serializable {
 		this.usernameURL = usernameURL;
 	}
 
-	public void validateKey() throws IOException {
+	public void validateKey() throws CaveatEmptorException {
 		
 		  FacesContext fc = FacesContext.getCurrentInstance();
 	      Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
@@ -64,15 +65,17 @@ public class ActivationAccount implements Serializable {
 			else {
 				boolean enabled=userService.enableAndRegisterUser(userDto);
 				if(enabled){
-					//Faces.message_info("@@@@@@@@@@@@@@!", "");
 					FacesMessagesUtil.redirectPage("home.xhtml");
 				}
 				else{
 					FacesMessagesUtil.message_info("Account already enabled!", "");
 				}
 			}
-		} catch (UsersException e) {
-			e.getMessage();
+		} catch (CaveatEmptorException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in validateKey method from ActivationAccount" ,e.getMessage());		
+		}
+		catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
 		}
 	}
 }

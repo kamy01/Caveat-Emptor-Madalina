@@ -9,19 +9,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-
-import utils.Constants;
+import RepositoryConstants.*;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = Constants.FIND_USER_BY_USERNAME, query = Constants.FIND_USER_BY_USERNAME_QUERY),
-				@NamedQuery(name = Constants.FIND_USER_BY_EMAIL, query = Constants.FIND_USER_BY_EMAIL_QUERY) 			
+@NamedQueries({ @NamedQuery(name = QueryConstants.FIND_USER_BY_USERNAME, query = QueryConstants.FIND_USER_BY_USERNAME_QUERY),
+				@NamedQuery(name = QueryConstants.FIND_USER_BY_EMAIL, query = QueryConstants.FIND_USER_BY_EMAIL_QUERY) 			
 })
 public class Users implements Serializable {
 	private static final long serialVersionUID = 3436918407169441316L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long user_id;
+	private Long userId;
 	@Column
 	private String firstname;
 	@Column
@@ -54,12 +53,12 @@ public class Users implements Serializable {
 	public Users() {
 	}
 
-	public Long getId() {
-		return user_id;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setId(Long user_id) {
-		this.user_id = user_id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getFirstname() {
@@ -118,14 +117,6 @@ public class Users implements Serializable {
 		this.admin = admin;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -134,12 +125,12 @@ public class Users implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Long getUser_id() {
-		return user_id;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public String getActivationKey() {
@@ -151,11 +142,13 @@ public class Users implements Serializable {
 	}
 
 	public Timestamp getDateRegistered() {
-		return dateRegistered;
+		return new Timestamp(dateRegistered.getTime());
 	}
 
 	public void setDateRegistered(Timestamp dateRegistered) {
 		this.dateRegistered = dateRegistered;
 	}
+
+	
 
 }
