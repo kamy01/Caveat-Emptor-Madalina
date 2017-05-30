@@ -47,5 +47,14 @@ public class CategoryServiceImpl implements CategoryService{
 		}
 		return listCategoriesDto;
 	}
+	
+	public boolean removeCategory(CategoriesDTO categoryDto) throws CaveatEmptorException{
+		try{
+			return categoriesRepository.removeCategory(categoryDto);
+		}catch(Exception e){
+			Constants.getLogger().log( Level.INFO, "Exception in removeCategory method from CategoryServiceImpl" ,e.getMessage());		
+			throw new CaveatEmptorException();
+		}
+	}
 
 }

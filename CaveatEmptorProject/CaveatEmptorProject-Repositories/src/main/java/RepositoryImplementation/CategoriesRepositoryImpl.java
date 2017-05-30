@@ -7,6 +7,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.dtos.CategoriesDTO;
+
 import RepositoryInterfaces.CategoriesRepository;
 import entities.Categories;
 import exceptions.CaveatEmptorException;
@@ -30,5 +32,28 @@ public class CategoriesRepositoryImpl implements CategoriesRepository{
 			Constants.getLogger().log( Level.INFO, "Exception in getCategories method from CategoriesRepositoryImpl" ,ex.getMessage());		
 			return null;
 		}	
+	}
+	
+	public Categories entityToCategory(CategoriesDTO categoryDto)
+	{
+		Categories category=new Categories();
+		category.setCategoryId(categoryDto.getCategoryId());
+		category.setParentId(categoryDto.getParentId());
+		category.setNameCategory(categoryDto.getNameCategory());
+		category.setDescription(categoryDto.getDescription());
+		
+		return category;
+	}
+	
+	public boolean removeCategory(CategoriesDTO categoryDto) throws CaveatEmptorException{
+		try {
+			Categories category=entityToCategory(categoryDto);
+			entityManager.remove(category);
+			return true;
+		} catch (Exception ex) {
+			Constants.getLogger().log( Level.INFO, "Exception in removeCategory method from CategoriesRepositoryImpl" ,ex.getMessage());		
+			return false;
+		}
+		
 	}
 }

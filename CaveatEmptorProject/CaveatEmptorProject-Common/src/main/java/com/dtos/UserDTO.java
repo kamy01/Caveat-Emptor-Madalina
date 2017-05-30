@@ -3,45 +3,31 @@ package com.dtos;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.validation.constraints.Size;
-
 public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = -5140878302612717434L;
-	@Size(min = 3)
 	private Long userId;
 	
-	@Size(min = 3)
 	private String firstname;
 	
-	@Size(min = 3)
 	private String lastname;
 	
-	@Size(min = 3)
 	private String username;
 	
-	@Size(min = 3)
 	private String password;
 	
-	@Size(min = 10)
 	private String email;
 	
-	@Size(min = 3)
 	private int ranking;
 	
-	@Size(min = 3)
 	private boolean admin;
 	
-	@Size(min = 10)
-	private String phoneNumber;
+	private Long phoneNumber;
 	
-	@Size(min = 3)
 	private boolean enabled;
-	
-	@Size(min = 3)
+
 	private String activationKey;
-	
-	@Size(min = 3)
+
 	private Timestamp dateRegistered;
 
 	public UserDTO() {
@@ -111,11 +97,11 @@ public class UserDTO implements Serializable {
 		this.admin = admin;
 	}
 
-	public String getPhoneNumber() {
+	public Long getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
+	public void setPhoneNumber(Long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 

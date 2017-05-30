@@ -20,11 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@PersistenceContext(unitName = "persistenceUnit")
 	private EntityManager entityManager;
-	Users user;
 
-	public void init() {
-		user = new Users();
-	}
 
 	@Override
 	public Users findUserByUsername(String username) throws CaveatEmptorException {
@@ -32,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
 			return (Users) entityManager.createNamedQuery(QueryConstants.FIND_USER_BY_USERNAME)
 					.setParameter("username", username).getSingleResult();
 		} catch (Exception ex) {
-			Constants.getLogger().log( Level.INFO, "Exception in findUserByUsername method from UserRepositoryImpl" ,ex.getMessage());		
+			Constants.getLogger().log( Level.INFO, "Exception in findUserByUsername method from UserRepositoryImpl" ,ex.getMessage());
 			return null;
 		}
 	}
@@ -44,17 +40,27 @@ public class UserRepositoryImpl implements UserRepository {
 					.getSingleResult();
 
 		} catch (Exception ex) {
-			Constants.getLogger().log( Level.INFO, "Exception in findUserByEmail method from UserRepositoryImpl" ,ex.getMessage());		
+			Constants.getLogger().log( Level.INFO, "Exception in findUserByEmail method from UserRepositoryImpl" ,ex.getMessage());	
 			return null;
 
 		}
 	}
-
 	@Override
-	public String createUser(UserDTO userDto) throws CaveatEmptorException {
-		Date date = new Date();
+	public Users findUserByPhoneNumber(Long phoneNumber) throws CaveatEmptorException {
+		try {
+			return (Users) entityManager.createNamedQuery(QueryConstants.FIND_USER_BY_PHONENR).setParameter("phoneNumber", phoneNumber)
+					.getSingleResult();
 
-		user = new Users();
+		} catch (Exception ex) {
+			Constants.getLogger().log( Level.INFO, "Exception in findUserByPhoneNumber method from UserRepositoryImpl" ,ex.getMessage());	
+			return null;
+
+		}
+	}
+	
+	public Users setUser(UserDTO userDto){
+		Date date = new Date();
+		Users user = new Users();
 		user.setFirstname(userDto.getFirstname());
 		user.setLastname(userDto.getLastname());
 		user.setEmail(userDto.getEmail());
@@ -62,19 +68,32 @@ public class UserRepositoryImpl implements UserRepository {
 		user.setPhoneNumber(userDto.getPhoneNumber());
 		user.setUsername(userDto.getUsername());
 		user.setDateRegistered(new Timestamp(date.getTime()));
+		return user;
+	}
 
+	@Override
+	public String createUser(UserDTO userDto,String repeatPassword) throws CaveatEmptorException {
+		Users user = new Users();
+		user=setUser(userDto);
 		if (findUserByUsername(userDto.getUsername()) != null) {
 			return "usernameExist";
-		} else if (findUserByEmail(userDto.getUsername()) != null) {
+		} else if (findUserByEmail(userDto.getEmail()) != null) {
 			return "emailExist";
+		}else if (findUserByPhoneNumber(userDto.getPhoneNumber()) != null) {
+			return "phoneNumberExist";
 		} else {
-			entityManager.persist(user);
-			return "userCreated";
+			if(user.getPassword().equals(repeatPassword)){
+				entityManager.persist(user);
+				return "userCreated";
+			}else{
+				return "passwordDifferent";
+			}
 		}
 	}
 
 	@Override
 	public void insertKeyForUser(UserDTO userDto, String key) throws CaveatEmptorException {
+		Users user = new Users();
 		user = findUserByUsername(userDto.getUsername());
 		if (user != null) {
 			user.setActivationKey(key);
@@ -84,6 +103,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public boolean enableAndRegisterUser(UserDTO userDto) throws CaveatEmptorException {
+		Users user = new Users();
 		user = findUserByUsername(userDto.getUsername());
 		if(!user.isEnabled()){
 			user.setEnabled(true);

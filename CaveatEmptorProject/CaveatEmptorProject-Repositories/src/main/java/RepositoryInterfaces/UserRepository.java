@@ -10,8 +10,10 @@ public interface UserRepository {
 	public Users findUserByUsername(String username) throws CaveatEmptorException;
 
 	public Users findUserByEmail(String email) throws CaveatEmptorException;
+	
+	public Users findUserByPhoneNumber(Long phoneNumber) throws CaveatEmptorException;
 
-	public String createUser(UserDTO userDto) throws CaveatEmptorException;
+	public String createUser(UserDTO userDto,String repeatPassword) throws CaveatEmptorException;
 
 	public void insertKeyForUser(UserDTO userDto, String key) throws CaveatEmptorException;
 

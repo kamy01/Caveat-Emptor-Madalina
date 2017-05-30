@@ -33,4 +33,8 @@ public class FacesMessagesUtil {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, title, message));
     }
 	
+	public static void message_error(String title,String message) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, title, message));
+    }
+	
 }

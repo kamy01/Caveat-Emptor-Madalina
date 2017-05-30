@@ -1,64 +1,54 @@
 package beans;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeExpandEvent;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import com.dtos.CategoriesDTO;
+
+import ServiceInterfaces.CategoryService;
+import ServiceInterfaces.UserService;
+import exceptions.CaveatEmptorException;
 
 @ManagedBean(name="contentCategory")
 @ViewScoped
 public class ContentCategoryBean {
 	
-	private String nameCategory;
-	private String description;
-	private TreeNode selectedNode;
+	private CategoriesBeanTree categoryTree;
 	
-	private String option;
-	@PostConstruct
-    public void init() {
-		option=new String("Categories");
+	@EJB
+	CategoryService categoryService;
+	
+
+	public CategoriesBeanTree getCategoryTree() {
+		return categoryTree;
+	}
+
+	public void setCategoryTree(CategoriesBeanTree categoryTree) {
+		this.categoryTree = categoryTree;
+	}
+
+	public void onNodeSelect(NodeSelectEvent event) {
+		event.getTreeNode().getData();
+		
+		this.categoryTree.setNameCategory(((CategoriesDTO)event.getTreeNode().getData()).getNameCategory());
+		this.categoryTree.setDescription(((CategoriesDTO)event.getTreeNode().getData()).getDescription());
+		////categoryTree.getNameCategory() = ((CategoriesDTO)event.getTreeNode().getData()).getNameCategory();
+		//this.description = ((CategoriesDTO)event.getTreeNode().getData()).getDescription();
+	
+	}
+	
+	public void editOrCreateCategory(){
 		
 	}
 	
-	
-	public String getOption() {
-		return option;
-	}
-
-	public void setOption(String option) {
-		this.option = option;
-	}
-
-	public String getNameCategory() {
-		return nameCategory;
-	}
-	public void setNameCategory(String nameCategory) {
-		this.nameCategory = nameCategory;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public TreeNode getSelectedNode() {
-		return selectedNode;
-	}
-
-	public void setSelectedNode(TreeNode selectedNode) {
-		this.selectedNode = selectedNode;
-	}
-
-
-	
-	public void onNodeUnSelect(NodeExpandEvent event) {
-		event.getTreeNode().getData();
-		this.nameCategory = ((CategoriesDTO)event.getTreeNode().getData()).getNameCategory();
-		this.description = ((CategoriesDTO)event.getTreeNode().getData()).getDescription();
+	public void remove() throws CaveatEmptorException{
+		categoryService.removeCategory((CategoriesDTO)categoryTree.getSelectedNode());
 	}
 	
 }

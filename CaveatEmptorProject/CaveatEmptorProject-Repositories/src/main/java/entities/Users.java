@@ -13,7 +13,8 @@ import RepositoryConstants.*;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = QueryConstants.FIND_USER_BY_USERNAME, query = QueryConstants.FIND_USER_BY_USERNAME_QUERY),
-				@NamedQuery(name = QueryConstants.FIND_USER_BY_EMAIL, query = QueryConstants.FIND_USER_BY_EMAIL_QUERY) 			
+				@NamedQuery(name = QueryConstants.FIND_USER_BY_EMAIL, query = QueryConstants.FIND_USER_BY_EMAIL_QUERY) ,
+				@NamedQuery(name = QueryConstants.FIND_USER_BY_PHONENR, query = QueryConstants.FIND_USER_BY_PHONENR_QUERY) 
 })
 public class Users implements Serializable {
 	private static final long serialVersionUID = 3436918407169441316L;
@@ -36,7 +37,7 @@ public class Users implements Serializable {
 	@Column
 	private boolean admin = false;
 	@Column
-	private String phoneNumber;
+	private Long phoneNumber;
 	@Column
 	private boolean enabled = false;
 	@Column
@@ -117,11 +118,11 @@ public class Users implements Serializable {
 		this.admin = admin;
 	}
 
-	public String getPhoneNumber() {
+	public Long getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
+	public void setPhoneNumber(Long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 

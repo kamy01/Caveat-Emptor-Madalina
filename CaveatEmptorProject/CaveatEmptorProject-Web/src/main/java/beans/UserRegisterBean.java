@@ -9,6 +9,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpSession;
+
+import org.primefaces.context.RequestContext;
+
 import com.dtos.UserDTO;
 import ServiceImplementation.SendEmailService;
 import ServiceInterfaces.UserService;
@@ -57,32 +60,48 @@ public class UserRegisterBean implements Serializable {
 		userDto.setPhoneNumber(getUserDto().getPhoneNumber());
 		userDto.setPassword(getUserDto().getPassword());
 	}
+	
+	
+
 
 	public void register() throws CaveatEmptorException {
 		try {
+			
 			getNewUser();
-			String newUser = userService.createUser(userDto);
+			String newUser = userService.createUser(userDto,getRepeatPassword());
+		
+			switch (newUser) {
+			case "emailExist":
+				FacesMessagesUtil.message_info("Cannot register! Email already exist!", "");
+				break;
+			case "usernameExist":
+				FacesMessagesUtil.message_info("Cannot register! Username already exist!", "");
+				break;
+			case "passwordDifferent":
+				FacesMessagesUtil.message_info("Cannot register! Password doesn't match!", "");
+				break;
+			case "phoneNumberExist":
+				FacesMessagesUtil.message_info("Cannot register! Phone Number already exist!", "");
+				break;
 
-			if (newUser.equals("emailExist")) {
-				FacesMessagesUtil.message_info("Cannot register!", "Email already exist!");
-			} else if (newUser.equals("usernameExist")) {
-				FacesMessagesUtil.message_info("Cannot register!", "Username already exist!");
-			} else {
-				String key = SendEmailService.sendEmail(userDto);
-				if (key != null) {
-					userService.insertKeyForUser(userDto, key);
-					FacesMessagesUtil.message_info("An email was sent to your email address", "Please confirm it!");
-				}
-
-				session.setAttribute("userDto", userDto);
+			default:
+					String key = SendEmailService.sendEmail(userDto);
+					if (key != null) {
+						userService.insertKeyForUser(userDto, key);								
+						FacesMessagesUtil.message_info("An email was sent to your email address.Please confirm it!", "");
+					}
+					session.setAttribute("userDto", userDto);
+				break;
 			}
+			
+		
+		
 		} catch (CaveatEmptorException e) {
 			Constants.getLogger().log( Level.INFO, "Exception in register method from UserRegisterBean" ,e.getMessage());	
 		}
 		catch (Exception e) {
 			FacesMessagesUtil.redirectPage("error.xhtml");
 		}
-		
 	}
 	
 	public void cancelRegister() throws CaveatEmptorException {

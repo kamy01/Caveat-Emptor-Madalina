@@ -62,11 +62,22 @@ public class UserServiceImpl implements UserService {
 			throw new CaveatEmptorException();			
 		}
 	}
+	
+	@Override
+	public UserDTO getUserByPhoneNumber(Long phoneNumber) throws CaveatEmptorException {
+		try{
+			Users user = userReposity.findUserByPhoneNumber(phoneNumber);
+			return transformUserEntityToDto(user);	
+		}catch(Exception e){
+			Constants.getLogger().log( Level.INFO, "Exception in getUserByPhoneNumber method from UserServiceImpl" ,e.getMessage());		
+			throw new CaveatEmptorException();			
+		}
+	}
 
 	@Override
-	public String createUser(UserDTO userDto) throws CaveatEmptorException {
+	public String createUser(UserDTO userDto,String repeatPassword) throws CaveatEmptorException {
 		try{
-			return userReposity.createUser(userDto);
+			return userReposity.createUser(userDto,repeatPassword);
 		}catch(Exception e){
 			Constants.getLogger().log( Level.INFO, "Exception in createUser method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			

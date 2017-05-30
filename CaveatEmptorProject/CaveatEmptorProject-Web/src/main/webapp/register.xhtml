@@ -17,9 +17,8 @@
 	<p>
 		<img src="images/logo.png" />
 	</p>
-	<p:messages id="messages" showDetail="true" autoUpdate="true"
-		closable="true" />
 
+	<p:messages id="messages"  autoUpdate="true" closable="true" />
 	<div id="divRegister">
 
 
@@ -27,31 +26,38 @@
 			<h1>Sign Up</h1>
 			<br />
 
-			<p:inputText id="firstname" value="#{registerBean.userDto.firstname}"
-				label="firstname" />
+
+
+			<p:inputText id="firstname" value="#{registerBean.userDto.firstname}" required="true"
+				label="firstname" requiredMessage="FirstName is required"  validatorMessage="Firstname size must be between 3 and 20." >
+				<f:validateLength minimum="3" maximum="20" />			
+			</p:inputText>
 			<p:watermark for="firstname" value="First Name *" />
 			<br />
 			<br />
 			<br />
 
-			<p:inputText id="lastname" value="#{registerBean.userDto.lastname}"
-				label="lastname" />
+			<p:inputText id="lastname" value="#{registerBean.userDto.lastname}" required="true" requiredMessage="LastName is required"
+				label="lastname"  validatorMessage="Lastname size must be between 3 and 20.">
+				<f:validateLength minimum="3" maximum="20" />
+			</p:inputText>
 			<p:watermark for="lastname" value="Last Name *" />
 			<br />
 			<br />
 			<br />
 
-			<p:inputText id="username" value="#{registerBean.userDto.username}"
-				label="username" />
+			<p:inputText id="username" value="#{registerBean.userDto.username}" required="true" requiredMessage="Username is required"
+				label="username" validatorMessage="Username size must be between 3 and 20." >
+				<f:validateLength minimum="3" maximum="20" />
+			</p:inputText>
 			<p:watermark for="username" value="User Name *" />
 			<br />
 			<br />
 			<br />
 
-			<p:inputText id="email" value="#{registerBean.userDto.email}"
-				label="email" validatorMessage="Email is invalid.">
-				<f:validateRegex
-					pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+			<p:inputText id="email" value="#{registerBean.userDto.email}" required="true" requiredMessage="Email is required"
+				label="email" validatorMessage="Inccorect email">
+				<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
 			</p:inputText>
 			<p:watermark for="email" value="Email *" />
 			<br />
@@ -59,31 +65,38 @@
 			<br />
 
 			<p:inputText id="phoneNumber"
-				value="#{registerBean.userDto.phoneNumber}" label="phoneNumber" />
+				value="#{registerBean.userDto.phoneNumber}" label="phoneNumber"  required="true" requiredMessage="Phone Number is required"
+				validatorMessage="Phone number must contain only digits.Size between 9 and 20 digits.">
+				<f:validateLength minimum="9" maximum="20" />
+			</p:inputText>
 			<p:watermark for="phoneNumber" value="Phone Number *" />
 			<br />
 			<br />
 			<br />
 
-			<p:password id="password" value="#{registerBean.userDto.password}"
-				label="password" />
+			<p:password id="password" value="#{registerBean.userDto.password}" required="true" requiredMessage="Password is required"
+				label="password" validatorMessage="Password size must be between 3 and 20." >
+				<f:validateLength minimum="3" maximum="20"  />
+			</p:password>
 			<p:watermark for="password" value="Password *" />
 			<br />
 			<br />
 			<br />
 
 
-			<p:password id="repeatPassword"
-				value="#{registerBean.repeatPassword}" label="repeatPassword" />
+			<p:password id="repeatPassword" required="true" requiredMessage="Repeat Password is required"
+				value="#{registerBean.repeatPassword}" label="repeatPassword" validatorMessage="Reapeated Password size must be between 3 and 20.">
+				<f:validateLength minimum="3" maximum="20"  />
+			</p:password>
+			
 			<p:watermark for="repeatPassword" value="Repeat password *" />
-			<br />
 			<br />
 			<br />
 			<br />
 
 
 			<p:commandButton value="Sign Up" action="#{registerBean.register}"
-				update=" messages">
+				update="messages">
 			</p:commandButton>
 			
 			<h:form >

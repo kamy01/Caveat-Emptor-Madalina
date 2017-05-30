@@ -36,9 +36,10 @@ CREATE TABLE `users` (
   `activationKey` varchar(50) DEFAULT NULL,
   `dateRegistered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`userId`),
+  UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `phoneNumber` (`phoneNumber`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +48,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Madalina','Palade','Madalina','madalina','madalina.palade@fortech.ro',0,0,761444651,1,NULL,'2017-05-26 13:17:21');
+INSERT INTO `users` VALUES (1,'Madalina','Palade','Madalina','madalina','madalina.palade@fortech.ro',0,0,761444651,1,NULL,'2017-05-29 15:30:21'),(2,'Madalina','Palade','MadalinaP','madalina','madalinaa.palade@fortech.ro',0,0,7614446511,0,'306f7bc0-6242-4f63-a033-af1e963d651e','2017-05-29 15:31:20'),(3,'Madalina','Palade','MadalinaP33','madalina','33madalinaa.palade@fortech.ro',0,0,761444651111,0,'35143e69-12ad-4939-a50a-96319639690c','2017-05-29 15:31:44');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -60,7 +61,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-29  9:53:33
+-- Dump completed on 2017-05-30 10:16:54
 
 
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
@@ -115,5 +116,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-29  9:53:33
-
+-- Dump completed on 2017-05-30 10:16:55
