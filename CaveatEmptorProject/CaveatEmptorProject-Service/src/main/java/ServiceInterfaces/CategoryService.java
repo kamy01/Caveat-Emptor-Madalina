@@ -12,4 +12,5 @@ import exceptions.CaveatEmptorException;
 public interface CategoryService {
 	public List<CategoriesDTO> getCategories() throws CaveatEmptorException;
 	public boolean removeCategory(CategoriesDTO categoryDto) throws CaveatEmptorException;
+	public void insertCategory(CategoriesDTO categoryDto) throws CaveatEmptorException ;
 }

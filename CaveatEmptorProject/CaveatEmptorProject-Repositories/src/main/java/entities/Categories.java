@@ -13,7 +13,8 @@ import javax.persistence.NamedQuery;
 import RepositoryConstants.*;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = QueryConstants.GET_CATEGORIES, query = QueryConstants.GET_CATEGORIES_QUERY)
+@NamedQueries({ @NamedQuery(name = QueryConstants.GET_CATEGORIES, query = QueryConstants.GET_CATEGORIES_QUERY),
+	@NamedQuery(name = QueryConstants.GET_CHILDREN_FOR_CATEGORY, query = QueryConstants.GET_CHILDREN_FOR_CATEGORY_QUERY)
 })
 public class Categories implements Serializable{
 	
