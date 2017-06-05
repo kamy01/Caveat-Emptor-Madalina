@@ -26,20 +26,30 @@
 	padding-top: 9%;
 }
 
-#footerDiv{
-	margin-left: 40%;
-	font-style:italic;
-	font-size:12pt;
-	font-family:times new roman;
+#footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 8%;
+	border-top: 1px solid #d3d7d8;
+	background-color: #474e5d;
+	color: #bdc3c7;
+}
+
+#footer p {
+	margin-top: 1.5%;
+	font-family: 'lato', sans-serif;
+	font-weight: 900;
+	font-size: 15px;
 }
 #divRegister {
 	padding-left: 38%;
 	width: 20%;
 	padding-top: 2%;
 }
-#tabView{
-	padding-left: 38%;
-}
+
+
+
 #frmContent{
 	height: 400px;
 }
@@ -95,11 +105,7 @@ h1 {
 .layoutHome{
 	height: 830px;	
 }
-.tabView{
-	height: 830px;	
-	padding: 0px;
-	
-}
+
 .frmContent{
 	padding-top: 0px;
 }
@@ -110,4 +116,23 @@ h1 {
 .contentForm{
 	height: 830px;	
 	padding: 0px;
+}
+
+
+.header {
+	position: absolute;
+	background-color: #fff;
+	z-index: 100;
+	border-bottom: 1px solid #d3d7d8;
+	min-height: 50px;
+	width: 100%;
+	font-size: 100%;
+	height: 8%;
+}
+#tabView {
+    padding-left: 2%;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    margin-left: 0px;
 }

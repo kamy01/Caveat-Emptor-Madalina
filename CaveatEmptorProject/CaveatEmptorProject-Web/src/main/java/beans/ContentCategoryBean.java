@@ -1,54 +1,253 @@
 package beans;
+import java.util.List;
+import java.util.logging.Level;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-
-import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
-
 import com.dtos.CategoriesDTO;
-
 import ServiceInterfaces.CategoryService;
-import ServiceInterfaces.UserService;
 import exceptions.CaveatEmptorException;
+import utils.Constants;
+import utils.FacesMessagesUtil;
 
 @ManagedBean(name="contentCategory")
 @ViewScoped
 public class ContentCategoryBean {
 	
-	private CategoriesBeanTree categoryTree;
+	@ManagedProperty("#{treeBean}")
+	private TreeBean categoryTree;
+	
+	private CategoriesDTO categoriesDto;
+	
+	private boolean disableButtonUpdateOrDelete=true;
+	private boolean readOnly=true;
+	private boolean renderedButtonUpdateOrDelete=false;
+	private boolean createButtonClicked=false;
+	private boolean renderedInsert=false;
+	private boolean disableInsertButton=false;
 	
 	@EJB
 	CategoryService categoryService;
 	
 
-	public CategoriesBeanTree getCategoryTree() {
+	@PostConstruct
+	public void init() {
+		categoriesDto = new CategoriesDTO();
+		categoryTree.init();
+		disableButtonUpdateOrDelete=true;
+	}
+
+	public CategoriesDTO getCategoriesDto() {
+		return categoriesDto;
+	}
+	
+	public void setCategoriesDto(CategoriesDTO categoriesDto) {
+		this.categoriesDto = categoriesDto;
+	}
+
+	public TreeBean getCategoryTree() {
 		return categoryTree;
 	}
 
-	public void setCategoryTree(CategoriesBeanTree categoryTree) {
+	public void setCategoryTree(TreeBean categoryTree) {
 		this.categoryTree = categoryTree;
 	}
+	
+	
+	public boolean isDisableButtonUpdateOrDelete() {
+		return disableButtonUpdateOrDelete;
+	}
 
+	public void setDisableButtonUpdateOrDelete(boolean disableButtonUpdateOrDelete) {
+		this.disableButtonUpdateOrDelete = disableButtonUpdateOrDelete;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public boolean isRenderedButtonUpdateOrDelete() {
+		return renderedButtonUpdateOrDelete;
+	}
+
+	public void setRenderedButtonUpdateOrDelete(boolean renderedButtonUpdateOrDelete) {
+		this.renderedButtonUpdateOrDelete = renderedButtonUpdateOrDelete;
+	}
+
+	
+	public boolean isRenderedInsert() {
+		return renderedInsert;
+	}
+
+	public void setRenderedInsert(boolean renderedInsert) {
+		this.renderedInsert = renderedInsert;
+	}
+
+	public boolean isDisableInsertButton() {
+		return disableInsertButton;
+	}
+
+	public void setDisableInsertButton(boolean disableInsertButton) {
+		this.disableInsertButton = disableInsertButton;
+	}
+	
+	public void insert() throws CaveatEmptorException{
+		FlagsValues(false,true,false,false,false);
+			try {
+				Long maxCategoryId=categoryService.getMaxCategoryId();
+				categoriesDto.setParentId(categoriesDto.getCategoryId());
+				categoriesDto.setCategoryId(maxCategoryId +1);
+				
+				String insertMessage=categoryService.insertCategory(categoriesDto);
+				
+				if(insertMessage.equals("categoryExist") || insertMessage.equals("error") || insertMessage.equals("nullValues")){
+					resetValues();
+					expandNode(categoriesDto);
+					FacesMessagesUtil.message_error("Category already exist or invalid fields !", "");
+				}
+				else{
+					expandNode(categoriesDto);
+					categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();
+					FacesMessagesUtil.message_info("Category was inserted!", "");
+				}
+		} catch (CaveatEmptorException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in insert method from ContentCategoryBean" ,e.getMessage());	
+		}
+			
+		categoryTree.init();
+		expandNode(categoriesDto);
+	}
+	public void cancelUpdate(){
+		FlagsValues(false,true,false,false,false);
+		expandNode(categoriesDto);
+		
+	}
+	
+	public void cancelInsert(){
+		FlagsValues(false,true,false,false,false);
+		categoryTree.init();
+		createButtonClicked=false;
+		expandNode(categoriesDto);
+	}
+	public void FlagsValues(boolean disableButtonUpdateOrDelete,boolean readOnly,boolean renderedButtonUpdateOrDelete,
+							boolean disaleInsertButton, boolean renderedInsert){
+		this.disableButtonUpdateOrDelete=disableButtonUpdateOrDelete;
+		this.readOnly=readOnly;
+		this.renderedButtonUpdateOrDelete=renderedButtonUpdateOrDelete;
+		this.disableInsertButton=disaleInsertButton;
+		this.renderedInsert=renderedInsert;
+	}
+	public void update(){
+		FlagsValues(false,true,false,false,false);
+		try {
+			if(!categoryService.updateCategory(categoriesDto)){
+				FacesMessagesUtil.message_error("Category doesn't exist.Choose an existing category for update!", "");
+			}
+			else{
+				FacesMessagesUtil.message_info("Category "+ categoriesDto.getNameCategory() +" updated!", "");
+			}
+	
+		} catch (Exception e) {
+			Constants.getLogger().log( Level.INFO, "Exception in updateCategory method from ContentCategoryBean" ,e.getMessage());	
+		}
+		categoryTree.init();
+		expandNode(categoriesDto);
+	}
+
+	public void updateCategory() {
+		FlagsValues(true,false,true,true,false);
+		expandNode(categoriesDto);
+	}
+	
+	
+	public void resetValues(){
+		categoriesDto.setCategoryId(null);
+		categoriesDto.setParentId(null);
+		categoriesDto.setNameCategory(null);
+		categoriesDto.setDescription(null);
+		
+		FlagsValues(true,false,false,true,true);
+		createButtonClicked=true;
+		categoryTree.init();
+		expandNode(categoriesDto);
+	}
+	
+	public void removeCategory() {
+		CategoriesDTO category = (CategoriesDTO) categoryTree.getSelectedNode().getData();
+		try {
+			if(categoryService.deleteCategory(category))
+			{
+				FacesMessagesUtil.message_info("Category "+ categoriesDto.getNameCategory() +" deleted!", "");
+
+			}
+			else{
+				FacesMessagesUtil.message_info("Category "+ categoriesDto.getNameCategory() +" wasn't deleted.Try again!", "");
+			}
+		} catch (Exception e) {
+			Constants.getLogger().log( Level.INFO, "Exception in removeCategory method from ContentCategoryBean" ,e.getMessage());	
+		}
+		categoriesDto = new CategoriesDTO();
+		categoryTree.init();
+		expandNode(categoriesDto);
+	}
+
+	private void expandNode(CategoriesDTO categoriesDto) {
+		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
+
+		for (TreeNode node : nodes) {
+			if(((CategoriesDTO)node.getData()).getNameCategory().equalsIgnoreCase(categoriesDto.getNameCategory()))
+			{
+				unselectAllNodes();
+				selectNode(node);
+				break;
+			}
+		}
+	}
+	
+	private void unselectAllNodes() {
+		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
+		for(TreeNode node: nodes)
+		{ 
+			if(node.isSelected())
+			{
+				node.setSelected(false);
+			}
+		}	
+	}
+
+	private void selectNode(TreeNode node) {
+		categoryTree.setSelectedNode(node);
+		expandParent(node);
+		node.setSelected(true);
+		node.setExpanded(false);
+	}
+	private void expandParent(TreeNode child) {
+		if (child.getParent() != null) {
+			child.getParent().setExpanded(true);
+			expandParent(child.getParent());
+		}
+	}
+
+	
 	public void onNodeSelect(NodeSelectEvent event) {
-		event.getTreeNode().getData();
-		
-		this.categoryTree.setNameCategory(((CategoriesDTO)event.getTreeNode().getData()).getNameCategory());
-		this.categoryTree.setDescription(((CategoriesDTO)event.getTreeNode().getData()).getDescription());
-		////categoryTree.getNameCategory() = ((CategoriesDTO)event.getTreeNode().getData()).getNameCategory();
-		//this.description = ((CategoriesDTO)event.getTreeNode().getData()).getDescription();
-	
+		disableButtonUpdateOrDelete=false;
+		if(createButtonClicked){
+			resetValues();
+			categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();
+			categoryTree.init();
+			expandNode(categoriesDto);
+		}
+		else{
+		categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();
+		}
 	}
-	
-	public void editOrCreateCategory(){
-		
-	}
-	
-	public void remove() throws CaveatEmptorException{
-		categoryService.removeCategory((CategoriesDTO)categoryTree.getSelectedNode());
-	}
-	
 }

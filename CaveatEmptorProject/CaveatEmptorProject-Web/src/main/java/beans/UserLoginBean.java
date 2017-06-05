@@ -60,7 +60,7 @@ public class UserLoginBean implements Serializable {
 				HttpSession session = SessionUtils.getSession();
 				session.setAttribute("userDto", userDto);
 				if(userDto.isEnabled()){
-					FacesMessagesUtil.redirectPage("home.xhtml");
+					FacesMessagesUtil.redirectPage("templates/content.xhtml");
 				}
 				else{
 					FacesMessagesUtil.message_info("Account not activated! ", "Please confirm your email to activate this account!");

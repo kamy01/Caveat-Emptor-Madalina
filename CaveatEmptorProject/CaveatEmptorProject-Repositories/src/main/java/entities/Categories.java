@@ -1,6 +1,5 @@
 package entities;
 
-
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -14,43 +13,50 @@ import RepositoryConstants.*;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = QueryConstants.GET_CATEGORIES, query = QueryConstants.GET_CATEGORIES_QUERY),
-	@NamedQuery(name = QueryConstants.GET_CHILDREN_FOR_CATEGORY, query = QueryConstants.GET_CHILDREN_FOR_CATEGORY_QUERY)
-})
-public class Categories implements Serializable{
-	
+		@NamedQuery(name = QueryConstants.GET_CHILDREN_FOR_CATEGORY, query = QueryConstants.GET_CHILDREN_FOR_CATEGORY_QUERY),
+		@NamedQuery(name = QueryConstants.GET_CATEGORY_BY_ID, query = QueryConstants.GET_CATEGORY_BY_ID_QUERY),
+		@NamedQuery(name = QueryConstants.GET_MAX_CATEGORY_ID, query = QueryConstants.GET_MAX_CATEGORY_ID_QUERY) })
+public class Categories implements Serializable {
+
 	private static final long serialVersionUID = 8408902672059587243L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long categoryId;	
+	private Long categoryId;
 	@Column
-	private Long parentId;	
+	private Long parentId;
 	@Column
-	private String nameCategory;	
+	private String nameCategory;
 	@Column
 	private String description;
-	
-	
+
 	public Long getCategoryId() {
 		return categoryId;
 	}
+
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
+
 	public Long getParentId() {
 		return parentId;
 	}
+
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
+
 	public String getNameCategory() {
 		return nameCategory;
 	}
+
 	public void setNameCategory(String nameCategory) {
 		this.nameCategory = nameCategory;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}

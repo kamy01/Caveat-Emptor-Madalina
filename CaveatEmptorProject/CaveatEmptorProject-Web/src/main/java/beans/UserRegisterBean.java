@@ -9,9 +9,6 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpSession;
-
-import org.primefaces.context.RequestContext;
-
 import com.dtos.UserDTO;
 import ServiceImplementation.SendEmailService;
 import ServiceInterfaces.UserService;
