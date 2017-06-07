@@ -99,6 +99,14 @@ public class TreeBean implements Serializable{
 		}
 	}
 	
+	public void getNodeParents(TreeNode selectedNode) {
+
+		CategoriesDTO selectedNodeData = (CategoriesDTO) selectedNode.getData();
+		if (selectedNodeData.getParentId() != null) {
+			getNodeParents(selectedNode.getParent());
+		}
+
+	}
 	public List<TreeNode> getChildrenForATreeNode(TreeNode parent) {
 
 		List<TreeNode> childrenNodes = new ArrayList<>();

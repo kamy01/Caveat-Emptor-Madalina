@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:layout style="width:100%;height:600px;">
+
+		<p:layoutUnit position="center">
+			<!-- 	<br/> -->
+		
+<!-- 					<h:selectOneMenu value="#{Region.dropDownValue}" id="dropDown"> -->
+
+	<div id="wrapper_create_item">
+		<div id="container_create_item">
+			<h:form id="frmContentItems" style="padding-left:15px;">
+				<p:growl id="message" showDetail="true" />
+		<p:outputLabel for="dropDownItems" value="Items to: " />
+		<h:selectOneMenu id="dropDownItems">
+     	  	<f:selectItem itemLabel=" Sell " itemValue="1"/>
+      		 <p:ajax event="change" update="@this"/>
+   		 </h:selectOneMenu>
+		
+				 <h:outputText for="createItem" value="     "/>
+				<p:commandButton value="Create New Item" id="createItem"></p:commandButton>
+					
+					<br/><br/>
+					
+					 <p:dataTable var="items" value="#{itemsToSell.itemsListDto}" sortMode="multiple" dblClickSelect="true">
+       				 <f:facet name="header">
+           					Items To Sell
+       				 </f:facet>
+       				 <p:column headerText="Name" sortBy="#{items.name}">
+           			 <h:outputText value="#{items.name}" />
+        			</p:column>
+ 
+       				 <p:column headerText="Categories" sortBy="#{items.categories}">
+          			  <h:outputText value="#{items.categories}" />
+       				 </p:column>
+ 
+        			<p:column headerText="Initial price" sortBy="#{items.initialPrice}">
+            		<h:outputText value="#{items.initialPrice}" />
+       			 	 </p:column>
+ 
+       				 <p:column headerText="Best bid" sortBy="#{items.bestBid}">
+           			 <h:outputText value="#{items.bestBid}" />
+        			</p:column>
+        			
+        			<p:column headerText="Bids" sortBy="#{items.nrBids}">
+           			 <h:outputText value="#{items.nrBids}" />
+        			</p:column>
+        			
+        			<p:column headerText="Opening date" sortBy="#{items.biddingStartDate}">
+           			 <h:outputText value="#{items.biddingStartDate}" />
+        			</p:column>
+        			
+        			<p:column headerText="Closing date" sortBy="#{items.biddingEndDate}">
+           			 <h:outputText value="#{items.biddingEndDate}" />
+        			</p:column>
+        			
+        			<p:column headerText="Status" sortBy="#{items.status}">
+           			 <h:outputText value="#{items.status}" />
+        			</p:column>
+        			
+        			<p:column headerText="Winner" sortBy="#{items.winner}">
+           			 <h:outputText value="#{items.winner}" />
+        			</p:column>
+        			
+        			
+    </p:dataTable>
+			</h:form>
+		</div>
+	</div>
+		
+
+		</p:layoutUnit>
+		<p:layoutUnit position="south">
+
+		</p:layoutUnit>
+	</p:layout>
+</ui:composition>

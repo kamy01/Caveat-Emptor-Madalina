@@ -9,6 +9,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpSession;
+
+import org.primefaces.context.RequestContext;
+
 import com.dtos.UserDTO;
 import ServiceImplementation.SendEmailService;
 import ServiceInterfaces.UserService;
@@ -85,7 +88,8 @@ public class UserRegisterBean implements Serializable {
 					String key = SendEmailService.sendEmail(userDto);
 					if (key != null) {
 						userService.insertKeyForUser(userDto, key);								
-						FacesMessagesUtil.message_info("An email was sent to your email address.Please confirm it!", "");
+						RequestContext context = RequestContext.getCurrentInstance();
+						context.execute("PF('myDialogVar').show();");
 					}
 					session.setAttribute("userDto", userDto);
 				break;
@@ -112,5 +116,15 @@ public class UserRegisterBean implements Serializable {
 		}
 		
 		
+	}
+	public void redirect() throws CaveatEmptorException {
+		try {
+			FacesMessagesUtil.redirectPage("index.xhtml");
+		} catch (CaveatEmptorException e) {
+			Constants.getLogger().log( Level.INFO, "Exception in redirect method from UserRegisterBean" ,e.getMessage());	
+		}
+		catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
+		}
 	}
 }

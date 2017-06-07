@@ -65,7 +65,7 @@ public class ActivationAccount implements Serializable {
 			else {
 				boolean enabled=userService.enableAndRegisterUser(userDto);
 				if(enabled){
-					FacesMessagesUtil.redirectPage("templates/content.xhtml");
+					FacesMessagesUtil.redirectPage("index.xhtml");
 				}
 				else{
 					FacesMessagesUtil.message_info("Account already enabled!", "");

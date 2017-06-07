@@ -11,8 +11,7 @@ public interface CategoriesRepository {
 	public List<Categories> getChildren(Categories parent) throws CaveatEmptorException ;
 	public Categories getCategoryById(Long categoryId) throws CaveatEmptorException;
 	public String insertCategory(Categories category) throws CaveatEmptorException;
-	public boolean updateCategory(Categories category) throws CaveatEmptorException;
+	public String updateCategory(Categories category) throws CaveatEmptorException;
 	public boolean deleteCategory(Categories category) throws CaveatEmptorException;
 	public Long getMaxCategoryId() throws CaveatEmptorException;
-
 }

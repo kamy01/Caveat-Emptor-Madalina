@@ -89,7 +89,7 @@ public class CategoryServiceImpl implements CategoryService{
 	public CategoriesDTO getRootCategory() throws CaveatEmptorException {
 		
 		try{
-			Categories category = categoriesRepository.getCategoryById((long) 0);
+			Categories category = categoriesRepository.getCategoryById(1L);
 			return EntityToDto(category);
 		}catch(Exception e){
 		Constants.getLogger().log( Level.INFO, "Exception in getRootCategory method from CategoryServiceImpl" ,e.getMessage());		
@@ -112,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService{
 		
 	}
 	@Override
-	public boolean updateCategory(CategoriesDTO categoriesDto) throws CaveatEmptorException {
+	public String updateCategory(CategoriesDTO categoriesDto) throws CaveatEmptorException {
 		try{
 			return categoriesRepository.updateCategory(DtoToEntity(categoriesDto));	
 	}catch(Exception e){

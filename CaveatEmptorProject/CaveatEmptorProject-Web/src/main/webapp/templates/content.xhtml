@@ -7,11 +7,19 @@
 
 <ui:define name="body">
 		<p:growl id="msgs" showDetail="true" />
-			<br/><br/>
-		<p:tabView id="tabView" orientation="top">
-			<p:tab title="CATEGORIES">
+			<br/><br/><br /><br />
+		<p:tabView id="tabView" orientation="top"  dynamic="true" cache="true" >
+		
+<!-- 		  	<p:ajax event="tabChange" listener="#{contentCategory.onTabChange}" update=":tabView:frmContent  :tabView:frmContentItems" /> -->
+<!--        		 <p:ajax event="tabClose" listener="#{contentCategory.onTabClose}" update=":tabView:frmContent  :tabView:frmContentItems"/> -->
+		
+			<p:tab title="CATEGORIES" id="categoriesTab">
 					<ui:include src="../categories.xhtml" />
 			</p:tab>
+			<p:tab title="ITEMS" id="itemsTab">
+					<ui:include src="../itemsToSell.xhtml" />	
+			</p:tab>
 		</p:tabView>
+ 
 </ui:define>
 </ui:composition>

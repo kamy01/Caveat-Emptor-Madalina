@@ -95,7 +95,7 @@
 			<br />
 
 
-			<p:commandButton value="Sign Up" action="#{registerBean.register}"
+			<p:commandButton value="Sign Up" action="#{registerBean.register}" 
 				update="messages">
 			</p:commandButton>
 			
@@ -103,7 +103,17 @@
      			 <p:commandButton value="Cancel" action="#{registerBean.cancelRegister}" immediate="true" />
    			 </h:form>
 			
+
+			<p:dialog id="myDialogID" header="Confirmation" widgetVar="myDialogVar" modal="true" height="100">
+			
+			 <h:outputText value="An email was sent to your email address.Please confirm it!"/>
+			 <br/> <br/> <br/>
+					<p:commandButton value="OK" style="margin-left:40%;" action="#{registerBean.redirect}" >
+				</p:commandButton>
+			</p:dialog>
 		</h:form>
 	</div>
+	
+	
 </h:body>
 </html>

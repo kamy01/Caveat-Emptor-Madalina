@@ -25,8 +25,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			return (List<Categories>) entityManager.createNamedQuery(QueryConstants.GET_CATEGORIES).getResultList();
 
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in getCategories method from CategoriesRepositoryImpl",
-					ex.getMessage());
+			Constants.getLogger().log(Level.INFO, "Exception in getCategories method from CategoriesRepositoryImpl",ex.getMessage());
 			return null;
 		}
 	}
@@ -37,11 +36,9 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			return (Categories) entityManager.createNamedQuery(QueryConstants.GET_CATEGORY_BY_ID)
 					.setParameter("categoryId", categoryId).getSingleResult();
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in getCategoryById method from CategoriesRepositoryImpl",
-					e.getMessage());
+			Constants.getLogger().log(Level.INFO, "Exception in getCategoryById method from CategoriesRepositoryImpl",e.getMessage());
 			return null;
 		}
-
 	}
 
 	@Override
@@ -49,15 +46,13 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 		try {
 			List<Categories> listCategoris = getCategories();
 			for (Categories child : listCategoris) {
-				if (getCategoryById(category.getCategoryId()) != null
-						|| (child.getNameCategory().equals(category.getNameCategory())
-								&& (category.getNameCategory() != null))) {
+				if ((getCategoryById(child.getCategoryId()).getCategoryId()) == category.getCategoryId() || ((child.getNameCategory().equals(category.getNameCategory()) && (category.getNameCategory() != null)))) {
 					return "categoryExist";
 				}
 			}
-			if (category.getNameCategory() != null && category.getDescription() != null) {
+			if ( !category.getNameCategory().isEmpty() ){
 				if (category.getParentId() == null) {
-					category.setParentId(0L);
+					category.setParentId(1L);
 				}
 				if (category.getCategoryId().equals(category.getParentId())) {
 					return "error";
@@ -68,13 +63,10 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			} else {
 				return "nullValues";
 			}
-
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",
-					e.getMessage());
+			Constants.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",e.getMessage());
 			throw new CaveatEmptorException();
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -93,15 +85,15 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 	}
 
 	@Override
-	public boolean updateCategory(Categories category) throws CaveatEmptorException {
+	public String updateCategory(Categories category) throws CaveatEmptorException {
 		try {
 			Categories categ = getCategoryById(category.getCategoryId());
 			if (categ == null) {
-				return false;
+				return "categoryNotExist";
 			} else {
 				entityManager.merge(category);
-				return true;
-			}
+				return "categoryUpdated";
+				}
 
 		} catch (Exception e) {
 			Constants.getLogger().log(Level.INFO, "Exception in updateCategory method from CategoriesRepositoryImpl",
