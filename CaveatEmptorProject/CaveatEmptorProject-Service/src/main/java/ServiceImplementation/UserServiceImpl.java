@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
 		
 		if(user!=null){
 		userDto = new UserDTO();
+		
+		userDto.setUserId(user.getUserId());
 		userDto.setFirstname(user.getFirstname());
 		userDto.setLastname(user.getLastname());
 		userDto.setAdmin(user.isAdmin());

@@ -34,7 +34,6 @@ public class UserLoginBean implements Serializable {
 	public void init() {
 		userDto = new UserDTO();
 	}
-	
 	public String getUsername() {
 		return username;
 	}
@@ -51,6 +50,15 @@ public class UserLoginBean implements Serializable {
 		this.password = password;
 	}
 
+	
+	public UserDTO getUserDto() {
+		return userDto;
+	}
+
+	public void setUserDto(UserDTO userDto) {
+		this.userDto = userDto;
+	}
+
 	public void login() throws CaveatEmptorException {
 		try {
 			userDto = userService.getUserByUsername(username);
@@ -65,7 +73,7 @@ public class UserLoginBean implements Serializable {
 				HttpSession session = SessionUtils.getSession();
 				session.setAttribute("userDto", userDto);
 				if(userDto.isEnabled()){
-					FacesMessagesUtil.redirectPage("templates/content.xhtml");
+					FacesMessagesUtil.redirectPage("templates/content.xhtml?userId="+userDto.getUserId());
 				}
 				else{
 					FacesMessagesUtil.message_info("Account not activated! ", "Please confirm your email to activate this account!");

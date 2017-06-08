@@ -22,14 +22,25 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Items> getItemsToSell() throws CaveatEmptorException {
+	public List<Items> getItemsToSell(Long userId) throws CaveatEmptorException {
 		try {
-				return (List<Items>) entityManager.createNamedQuery(QueryConstants.GET_ITEMS_TO_SELL).getResultList();
-
+				return (List<Items>) entityManager.createNamedQuery(QueryConstants.GET_ITEMS_TO_SELL)
+						.setParameter("userId", userId).getResultList();
 		} catch (Exception ex) {
 			Constants.getLogger().log(Level.INFO, "Exception in getItemsToSell method from ItemsRepositoryImpl",ex.getMessage());
 			return null;
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Items> getItemsToBuy(Long userId) throws CaveatEmptorException {
+		try {
+				return (List<Items>) entityManager.createNamedQuery(QueryConstants.GET_ITEMS_TO_BUY)
+						.setParameter("userId", userId).getResultList();
+		} catch (Exception ex) {
+			Constants.getLogger().log(Level.INFO, "Exception in getItemsToBuy method from ItemsRepositoryImpl",ex.getMessage());
+			return null;
+		}
+	}
 }

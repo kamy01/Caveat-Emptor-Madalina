@@ -9,5 +9,6 @@ import exceptions.CaveatEmptorException;
 
 @Remote
 public interface ItemsRepository {
-	public List<Items> getItemsToSell() throws CaveatEmptorException;
+	public List<Items> getItemsToSell(Long userId) throws CaveatEmptorException;
+	public List<Items> getItemsToBuy(Long userId) throws CaveatEmptorException;
 }

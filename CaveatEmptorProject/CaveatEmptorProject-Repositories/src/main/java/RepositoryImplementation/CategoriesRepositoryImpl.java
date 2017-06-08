@@ -20,7 +20,6 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Categories> getCategories() throws CaveatEmptorException {
-
 		try {
 			return (List<Categories>) entityManager.createNamedQuery(QueryConstants.GET_CATEGORIES).getResultList();
 
@@ -57,7 +56,6 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 				if (category.getCategoryId().equals(category.getParentId())) {
 					return "error";
 				}
-
 				entityManager.merge(category);
 				return "categoryCreated";
 			} else {
@@ -72,11 +70,9 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Categories> getChildren(Categories parent) throws CaveatEmptorException {
-
 		try {
 			return (List<Categories>) entityManager.createNamedQuery(QueryConstants.GET_CHILDREN_FOR_CATEGORY)
 					.setParameter("categoryId", parent.getCategoryId()).getResultList();
-
 		} catch (Exception e) {
 			Constants.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",
 					e.getMessage());
@@ -94,7 +90,6 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 				entityManager.merge(category);
 				return "categoryUpdated";
 				}
-
 		} catch (Exception e) {
 			Constants.getLogger().log(Level.INFO, "Exception in updateCategory method from CategoriesRepositoryImpl",
 					e.getMessage());
@@ -112,7 +107,6 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 				entityManager.remove(categ);
 				return true;
 			}
-
 		} catch (Exception e) {
 			Constants.getLogger().log(Level.INFO, "Exception in deleteCategory method from CategoriesRepositoryImpl",
 					e.getMessage());

@@ -64,6 +64,7 @@ public class UserRepositoryImpl implements UserRepository {
 	public Users setUser(UserDTO userDto) {
 		Date date = new Date();
 		Users user = new Users();
+		
 		user.setFirstname(userDto.getFirstname());
 		user.setLastname(userDto.getLastname());
 		user.setEmail(userDto.getEmail());

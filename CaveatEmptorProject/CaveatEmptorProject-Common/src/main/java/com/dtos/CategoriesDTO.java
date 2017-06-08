@@ -43,9 +43,4 @@ public class CategoriesDTO  implements Serializable  {
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
-	
-	
-
-
-
 }

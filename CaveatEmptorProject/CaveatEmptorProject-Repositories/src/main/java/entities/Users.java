@@ -149,7 +149,4 @@ public class Users implements Serializable {
 	public void setDateRegistered(Timestamp dateRegistered) {
 		this.dateRegistered = dateRegistered;
 	}
-
-	
-
 }

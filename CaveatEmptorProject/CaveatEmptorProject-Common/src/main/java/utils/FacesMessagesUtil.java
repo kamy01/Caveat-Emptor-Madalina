@@ -28,6 +28,23 @@ public class FacesMessagesUtil {
 		}
 	}
 	
+	public static void redirectWithParam(String page,Long userId) throws  CaveatEmptorException{
+		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		try{
+
+			 String username = (String) context.getSessionMap().get("username");
+
+			    if (username == null) {
+			    	context.redirect(page+"?userId="+userId);
+			        return;
+			    }
+
+		}catch(IOException ex){
+			Constants.getLogger().log( Level.INFO, "Redirect page exception" ,ex.getMessage());		
+			throw new CaveatEmptorException();
+		}
+	}
+	
 	
 	public static void message_info(String title,String message) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, title, message));

@@ -23,9 +23,9 @@ public class ItemsServiceImpl implements ItemsService{
 	@EJB 
 	ItemsRepository itemsRepository;
 	
-	public List<ItemsDTO> getItemsToSell() throws CaveatEmptorException {
+	public List<ItemsDTO> getItemsToSell(Long userId) throws CaveatEmptorException {
 		try{
-		List<Items> itemsList=itemsRepository.getItemsToSell();
+		List<Items> itemsList=itemsRepository.getItemsToSell(userId);
 		List<ItemsDTO> itemsListDto=new ArrayList<>();
 		ItemsDTO itemDto;
 		for (Items item : itemsList) {
@@ -35,6 +35,22 @@ public class ItemsServiceImpl implements ItemsService{
 		return itemsListDto;
 		}catch(Exception e){
 			Constants.getLogger().log( Level.INFO, "Exception in getItemsToSell method from ItemsServiceImpl" ,e.getMessage());		
+			throw new CaveatEmptorException();			
+		}
+	}
+	
+	public List<ItemsDTO> getItemsToBuy(Long userId) throws CaveatEmptorException {
+		try{
+		List<Items> itemsList=itemsRepository.getItemsToBuy(userId);
+		List<ItemsDTO> itemsListDto=new ArrayList<>();
+		ItemsDTO itemDto;
+		for (Items item : itemsList) {
+			itemDto=itemEntityToDto(item);
+			itemsListDto.add(itemDto);
+		}
+		return itemsListDto;
+		}catch(Exception e){
+			Constants.getLogger().log( Level.INFO, "Exception in getItemsToBuy method from ItemsServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 	}

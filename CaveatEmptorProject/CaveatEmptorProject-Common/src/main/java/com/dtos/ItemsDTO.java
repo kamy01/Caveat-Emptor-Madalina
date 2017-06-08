@@ -1,12 +1,12 @@
 package com.dtos;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.sql.Timestamp;
 public class ItemsDTO implements Serializable{
 
 	private static final long serialVersionUID = 352144983391426538L;
 	private Long itemId;
+	private Long userId;
 	private String name;
 	private String description;
 	private String categories;
@@ -14,8 +14,8 @@ public class ItemsDTO implements Serializable{
 	private double bestBid;
 	private Double yourBid;
 	private int nrBids;
-	private Date biddingStartDate;
-	private Date biddingEndDate;
+	private Timestamp biddingStartDate;
+	private Timestamp biddingEndDate;
 	private String status;
 	private String winner;
 	public Long getItemId() {
@@ -39,6 +39,13 @@ public class ItemsDTO implements Serializable{
 	public String getCategories() {
 		return categories;
 	}
+	
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 	public void setCategories(String categories) {
 		this.categories = categories;
 	}
@@ -60,16 +67,16 @@ public class ItemsDTO implements Serializable{
 	public void setNrBids(int nrBids) {
 		this.nrBids = nrBids;
 	}
-	public Date getBiddingStartDate() {
-		return biddingStartDate;
+	public Timestamp getBiddingStartDate() {
+		return new Timestamp(biddingStartDate.getTime());
 	}
-	public void setBiddingStartDate(Date biddingStartDate) {
+	public void setBiddingStartDate(Timestamp biddingStartDate) {
 		this.biddingStartDate = biddingStartDate;
 	}
-	public Date getBiddingEndDate() {
-		return biddingEndDate;
+	public Timestamp getBiddingEndDate() {
+		return new Timestamp(biddingEndDate.getTime());
 	}
-	public void setBiddingEndDate(Date biddingEndDate) {
+	public void setBiddingEndDate(Timestamp biddingEndDate) {
 		this.biddingEndDate = biddingEndDate;
 	}
 	public String getStatus() {
@@ -90,8 +97,5 @@ public class ItemsDTO implements Serializable{
 	public void setYourBid(Double yourBid) {
 		this.yourBid = yourBid;
 	}
-	
-	
-	
-	
+
 }

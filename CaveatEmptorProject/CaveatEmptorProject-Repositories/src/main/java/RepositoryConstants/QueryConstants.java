@@ -24,5 +24,8 @@ public class QueryConstants {
 	public static final String GET_MAX_CATEGORY_ID_QUERY = "SELECT categ.categoryId FROM Categories categ where categ.categoryId=(SELECT max(categ.categoryId) from Categories)";
 	
 	public static final String GET_ITEMS_TO_SELL = "Items.getItemsToSell";
-	public static final String GET_ITEMS_TO_SELL_QUERY = "SELECT item FROM Items item where item.yourBid is not null";
+	public static final String GET_ITEMS_TO_SELL_QUERY = "SELECT item FROM Items item where item.yourBid is null and item.userId=:userId";
+	
+	public static final String GET_ITEMS_TO_BUY = "Items.getItemsToBuy";
+	public static final String GET_ITEMS_TO_BUY_QUERY = "SELECT item FROM Items item where item.yourBid is not null and item.userId<>:userId";
 }
