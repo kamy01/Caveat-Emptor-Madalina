@@ -12,12 +12,12 @@ public class ItemsDTO implements Serializable{
 	private String categories;
 	private double initialPrice;
 	private double bestBid;
+	private Double yourBid;
 	private int nrBids;
 	private Date biddingStartDate;
 	private Date biddingEndDate;
 	private String status;
 	private String winner;
-	private String itemOption;
 	public Long getItemId() {
 		return itemId;
 	}
@@ -84,12 +84,13 @@ public class ItemsDTO implements Serializable{
 	public void setWinner(String winner) {
 		this.winner = winner;
 	}
-	public String getItemOption() {
-		return itemOption;
+	public Double getYourBid() {
+		return yourBid;
 	}
-	public void setItemOption(String itemOption) {
-		this.itemOption = itemOption;
+	public void setYourBid(Double yourBid) {
+		this.yourBid = yourBid;
 	}
+	
 	
 	
 	

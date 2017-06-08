@@ -8,6 +8,7 @@ public final class Constants {
 
 	public static final String MAIL_REGISTRATION_SITE_LINK="http://localhost:8080//CaveatEmptorProject-Web/activate.xhtml";
 	
+	
 	public static Level level=Level.ALL;
 
 	

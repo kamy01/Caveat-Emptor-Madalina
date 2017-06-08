@@ -22,12 +22,9 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Items> getItemsToSell(String itemOption) throws CaveatEmptorException {
+	public List<Items> getItemsToSell() throws CaveatEmptorException {
 		try {
-			if(itemOption.equalsIgnoreCase("sell")) {
 				return (List<Items>) entityManager.createNamedQuery(QueryConstants.GET_ITEMS_TO_SELL).getResultList();
-			}
-			return null;
 
 		} catch (Exception ex) {
 			Constants.getLogger().log(Level.INFO, "Exception in getItemsToSell method from ItemsRepositoryImpl",ex.getMessage());

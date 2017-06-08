@@ -33,6 +33,8 @@ public class Items implements Serializable {
 	@Column
 	private double bestBid;
 	@Column
+	private Double yourBid;
+	@Column
 	private int nrBids;
 	@Column
 	private Date biddingStartDate;
@@ -42,8 +44,6 @@ public class Items implements Serializable {
 	private String status;
 	@Column
 	private String winner;
-	@Column
-	private String itemOption;
 	
 	public Long getItemId() {
 		return itemId;
@@ -111,11 +111,11 @@ public class Items implements Serializable {
 	public void setWinner(String winner) {
 		this.winner = winner;
 	}
-	public String getItemOption() {
-		return itemOption;
+	public Double getYourBid() {
+		return yourBid;
 	}
-	public void setItemOption(String itemOption) {
-		this.itemOption = itemOption;
+	public void setYourBid(Double yourBid) {
+		this.yourBid = yourBid;
 	}
-	
+
 }

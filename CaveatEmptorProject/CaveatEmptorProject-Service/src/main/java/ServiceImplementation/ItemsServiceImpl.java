@@ -23,9 +23,9 @@ public class ItemsServiceImpl implements ItemsService{
 	@EJB 
 	ItemsRepository itemsRepository;
 	
-	public List<ItemsDTO> getItemsToSell(String itemOption) throws CaveatEmptorException {
+	public List<ItemsDTO> getItemsToSell() throws CaveatEmptorException {
 		try{
-		List<Items> itemsList=itemsRepository.getItemsToSell(itemOption);
+		List<Items> itemsList=itemsRepository.getItemsToSell();
 		List<ItemsDTO> itemsListDto=new ArrayList<>();
 		ItemsDTO itemDto;
 		for (Items item : itemsList) {
@@ -46,12 +46,12 @@ public class ItemsServiceImpl implements ItemsService{
 		itemDto.setCategories(item.getCategories());
 		itemDto.setInitialPrice(item.getInitialPrice());
 		itemDto.setBestBid(item.getBestBid());
+		itemDto.setYourBid(item.getYourBid());
 		itemDto.setNrBids(item.getNrBids());
 		itemDto.setBiddingStartDate(item.getBiddingStartDate());
 		itemDto.setBiddingEndDate(item.getBiddingEndDate());
 		itemDto.setStatus(item.getStatus());
 		itemDto.setWinner(item.getWinner());
-		itemDto.setItemOption(item.getItemOption());
 		return itemDto;
 	}
 }

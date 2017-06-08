@@ -2,11 +2,15 @@ package beans;
 
 import java.io.Serializable;
 import java.util.logging.Level;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpSession;
+
 import com.dtos.UserDTO;
+
 import ServiceInterfaces.UserService;
 import exceptions.CaveatEmptorException;
 import utils.Constants;
@@ -14,6 +18,7 @@ import utils.FacesMessagesUtil;
 import utils.SessionUtils;
 
 @ManagedBean(name = "userlogin")
+@SessionScoped
 public class UserLoginBean implements Serializable {
 
 	private static final long serialVersionUID = 951727265860837267L;
