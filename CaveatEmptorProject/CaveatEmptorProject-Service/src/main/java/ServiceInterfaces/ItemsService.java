@@ -11,4 +11,5 @@ import exceptions.CaveatEmptorException;
 public interface ItemsService {
 	public List<ItemsDTO> getItemsToSell(Long userId) throws CaveatEmptorException;
 	public List<ItemsDTO> getItemsToBuy(Long userId) throws CaveatEmptorException;
+	public List<String> getCategoriesNames() throws CaveatEmptorException;
 }

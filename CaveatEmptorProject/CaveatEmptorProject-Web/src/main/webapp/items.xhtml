@@ -13,6 +13,7 @@
 	<p:layout style="width:100%;height:600px;">
 
 
+
 		<p:layoutUnit position="center">
 			<div id="wrapper_create_item">
 				<div id="container_create_item">
@@ -31,20 +32,20 @@
 
 						<h:form id="frmContentItems" style="padding-left:15px;">
 							<h:outputText for="createItem" value="     " />
-<!-- 							<p:commandButton value="Create New Item" id="createItem"></p:commandButton> -->
 
 							<br />
 							<br />
-
+					
 							<p:dataTable id="dataTableItems" var="item" dblClickSelect="true" rows="10" paginator="true"
 								value="#{itemsBean.itemsListDto}" sortMode="multiple"  editable="true">
 								
-								 <p:ajax event="rowEdit" listener="#{itemsBean.onRowEdit}" update="tabView:frmDropDown:frmContentItems:dataTableItems" />
-      							 <p:ajax event="rowEditCancel" listener="#{itemsBean.onRowCancel}" update="tabView:frmDropDown:frmContentItems:dataTableItems" />
+								
+								 <p:ajax event="rowEdit" listener="#{itemsBean.onRowEdit}" 	process="@this" update="tabView:frmDropDown:frmContentItems:dataTableItems" />
+      							 <p:ajax event="rowEditCancel" listener="#{itemsBean.onRowCancel}" process="@this" update="tabView:frmDropDown:frmContentItems:dataTableItems tabView:frmDropDown:frmContentItems:dataTableItems:message" />
        
 								<f:facet name="header">
            							Items to #{itemsBean.optionDropDown}
-       				 </f:facet>
+       							 </f:facet>
 
    
 								<p:column headerText="Name" sortBy="#{item.name}">
@@ -57,26 +58,36 @@
 
 								<p:column headerText="Categories" sortBy="#{item.categories}">
 								<p:cellEditor>
-									<f:facet name="output"><h:outputText value="#{item.categories}" /></f:facet>
-                 					<f:facet name="input"><p:inputText id="modelInputCategories" value="#{item.categories}" style="width:96%"/></f:facet>
+									<f:facet name="output">
+									<h:outputText value="#{item.categories}" />
+									</f:facet>
+									
+                 					<f:facet name="input">
+                 					<h:selectOneMenu id="dropDownCategories" value="#{item.categories}">
+                 					
+                 					  	<f:selectItems value="#{itemsBean.category}" var="categ" itemValue="#{categ}" itemLabel="#{categ}" />
+   
+									</h:selectOneMenu>
+                 					</f:facet>
+
 								</p:cellEditor>
 								</p:column>
 
-								<p:column headerText="Initial price" sortBy="#{item.initialPrice}">
+								<p:column headerText="Initial price (€)" sortBy="#{item.initialPrice}" >
 								<p:cellEditor>
 									<f:facet name="output"><h:outputText value="#{item.initialPrice}" /></f:facet>
                  					<f:facet name="input"><p:inputText id="modelInputInitialPrice" value="#{item.initialPrice}" style="width:96%"/></f:facet>
 								</p:cellEditor>
 								</p:column>
 
-								<p:column headerText="Best bid" sortBy="#{item.bestBid}">
+								<p:column headerText="Best bid (€)" sortBy="#{item.bestBid}">
 								<p:cellEditor>
 									<f:facet name="output"><h:outputText value="#{item.bestBid}" /></f:facet>
                  					<f:facet name="input"><p:inputText id="modelInputBestBid" value="#{item.bestBid}" style="width:96%"/></f:facet>
 								</p:cellEditor>
 								</p:column>
 								
-								<p:column headerText="My bid" sortBy="#{item.yourBid}" rendered="#{itemsBean.renderedMyBid}">
+								<p:column headerText="My bid (€)" sortBy="#{item.yourBid}" rendered="#{itemsBean.renderedMyBid}">
 								<p:cellEditor>
 									<f:facet name="output"><h:outputText value="#{item.yourBid}" /></f:facet>
                  					<f:facet name="input"><p:inputText id="modelInputYourBid" value="#{item.yourBid}" style="width:96%"/></f:facet>
@@ -94,7 +105,7 @@
 								<p:cellEditor>
 									<f:facet name="output"><h:outputText value="#{item.biddingStartDate}" /></f:facet>
                  					<f:facet name="input">
-                 					<p:calendar id="modelInputBiddingStartDate" value="#{item.biddingStartDate}" style="width:96%" pattern="MM/dd/yyyy HH:mm:ss">
+                 					<p:calendar id="modelInputBiddingStartDate" value="#{item.biddingStartDate}" style="width:96%" pattern="MM/dd/yyyy">
                  		
                  					</p:calendar>
                  					</f:facet>
@@ -105,7 +116,7 @@
 								<p:cellEditor>
 									<f:facet name="output"><h:outputText value="#{item.biddingEndDate}" /></f:facet>
                  					<f:facet name="input">
-                 					<p:calendar id="modelInputBiddingEndDate" value="#{item.biddingEndDate}" style="width:96%" pattern="MM/dd/yyyy HH:mm:ss">
+                 					<p:calendar id="modelInputBiddingEndDate" value="#{item.biddingEndDate}" style="width:96%" pattern="MM/dd/yyyy">
                  				
                  					</p:calendar>
                  					</f:facet>
@@ -125,16 +136,20 @@
                  					<f:facet name="input"><p:inputText id="modelInputWinner" value="#{item.winner}" style="width:96%"/></f:facet>
 								</p:cellEditor>
 								</p:column>
-								<p:column style="width:32px">
-								           <p:rowEditor rendered="#{itemsBean.renderedEditButton}" />
+								<p:column style="width:200px">
+								           <p:rowEditor rendered="#{item.renderedEdit}" />        
+   				 							<p:growl id="message" autoUpdate="true" showDetail="true" />
+   				 							<p:button></p:button>
+ 
 							    </p:column>
 							</p:dataTable>
+							
 						</h:form>
+
 					</h:form>
 				</div>
 			</div>
-
-
+				
 		</p:layoutUnit>
 		<p:layoutUnit position="south">
 

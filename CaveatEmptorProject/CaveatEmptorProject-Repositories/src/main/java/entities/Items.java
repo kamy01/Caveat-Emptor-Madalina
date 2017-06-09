@@ -1,7 +1,8 @@
 package entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import RepositoryConstants.QueryConstants;
+import utils.Constants;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = QueryConstants.GET_ITEMS_TO_SELL, query = QueryConstants.GET_ITEMS_TO_SELL_QUERY),
@@ -31,22 +33,23 @@ public class Items implements Serializable {
 	@Column
 	private String categories;
 	@Column
-	private double initialPrice;
+	private Double initialPrice;
 	@Column
-	private double bestBid;
+	private Double bestBid;
 	@Column
 	private Double yourBid;
 	@Column
 	private int nrBids;
 	@Column
-	private Timestamp biddingStartDate;
+	private Date biddingStartDate;
 	@Column
-	private Timestamp biddingEndDate;
+	private Date biddingEndDate;
 	@Column
 	private String status;
 	@Column
 	private String winner;
-
+	
+	
 	public Long getItemId() {
 		return itemId;
 	}
@@ -79,19 +82,19 @@ public class Items implements Serializable {
 		this.categories = categories;
 	}
 
-	public double getInitialPrice() {
-		return initialPrice;
+	public Double getInitialPrice() throws ParseException {
+		return Constants.formatDouble(initialPrice);
 	}
 
-	public void setInitialPrice(double initialPrice) {
+	public void setInitialPrice(Double initialPrice) {
 		this.initialPrice = initialPrice;
 	}
 
-	public double getBestBid() {
-		return bestBid;
+	public Double getBestBid() throws ParseException {
+		return Constants.formatDouble(bestBid);
 	}
 
-	public void setBestBid(double bestBid) {
+	public void setBestBid(Double bestBid) {
 		this.bestBid = bestBid;
 	}
 
@@ -103,19 +106,24 @@ public class Items implements Serializable {
 		this.nrBids = nrBids;
 	}
 
-	public Timestamp getBiddingStartDate() {
-		return new Timestamp(biddingStartDate.getTime());
+	
+	public Date getBiddingStartDate() {
+		return (Date) biddingStartDate.clone();
+		
+		
 	}
 
-	public void setBiddingStartDate(Timestamp biddingStartDate) {
+	public void setBiddingStartDate(Date biddingStartDate) {
 		this.biddingStartDate = biddingStartDate;
 	}
 
-	public Timestamp getBiddingEndDate() {
-		return new Timestamp(biddingEndDate.getTime());
+
+	public Date getBiddingEndDate() {
+		return (Date) biddingEndDate.clone();
+		
 	}
 
-	public void setBiddingEndDate(Timestamp biddingEndDate) {
+	public void setBiddingEndDate(Date biddingEndDate) {
 		this.biddingEndDate = biddingEndDate;
 	}
 
@@ -135,8 +143,8 @@ public class Items implements Serializable {
 		this.winner = winner;
 	}
 
-	public Double getYourBid() {
-		return yourBid;
+	public Double getYourBid() throws ParseException {
+		return Constants.formatDouble(yourBid);
 	}
 
 	public void setYourBid(Double yourBid) {

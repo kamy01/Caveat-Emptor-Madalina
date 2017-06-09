@@ -2,27 +2,22 @@ package beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.EditableValueHolder;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
-import org.primefaces.event.CellEditEvent;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-
 import com.dtos.ItemsDTO;
 import ServiceInterfaces.ItemsService;
 import exceptions.CaveatEmptorException;
+import utils.FacesMessagesUtil;
 import utils.ItemsOption;
 
 
@@ -33,44 +28,55 @@ public class ItemsBean  implements Serializable{
 	
 	private Long userId;
 	private List<ItemsDTO> itemsListDto;
-	private ItemsDTO itemDto;
 	private Long currentRow;
 	private String optionDropDown;
 	private Map<String, String> dropDownItems;
 	private boolean renderedMyBid;
 	private boolean renderedEditButton=true;
+	RequestContext context = RequestContext.getCurrentInstance();
 	
 			
 	@EJB
 	ItemsService itemsService;
 	
-	@Inject
-	@ManagedProperty("#{userlogin}")
-	private UserLoginBean user;
+	List<String> category;
+	
 	private Map<String, String> params=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap(); 
-	String userIdParameter = params.get("userId");
+	public final String userIdParameter = params.get("userId");
 	
 	@ManagedProperty("#{treeBean}")
 	TreeBean tree;
 	
 	@PostConstruct
 	public void init() throws CaveatEmptorException {
+		category=new ArrayList<>();
+		category=itemsService.getCategoriesNames();
 		renderedEditButton=true;
 		itemsListDto = new ArrayList<>();	
-		itemDto=new ItemsDTO();
 		dropDownItems=new HashMap<>();
 		optionDropDown="sell";
 		renderedMyBid=false;
 		itemsListDto=itemsService.getItemsToSell(Long.parseLong(userIdParameter));
-//		for (ItemsDTO item : itemsListDto) {
-//			if(item.getStatus().equals("closed")){
-//				renderedEditButton=false;
-//			}
-//		}
+		for (ItemsDTO item : itemsListDto) {
+			if(item.getStatus().equals("closed")){
+				item.setRenderedEdit(false);
+			}
+			else{
+				item.setRenderedEdit(true);
+			}
+		}
 	}
 
 	
-	
+	public List<String> getCategory() {
+		return category;
+	}
+
+	public void setCategory(List<String> category) {
+		this.category = category;
+	}
+
+
 	public boolean isRenderedEditButton() {
 		return renderedEditButton;
 	}
@@ -89,23 +95,11 @@ public class ItemsBean  implements Serializable{
 	public void setOptionDropDown(String optionDropDown) {
 		this.optionDropDown = optionDropDown;
 	}
-	public ItemsDTO getItemDto() {
-		return itemDto;
-	}
-	public void setItemDto(ItemsDTO itemDto) {
-		this.itemDto = itemDto;
-	}
 	public Long getCurrentRow() {
 		return currentRow;
 	}
 	public void setCurrentRow(Long currentRow) {
 		this.currentRow = currentRow;
-	}
-	public UserLoginBean getUser() {
-		return user;
-	}
-	public void setUser(UserLoginBean user) {
-		this.user = user;
 	}
 	public TreeBean getTree() {
 		return tree;
@@ -138,12 +132,26 @@ public class ItemsBean  implements Serializable{
 
 	public void onDropDownChange() throws CaveatEmptorException {
 		if (optionDropDown.toLowerCase().equals(ItemsOption.SELL.getValue())) {
-			renderedMyBid=false;
-			itemsListDto=itemsService.getItemsToSell(Long.parseLong(userIdParameter));
+			renderedMyBid=false;		
+			init();
 
 		} else if (optionDropDown.toLowerCase().equals(ItemsOption.BUY.getValue())) {
 			renderedMyBid=true;
+			optionDropDown="buy";
+			category=new ArrayList<>();
+			category=itemsService.getCategoriesNames();
+			renderedEditButton=true;
+			itemsListDto = new ArrayList<>();	
+			dropDownItems=new HashMap<>();
 			itemsListDto=itemsService.getItemsToBuy(Long.parseLong(userIdParameter));
+			for (ItemsDTO item : itemsListDto) {
+				if(item.getStatus().equals("closed")){
+					item.setRenderedEdit(false);
+				}
+				else{
+					item.setRenderedEdit(true);
+				}
+			}
 		}
 		else{
 			itemsListDto = new ArrayList<>();	
@@ -151,11 +159,15 @@ public class ItemsBean  implements Serializable{
 	}
 	
 	 public void onRowEdit(RowEditEvent event) {
-		 	itemDto=(ItemsDTO) event.getObject();
+		 
+		
+		 FacesMessagesUtil.message_info("Row edit", "");
+		 context.execute("PF('myDialogEdit').show();");
 	    }
 	     
 	    public void onRowCancel(RowEditEvent event) {
-	     
+	    	 FacesMessagesUtil.message_error("Row edit", "");
+	    	// context.execute("PF('myDialogItems').hide();");
 	    }
 
 }

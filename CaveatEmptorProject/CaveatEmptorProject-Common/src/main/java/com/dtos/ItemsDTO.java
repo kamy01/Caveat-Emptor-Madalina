@@ -1,7 +1,11 @@
 package com.dtos;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
+
+import utils.Constants;
+
 public class ItemsDTO implements Serializable{
 
 	private static final long serialVersionUID = 352144983391426538L;
@@ -10,14 +14,24 @@ public class ItemsDTO implements Serializable{
 	private String name;
 	private String description;
 	private String categories;
-	private double initialPrice;
-	private double bestBid;
+	private Double initialPrice;
+	private Double bestBid;
 	private Double yourBid;
 	private int nrBids;
-	private Timestamp biddingStartDate;
-	private Timestamp biddingEndDate;
+	private Date biddingStartDate;
+	private Date biddingEndDate;
 	private String status;
 	private String winner;
+	
+	private boolean renderedEdit;
+	
+	
+	public boolean isRenderedEdit() {
+		return renderedEdit;
+	}
+	public void setRenderedEdit(boolean renderedEdit) {
+		this.renderedEdit = renderedEdit;
+	}
 	public Long getItemId() {
 		return itemId;
 	}
@@ -49,16 +63,16 @@ public class ItemsDTO implements Serializable{
 	public void setCategories(String categories) {
 		this.categories = categories;
 	}
-	public double getInitialPrice() {
-		return initialPrice;
+	public Double getInitialPrice() throws ParseException {
+		return Constants.formatDouble(initialPrice);
 	}
-	public void setInitialPrice(double initialPrice) {
+	public void setInitialPrice(Double initialPrice) {
 		this.initialPrice = initialPrice;
 	}
-	public double getBestBid() {
-		return bestBid;
+	public Double getBestBid() throws ParseException {
+		return Constants.formatDouble(bestBid);
 	}
-	public void setBestBid(double bestBid) {
+	public void setBestBid(Double bestBid) {
 		this.bestBid = bestBid;
 	}
 	public int getNrBids() {
@@ -67,16 +81,19 @@ public class ItemsDTO implements Serializable{
 	public void setNrBids(int nrBids) {
 		this.nrBids = nrBids;
 	}
-	public Timestamp getBiddingStartDate() {
-		return new Timestamp(biddingStartDate.getTime());
+
+	public Date getBiddingStartDate() throws ParseException {
+		return (Date) biddingStartDate.clone();
+		
 	}
-	public void setBiddingStartDate(Timestamp biddingStartDate) {
+	public void setBiddingStartDate(Date biddingStartDate) {
 		this.biddingStartDate = biddingStartDate;
 	}
-	public Timestamp getBiddingEndDate() {
-		return new Timestamp(biddingEndDate.getTime());
+	
+	public Date getBiddingEndDate() throws ParseException {
+		return (Date) biddingEndDate.clone();
 	}
-	public void setBiddingEndDate(Timestamp biddingEndDate) {
+	public void setBiddingEndDate(Date biddingEndDate) {
 		this.biddingEndDate = biddingEndDate;
 	}
 	public String getStatus() {
@@ -91,8 +108,8 @@ public class ItemsDTO implements Serializable{
 	public void setWinner(String winner) {
 		this.winner = winner;
 	}
-	public Double getYourBid() {
-		return yourBid;
+	public Double getYourBid() throws ParseException {
+		return Constants.formatDouble(yourBid);
 	}
 	public void setYourBid(Double yourBid) {
 		this.yourBid = yourBid;
