@@ -40,8 +40,5 @@ public final class Constants {
 	        logger.setLevel(level);
 
 	        return logger;
-	    }
-	
-	
-    
+	    }   
 }

@@ -237,3 +237,6 @@ h1 {
     font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
     font-size: 1.5em;
 }
+
+.ui-datatable .ui-row-editor .ui-icon-check, .ui-datatable .ui-row-editor .ui-icon-close {
+}

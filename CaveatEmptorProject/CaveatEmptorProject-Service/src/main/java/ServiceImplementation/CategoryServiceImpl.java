@@ -21,22 +21,7 @@ public class CategoryServiceImpl implements CategoryService{
 	
 	CategoriesDTO categoriesDto;
 	
-	public CategoriesDTO EntityToDto(Categories categories){
-		categoriesDto=new CategoriesDTO();		
-		categoriesDto.setCategoryId(categories.getCategoryId());
-		categoriesDto.setParentId(categories.getParentId());
-		categoriesDto.setNameCategory(categories.getNameCategory());
-		categoriesDto.setDescription(categories.getDescription());
-		return categoriesDto;
-	}
-	public Categories DtoToEntity(CategoriesDTO categoriesDto){
-		Categories categories=new Categories();		
-		categories.setCategoryId(categoriesDto.getCategoryId());
-		categories.setParentId(categoriesDto.getParentId());
-		categories.setNameCategory(categoriesDto.getNameCategory());
-		categories.setDescription(categoriesDto.getDescription());
-		return categories;
-	}
+	
 	
 	@Override
 	public List<CategoriesDTO> getCategories() throws CaveatEmptorException {
@@ -45,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService{
 		try{
 		List<Categories> categories=((CategoriesRepository) categoriesRepository).getCategories();
 		for (Categories categoryService : categories) {
-			categoriesDto=EntityToDto(categoryService);
+			categoriesDto=Transformation.CategoriesEntityToDto(categoryService);
 			listCategoriesDto.add(categoriesDto);
 		}
 		}catch(Exception e){
@@ -58,11 +43,11 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<CategoriesDTO> getChildrenForParent(CategoriesDTO parent) throws CaveatEmptorException {
 		try{
-			Categories parentCategory = DtoToEntity(parent);		
+			Categories parentCategory = Transformation.CategoriesDtoToEntity(parent);		
 			List<Categories> categories = categoriesRepository.getChildren(parentCategory);	
 			List<CategoriesDTO> categoriesDto = new ArrayList<CategoriesDTO>();
 			for (Categories category : categories) {
-				categoriesDto.add(EntityToDto(category));
+				categoriesDto.add(Transformation.CategoriesEntityToDto(category));
 			}
 			return categoriesDto;	
 			 }
@@ -75,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public String insertCategory(CategoriesDTO categoriesDto) throws CaveatEmptorException {
 		try{
-			String insertMessage=categoriesRepository.insertCategory(DtoToEntity(categoriesDto));
+			String insertMessage=categoriesRepository.insertCategory(Transformation.CategoriesDtoToEntity(categoriesDto));
 			return insertMessage;	
 			 }
 		catch(Exception e){
@@ -90,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService{
 		
 		try{
 			Categories category = categoriesRepository.getCategoryById(1L);
-			return EntityToDto(category);
+			return Transformation.CategoriesEntityToDto(category);
 		}catch(Exception e){
 		Constants.getLogger().log( Level.INFO, "Exception in getRootCategory method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
@@ -103,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService{
 		
 		try{
 			Categories category=categoriesRepository.getCategoryById(categoryId);
-			 return EntityToDto(category);	
+			 return Transformation.CategoriesEntityToDto(category);	
 			 }
 		catch(Exception e){
 		Constants.getLogger().log( Level.INFO, "Exception in getCategoryById method from CategoryServiceImpl" ,e.getMessage());		
@@ -114,7 +99,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public String updateCategory(CategoriesDTO categoriesDto) throws CaveatEmptorException {
 		try{
-			return categoriesRepository.updateCategory(DtoToEntity(categoriesDto));	
+			return categoriesRepository.updateCategory(Transformation.CategoriesDtoToEntity(categoriesDto));	
 	}catch(Exception e){
 		Constants.getLogger().log( Level.INFO, "Exception in updateCategory method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
@@ -124,7 +109,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public boolean deleteCategory(CategoriesDTO categoriesDto) throws CaveatEmptorException {
 		try{
-			Categories category = DtoToEntity(categoriesDto);
+			Categories category = Transformation.CategoriesDtoToEntity(categoriesDto);
 			List<Categories> children=categoriesRepository.getChildren(category);
 			Long parentId=categoriesDto.getParentId();
 			

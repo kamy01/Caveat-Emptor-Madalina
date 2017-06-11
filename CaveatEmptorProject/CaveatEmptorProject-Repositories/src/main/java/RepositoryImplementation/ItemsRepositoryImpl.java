@@ -43,4 +43,15 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 			return null;
 		}
 	}
+	
+	public boolean updateItem(Items item) throws CaveatEmptorException{
+		return entityManager.merge(item) != null;
+	}
+	public boolean deleteItem(Items item) throws CaveatEmptorException{
+		if(item.getItemId()!=null){
+			entityManager.remove(item);
+			return true;
+		}
+		return false;
+	}
 }

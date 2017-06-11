@@ -33,9 +33,9 @@ public class ItemsServiceImpl implements ItemsService{
 		try{
 		List<Items> itemsList=itemsRepository.getItemsToSell(userId);
 		List<ItemsDTO> itemsListDto=new ArrayList<>();
-		ItemsDTO itemDto;
+		ItemsDTO itemDto=new ItemsDTO();
 		for (Items item : itemsList) {
-			itemDto=itemEntityToDto(item);
+			itemDto=Transformation.itemEntityToDto(item);
 			itemsListDto.add(itemDto);
 		}
 			return itemsListDto;
@@ -50,7 +50,7 @@ public class ItemsServiceImpl implements ItemsService{
 		List<String> categoriesNames=new ArrayList<>();
 
 		for (Categories category : categories) {
-			if(category.getNameCategory()!=null){
+			if(category.getNameCategory()!=null || !category.getNameCategory().isEmpty()){
 				categoriesNames.add(category.getNameCategory());
 			}
 		}
@@ -63,7 +63,7 @@ public class ItemsServiceImpl implements ItemsService{
 		List<ItemsDTO> itemsListDto=new ArrayList<>();
 		ItemsDTO itemDto;
 		for (Items item : itemsList) {
-			itemDto=itemEntityToDto(item);
+			itemDto=Transformation.itemEntityToDto(item);
 			itemsListDto.add(itemDto);
 		}
 		return itemsListDto;
@@ -73,19 +73,27 @@ public class ItemsServiceImpl implements ItemsService{
 		}
 	}
 	
-	public ItemsDTO itemEntityToDto(Items item) throws ParseException{
-		ItemsDTO itemDto=new ItemsDTO();
-		itemDto.setName(item.getName());
-		itemDto.setDescription(item.getDescription());
-		itemDto.setCategories(item.getCategories());
-		itemDto.setInitialPrice(item.getInitialPrice());
-		itemDto.setBestBid(item.getBestBid());
-		itemDto.setYourBid(item.getYourBid());
-		itemDto.setNrBids(item.getNrBids());
-		itemDto.setBiddingStartDate(item.getBiddingStartDate());
-		itemDto.setBiddingEndDate(item.getBiddingEndDate());
-		itemDto.setStatus(item.getStatus());
-		itemDto.setWinner(item.getWinner());
-		return itemDto;
+	
+	
+	public boolean updateItem(ItemsDTO itemDto) throws CaveatEmptorException{
+		Items item=new Items();
+		try {
+			item = Transformation.itemDtoToEntity(itemDto);
+			return itemsRepository.updateItem(item);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+			}
+	public boolean deleteItem(ItemsDTO itemDto) throws CaveatEmptorException{
+		try {
+			Items item=new Items();
+			item.setItemId(itemDto.getItemId());
+			return itemsRepository.deleteItem(item);
+		}catch(Exception e){
+			Constants.getLogger().log( Level.INFO, "Exception in deleteItem method from ItemsServiceImpl" ,e.getMessage());		
+			throw new CaveatEmptorException();			
+		}
 	}
 }

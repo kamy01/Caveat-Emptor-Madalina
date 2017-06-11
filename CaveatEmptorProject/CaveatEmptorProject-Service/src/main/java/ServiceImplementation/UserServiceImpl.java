@@ -19,34 +19,14 @@ public class UserServiceImpl implements UserService {
 
 	UserDTO userDto;
 
-	public UserDTO transformUserEntityToDto(Users user){
-		
-		if(user!=null){
-		userDto = new UserDTO();
-		
-		userDto.setUserId(user.getUserId());
-		userDto.setFirstname(user.getFirstname());
-		userDto.setLastname(user.getLastname());
-		userDto.setAdmin(user.isAdmin());
-		userDto.setEmail(user.getEmail());
-		userDto.setPassword(user.getPassword());
-		userDto.setPhoneNumber(user.getPhoneNumber());
-		userDto.setRanking(user.getRanking());
-		userDto.setUsername(user.getUsername());
-		userDto.setActivationKey(user.getActivationKey());
-		userDto.setDateRegistered(user.getDateRegistered());
-		userDto.setEnabled(user.isEnabled());
-		}
-		return userDto;
-		
-	}
+	
 	
 	@Override
 	public UserDTO getUserByUsername(String username) throws CaveatEmptorException {
 		
 		try{
 			Users user = userReposity.findUserByUsername(username);
-			return transformUserEntityToDto(user);
+			return Transformation.transformUserEntityToDto(user);
 			
 		}catch(Exception e){
 			Constants.getLogger().log( Level.INFO, "Exception in getUserByUsername method from UserServiceImpl" ,e.getMessage());		
@@ -58,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	public UserDTO getUserByEmail(String email) throws CaveatEmptorException {
 		try{
 			Users user = userReposity.findUserByEmail(email);	
-			return transformUserEntityToDto(user);	
+			return Transformation.transformUserEntityToDto(user);	
 		}catch(Exception e){
 			Constants.getLogger().log( Level.INFO, "Exception in getUserByEmail method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
@@ -69,7 +49,7 @@ public class UserServiceImpl implements UserService {
 	public UserDTO getUserByPhoneNumber(Long phoneNumber) throws CaveatEmptorException {
 		try{
 			Users user = userReposity.findUserByPhoneNumber(phoneNumber);
-			return transformUserEntityToDto(user);	
+			return Transformation.transformUserEntityToDto(user);	
 		}catch(Exception e){
 			Constants.getLogger().log( Level.INFO, "Exception in getUserByPhoneNumber method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
