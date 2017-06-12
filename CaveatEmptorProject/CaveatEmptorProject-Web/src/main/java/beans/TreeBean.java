@@ -16,12 +16,10 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
 import com.dtos.CategoriesDTO;
-
 import ServiceInterfaces.CategoryService;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 
 
 @ManagedBean(name="treeBean")
@@ -51,7 +49,7 @@ public class TreeBean implements Serializable{
 		createTree(categoriesDto, root);
 	
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in init method from TreeBean" ,e.getMessage());	
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in init method from TreeBean" ,e.getMessage());	
 		}
     }
 	public TreeNode getRoot() {
@@ -92,7 +90,7 @@ public class TreeBean implements Serializable{
 			try {
 				children = categoryService.getChildrenForParent(categoryDTO);
 			} catch (CaveatEmptorException e) {
-				Constants.getLogger().log( Level.INFO, "Exception in constructTree method from TreeBean" ,e.getMessage());	
+				LoggerUtils.getLogger().log( Level.INFO, "Exception in constructTree method from TreeBean" ,e.getMessage());	
 			}
 			if (!children.isEmpty())
 				createTree(children, node);
@@ -153,7 +151,7 @@ public List<CategoriesDTO> getCategories() {
 				event.getTreeNode().setSelected(true);
 			}
 		} catch (Exception e) {
-			Constants.getLogger().log( Level.INFO, "Exception in onNodeSelect method from TreeBean for selectedNode: "+ categoriesDto ,e.getMessage());	
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in onNodeSelect method from TreeBean for selectedNode: "+ categoriesDto ,e.getMessage());	
 		}
 	}
 	public void onNodeUnselect(NodeUnselectEvent event) {

@@ -11,7 +11,7 @@ import RepositoryConstants.QueryConstants;
 import RepositoryInterfaces.ItemsRepository;
 import entities.Items;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 
 @Stateless
 public class ItemsRepositoryImpl implements ItemsRepository{
@@ -28,7 +28,7 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 						.setParameter("userId", userId).getResultList();
 
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in getItemsToSell method from ItemsRepositoryImpl",ex.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in getItemsToSell method from ItemsRepositoryImpl",ex.getMessage());
 			return null;
 		}
 	}
@@ -40,7 +40,7 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 				return (List<Items>) entityManager.createNamedQuery(QueryConstants.GET_ITEMS_TO_BUY)
 						.setParameter("userId", userId).getResultList();
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in getItemsToBuy method from ItemsRepositoryImpl",ex.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in getItemsToBuy method from ItemsRepositoryImpl",ex.getMessage());
 			return null;
 		}
 	}
@@ -50,9 +50,18 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 	}
 	public boolean insertItem(Items item) throws CaveatEmptorException{
 		if(item.getItemId()!=null){
-			entityManager.remove(item);
+			entityManager.merge(item);
 			return true;
 		}
 		return false;
+	}
+	public Long getMaxItemId() throws CaveatEmptorException {
+		try {
+			return (Long) entityManager.createNamedQuery(QueryConstants.GET_MAX_ITEMID).getSingleResult();
+		} catch (Exception e) {
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in getMaxItemId method from ItemsRepositoryImpl",
+					e.getMessage());
+			throw new CaveatEmptorException();
+		}
 	}
 }

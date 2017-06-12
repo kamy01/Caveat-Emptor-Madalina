@@ -11,7 +11,7 @@ import RepositoryInterfaces.CategoriesRepository;
 import ServiceInterfaces.CategoryService;
 import entities.Categories;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 
 @Stateless
 public class CategoryServiceImpl implements CategoryService{
@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService{
 			listCategoriesDto.add(categoriesDto);
 		}
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in getCategories method from CategoryServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getCategories method from CategoryServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();
 		}
 		return listCategoriesDto;
@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService{
 			return categoriesDto;	
 			 }
 		catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in getChildrenForParent method from CategoryServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getChildrenForParent method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();		
 		}
 	}
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService{
 			return insertMessage;	
 			 }
 		catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in insertCategory method from CategoryServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in insertCategory method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();		
 		}
 		
@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService{
 			Categories category = categoriesRepository.getCategoryById(1L);
 			return Transformation.CategoriesEntityToDto(category);
 		}catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in getRootCategory method from CategoryServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getRootCategory method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
 	}		
 		
@@ -91,7 +91,7 @@ public class CategoryServiceImpl implements CategoryService{
 			 return Transformation.CategoriesEntityToDto(category);	
 			 }
 		catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in getCategoryById method from CategoryServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getCategoryById method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
 	}
 		
@@ -101,7 +101,7 @@ public class CategoryServiceImpl implements CategoryService{
 		try{
 			return categoriesRepository.updateCategory(Transformation.CategoriesDtoToEntity(categoriesDto));	
 	}catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in updateCategory method from CategoryServiceImpl" ,e.getMessage());		
+		LoggerUtils.getLogger().log( Level.INFO, "Exception in updateCategory method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
 	}
 		
@@ -119,7 +119,7 @@ public class CategoryServiceImpl implements CategoryService{
 			}
 			return categoriesRepository.deleteCategory(category);		
 	}catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in deleteCategory method from CategoryServiceImpl" ,e.getMessage());		
+		LoggerUtils.getLogger().log( Level.INFO, "Exception in deleteCategory method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
 	}
 		
@@ -129,7 +129,7 @@ public class CategoryServiceImpl implements CategoryService{
 		try{
 			return categoriesRepository.getMaxCategoryId();
 	}catch(Exception e){
-		Constants.getLogger().log( Level.INFO, "Exception in getMaxCategoryId method from CategoryServiceImpl" ,e.getMessage());		
+		LoggerUtils.getLogger().log( Level.INFO, "Exception in getMaxCategoryId method from CategoryServiceImpl" ,e.getMessage());		
 		throw new CaveatEmptorException();			
 	}
 	

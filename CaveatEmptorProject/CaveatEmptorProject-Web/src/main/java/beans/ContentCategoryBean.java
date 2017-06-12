@@ -15,8 +15,8 @@ import org.primefaces.model.TreeNode;
 import com.dtos.CategoriesDTO;
 import ServiceInterfaces.CategoryService;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
 import utils.FacesMessagesUtil;
+import utils.LoggerUtils;
 
 @ManagedBean(name = "contentCategory")
 @ViewScoped
@@ -27,14 +27,15 @@ public class ContentCategoryBean {
 
 	private CategoriesDTO categoriesDto;
 
-	private boolean disableButtonUpdateOrDelete = true;
-	private boolean readOnly = true;
-	private boolean renderedButtonUpdateOrDelete = false;
-	private boolean createButtonClicked = false;
-	private boolean renderedInsert = false;
-	private boolean disableInsertButton = false;
+	private boolean disableButtonUpdateOrDelete;
+	private boolean readOnly;
+	private boolean renderedButtonUpdateOrDelete ;
+	private boolean createButtonClicked ;
+	private boolean renderedInsert ;
+	private boolean disableInsertButton ;
+
 	@SuppressWarnings("unused")
-	private boolean deleteOption=false;
+	private boolean deleteOption;
 
 
 	@EJB
@@ -42,6 +43,8 @@ public class ContentCategoryBean {
 
 	@PostConstruct
 	public void init() {
+		disableButtonUpdateOrDelete = true;
+		readOnly = true;
 		categoriesDto = new CategoriesDTO();
 		categoryTree.init();
 		disableButtonUpdateOrDelete = true;
@@ -124,7 +127,7 @@ public class ContentCategoryBean {
 				FacesMessagesUtil.message_info("Category was inserted!", "");
 			}
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log(Level.INFO, "Exception in insert method from ContentCategoryBean",e.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in insert method from ContentCategoryBean",e.getMessage());
 		}
 		categoryTree.init();
 		createButtonClicked = false;
@@ -164,7 +167,7 @@ public class ContentCategoryBean {
 				FacesMessagesUtil.message_info("Category " + categoriesDto.getNameCategory() + " updated!", "");
 			}
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in updateCategory method from ContentCategoryBean", e.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in updateCategory method from ContentCategoryBean", e.getMessage());
 		}
 		categoryTree.init();
 		createButtonClicked = false;
@@ -199,7 +202,7 @@ public class ContentCategoryBean {
 					RequestContext context = RequestContext.getCurrentInstance();
 					context.execute("PF('myDialogDelete').show();");
 				} catch (Exception e) {
-					Constants.getLogger().log(Level.INFO, "Exception in removeCategory method from ContentCategoryBean",e.getMessage());
+					LoggerUtils.getLogger().log(Level.INFO, "Exception in removeCategory method from ContentCategoryBean",e.getMessage());
 				}
 			} else {
 				FacesMessagesUtil.message_info("Invalid fields!", "");

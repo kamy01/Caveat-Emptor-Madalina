@@ -23,7 +23,7 @@ public class FacesMessagesUtil {
 			    }
 
 		}catch(IOException ex){
-			Constants.getLogger().log( Level.INFO, "Redirect page exception" ,ex.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Redirect page exception" ,ex.getMessage());		
 			throw new CaveatEmptorException();
 		}
 	}
@@ -40,7 +40,7 @@ public class FacesMessagesUtil {
 			    }
 
 		}catch(IOException ex){
-			Constants.getLogger().log( Level.INFO, "Redirect page exception" ,ex.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Redirect page exception" ,ex.getMessage());		
 			throw new CaveatEmptorException();
 		}
 	}

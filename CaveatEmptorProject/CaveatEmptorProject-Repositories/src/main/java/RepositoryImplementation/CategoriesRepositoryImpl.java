@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import RepositoryInterfaces.CategoriesRepository;
 import entities.Categories;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 import RepositoryConstants.*;
 
 @Stateless
@@ -24,7 +24,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			return (List<Categories>) entityManager.createNamedQuery(QueryConstants.GET_CATEGORIES).getResultList();
 
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in getCategories method from CategoriesRepositoryImpl",ex.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in getCategories method from CategoriesRepositoryImpl",ex.getMessage());
 			return null;
 		}
 	}
@@ -35,7 +35,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			return (Categories) entityManager.createNamedQuery(QueryConstants.GET_CATEGORY_BY_ID)
 					.setParameter("categoryId", categoryId).getSingleResult();
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in getCategoryById method from CategoriesRepositoryImpl",e.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in getCategoryById method from CategoriesRepositoryImpl",e.getMessage());
 			return null;
 		}
 	}
@@ -62,7 +62,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 				return "nullValues";
 			}
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",e.getMessage());
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",e.getMessage());
 			throw new CaveatEmptorException();
 		}
 	}
@@ -74,7 +74,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			return (List<Categories>) entityManager.createNamedQuery(QueryConstants.GET_CHILDREN_FOR_CATEGORY)
 					.setParameter("categoryId", parent.getCategoryId()).getResultList();
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in insertCategory method from CategoriesRepositoryImpl",
 					e.getMessage());
 			throw new CaveatEmptorException();
 		}
@@ -91,7 +91,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 				return "categoryUpdated";
 				}
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in updateCategory method from CategoriesRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in updateCategory method from CategoriesRepositoryImpl",
 					e.getMessage());
 			throw new CaveatEmptorException();
 		}
@@ -108,7 +108,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 				return true;
 			}
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in deleteCategory method from CategoriesRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in deleteCategory method from CategoriesRepositoryImpl",
 					e.getMessage());
 			throw new CaveatEmptorException();
 		}
@@ -118,7 +118,7 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 		try {
 			return (Long) entityManager.createNamedQuery(QueryConstants.GET_MAX_CATEGORY_ID).getSingleResult();
 		} catch (Exception e) {
-			Constants.getLogger().log(Level.INFO, "Exception in getMaxCategoryId method from CategoriesRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in getMaxCategoryId method from CategoriesRepositoryImpl",
 					e.getMessage());
 			throw new CaveatEmptorException();
 		}

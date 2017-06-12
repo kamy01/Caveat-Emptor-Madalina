@@ -1,6 +1,8 @@
 package entities;
 
 import java.io.Serializable;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
 import javax.persistence.Column;
@@ -12,11 +14,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import RepositoryConstants.QueryConstants;
-import utils.Constants;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = QueryConstants.GET_ITEMS_TO_SELL, query = QueryConstants.GET_ITEMS_TO_SELL_QUERY),
-				@NamedQuery(name = QueryConstants.GET_ITEMS_TO_BUY, query = QueryConstants.GET_ITEMS_TO_BUY_QUERY) })
+				@NamedQuery(name = QueryConstants.GET_ITEMS_TO_BUY, query = QueryConstants.GET_ITEMS_TO_BUY_QUERY),
+				@NamedQuery(name = QueryConstants.GET_MAX_ITEMID, query = QueryConstants.GET_MAX_ITEMID_QUERY)})
 public class Items implements Serializable {
 
 	private static final long serialVersionUID = 352144983391426538L;
@@ -83,7 +85,7 @@ public class Items implements Serializable {
 	}
 
 	public Double getInitialPrice() throws ParseException {
-		return Constants.formatDouble(initialPrice);
+		return formatDouble(initialPrice);
 	}
 
 	public void setInitialPrice(Double initialPrice) {
@@ -91,7 +93,7 @@ public class Items implements Serializable {
 	}
 
 	public Double getBestBid() throws ParseException {
-		return Constants.formatDouble(bestBid);
+		return formatDouble(bestBid);
 	}
 
 	public void setBestBid(Double bestBid) {
@@ -144,7 +146,7 @@ public class Items implements Serializable {
 	}
 
 	public Double getYourBid() throws ParseException {
-		return Constants.formatDouble(yourBid);
+		return formatDouble(yourBid);
 	}
 
 	public void setYourBid(Double yourBid) {
@@ -159,4 +161,21 @@ public class Items implements Serializable {
 		this.userId = userId;
 	}
 
+	public static Double formatDouble(Double value) throws ParseException{
+		DecimalFormat df = new DecimalFormat(".##");
+		df.setRoundingMode(RoundingMode.DOWN);
+		
+		if(value!=null){
+		if(value % 1 == 0 || (value.toString().contains("0.00") ))
+		{
+			return value;
+		}else{
+				String valueString = df.format(value); 
+				return (Double) df.parse(valueString);
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }

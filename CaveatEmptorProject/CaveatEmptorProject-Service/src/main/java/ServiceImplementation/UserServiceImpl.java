@@ -9,7 +9,7 @@ import RepositoryInterfaces.UserRepository;
 import ServiceInterfaces.UserService;
 import entities.Users;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 
 @Stateless
 public class UserServiceImpl implements UserService {
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 			return Transformation.transformUserEntityToDto(user);
 			
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in getUserByUsername method from UserServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getUserByUsername method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 	}
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 			Users user = userReposity.findUserByEmail(email);	
 			return Transformation.transformUserEntityToDto(user);	
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in getUserByEmail method from UserServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getUserByEmail method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 	}
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 			Users user = userReposity.findUserByPhoneNumber(phoneNumber);
 			return Transformation.transformUserEntityToDto(user);	
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in getUserByPhoneNumber method from UserServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getUserByPhoneNumber method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 	}
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			return userReposity.createUser(userDto,repeatPassword);
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in createUser method from UserServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in createUser method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 	}
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userReposity.insertKeyForUser(userDto, key);
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in insertKeyForUser method from UserServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in insertKeyForUser method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 	}
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			return userReposity.enableAndRegisterUser(userDto);
 		}catch(Exception e){
-			Constants.getLogger().log( Level.INFO, "Exception in enableAndRegisterUser method from UserServiceImpl" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in enableAndRegisterUser method from UserServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
 

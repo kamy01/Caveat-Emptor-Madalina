@@ -1,10 +1,10 @@
 package com.dtos;
 
 import java.io.Serializable;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
-
-import utils.Constants;
 
 public class ItemsDTO implements Serializable{
 
@@ -64,13 +64,13 @@ public class ItemsDTO implements Serializable{
 		this.categories = categories;
 	}
 	public Double getInitialPrice() throws ParseException {
-		return Constants.formatDouble(initialPrice);
+		return formatDouble(initialPrice);
 	}
 	public void setInitialPrice(Double initialPrice) {
 		this.initialPrice = initialPrice;
 	}
 	public Double getBestBid() throws ParseException {
-		return Constants.formatDouble(bestBid);
+		return formatDouble(bestBid);
 	}
 	public void setBestBid(Double bestBid) {
 		this.bestBid = bestBid;
@@ -109,10 +109,26 @@ public class ItemsDTO implements Serializable{
 		this.winner = winner;
 	}
 	public Double getYourBid() throws ParseException {
-		return Constants.formatDouble(yourBid);
+		return formatDouble(yourBid);
 	}
 	public void setYourBid(Double yourBid) {
 		this.yourBid = yourBid;
 	}
-
+	public static Double formatDouble(Double value) throws ParseException{
+		DecimalFormat df = new DecimalFormat(".##");
+		df.setRoundingMode(RoundingMode.DOWN);
+		
+		if(value!=null){
+		if(value % 1 == 0 || (value.toString().contains("0.00") ))
+		{
+			return value;
+		}else{
+				String valueString = df.format(value); 
+				return (Double) df.parse(valueString);
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }

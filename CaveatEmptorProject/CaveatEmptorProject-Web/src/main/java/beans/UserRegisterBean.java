@@ -2,22 +2,18 @@ package beans;
 
 import java.io.Serializable;
 import java.util.logging.Level;
-
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpSession;
-
 import org.primefaces.context.RequestContext;
-
 import com.dtos.UserDTO;
 import ServiceImplementation.SendEmailService;
 import ServiceInterfaces.UserService;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
 import utils.FacesMessagesUtil;
+import utils.LoggerUtils;
 import utils.SessionUtils;
 
 @ManagedBean(name = "registerBean")
@@ -33,10 +29,11 @@ public class UserRegisterBean implements Serializable {
 	@EJB
 	UserService userService;
 
-	HttpSession session = SessionUtils.getSession();
+	HttpSession session ;
 
 	@PostConstruct
 	public void init() {
+		session = SessionUtils.getSession();
 		userDto = new UserDTO();
 	}
 
@@ -98,7 +95,7 @@ public class UserRegisterBean implements Serializable {
 		
 		
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in register method from UserRegisterBean" ,e.getMessage());	
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in register method from UserRegisterBean" ,e.getMessage());	
 		}
 		catch (Exception e) {
 			FacesMessagesUtil.redirectPage("error.xhtml");
@@ -109,7 +106,7 @@ public class UserRegisterBean implements Serializable {
 		try {
 			FacesMessagesUtil.redirectPage("index.xhtml");
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in cancelRegister method from UserRegisterBean" ,e.getMessage());	
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in cancelRegister method from UserRegisterBean" ,e.getMessage());	
 		}
 		catch (Exception e) {
 			FacesMessagesUtil.redirectPage("error.xhtml");
@@ -121,7 +118,7 @@ public class UserRegisterBean implements Serializable {
 		try {
 			FacesMessagesUtil.redirectPage("index.xhtml");
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in redirect method from UserRegisterBean" ,e.getMessage());	
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in redirect method from UserRegisterBean" ,e.getMessage());	
 		}
 		catch (Exception e) {
 			FacesMessagesUtil.redirectPage("error.xhtml");

@@ -12,7 +12,7 @@ import com.dtos.UserDTO;
 import RepositoryInterfaces.UserRepository;
 import entities.Users;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 import RepositoryConstants.*;
 
 @Stateless
@@ -27,7 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
 			return (Users) entityManager.createNamedQuery(QueryConstants.FIND_USER_BY_USERNAME)
 					.setParameter("username", username).getSingleResult();
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in findUserByUsername method from UserRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in findUserByUsername method from UserRepositoryImpl",
 					ex.getMessage());
 			return null;
 		}
@@ -40,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
 					.setParameter("email", email).getSingleResult();
 
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in findUserByEmail method from UserRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in findUserByEmail method from UserRepositoryImpl",
 					ex.getMessage());
 			return null;
 
@@ -54,7 +54,7 @@ public class UserRepositoryImpl implements UserRepository {
 					.setParameter("phoneNumber", phoneNumber).getSingleResult();
 
 		} catch (Exception ex) {
-			Constants.getLogger().log(Level.INFO, "Exception in findUserByPhoneNumber method from UserRepositoryImpl",
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in findUserByPhoneNumber method from UserRepositoryImpl",
 					ex.getMessage());
 			return null;
 

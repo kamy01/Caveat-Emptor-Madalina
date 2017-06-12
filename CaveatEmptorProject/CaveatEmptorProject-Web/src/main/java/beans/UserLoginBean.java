@@ -2,19 +2,16 @@ package beans;
 
 import java.io.Serializable;
 import java.util.logging.Level;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpSession;
-
 import com.dtos.UserDTO;
-
 import ServiceInterfaces.UserService;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
 import utils.FacesMessagesUtil;
+import utils.LoggerUtils;
 import utils.SessionUtils;
 
 @ManagedBean(name = "userlogin")
@@ -63,7 +60,7 @@ public class UserLoginBean implements Serializable {
 		try {
 			userDto = userService.getUserByUsername(username);
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in login method from UserLoginBean" ,e.getMessage());	
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in login method from UserLoginBean" ,e.getMessage());	
 		}
 		catch (Exception e) {
 			FacesMessagesUtil.redirectPage("error.xhtml");
@@ -79,7 +76,7 @@ public class UserLoginBean implements Serializable {
 					FacesMessagesUtil.message_info("Account not activated! ", "Please confirm your email to activate this account!");
 				}
 			} catch (CaveatEmptorException e) {
-				Constants.getLogger().log( Level.INFO, "Exception in login method from UserLoginBean" ,e.getMessage());	
+				LoggerUtils.getLogger().log( Level.INFO, "Exception in login method from UserLoginBean" ,e.getMessage());	
 			}
 			catch (Exception e) {
 				FacesMessagesUtil.redirectPage("error.xhtml");

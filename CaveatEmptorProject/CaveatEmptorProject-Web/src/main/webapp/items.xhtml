@@ -24,6 +24,9 @@
 								update="tabView:frmDropDown:frmContentItems:dataTableItems"
 								process="@this" listener="#{itemsBean.onDropDownChange}" />
 						</h:selectOneMenu>
+						
+						<p:commandButton value="Create new item" action="#{itemsBean.insertItem}" update="tabView:frmDropDown:frmContentItems:dataTableItems"/>
+						
 
 						<h:form id="frmContentItems" style="padding-left:15px;">
 							<h:outputText for="createItem" value="     " />
@@ -53,19 +56,24 @@
 								</p:cellEditor>
 								</p:column>
 
-								<p:column headerText="Categories" sortBy="#{item.categories}">
-								<p:cellEditor >
-									<f:facet name="output"><h:outputText value="#{item.categories}"/></f:facet>
-                 					<f:facet name="input">
-                 					<p:commandLink id="modelCategName" value="#{item.categories}" style="width:96%" required="true" readonly="true" onclick="PF('dlgChooseCategory').show()">	
-                 	
-                 					</p:commandLink>
-<!--                  					<p:commandLink id="categoryInput" value="#{item.categories}" readonly="true" style="text-decoration:none;" onclick="PF('dlgChooseCategory').hide()"></p:commandLink> -->
-                 					
-                 					</f:facet>
-								</p:cellEditor>
-								</p:column>
 
+							<p:column headerText="Categories" sortBy="#{item.categories}">
+								<p:cellEditor>
+									<f:facet name="output">
+									<h:outputText value="#{item.categories}" />
+									</f:facet>
+									
+                 					<f:facet name="input">
+                 					<h:selectOneMenu id="dropDownCategories" value="#{item.categories}">
+                 					
+                 					  	<f:selectItems value="#{itemsBean.category}" var="categ" itemValue="#{categ}" itemLabel="#{categ}" />
+   
+									</h:selectOneMenu>
+                 					</f:facet>
+
+								</p:cellEditor>
+								</p:column>			
+								
 								<p:column headerText="Initial price (€)" sortBy="#{item.initialPrice}" >
 								<p:cellEditor>
 									<f:facet name="output"><h:outputText value="#{item.initialPrice}" /></f:facet>
@@ -148,7 +156,6 @@
 							
 								<p:rowEditor rendered="#{item.renderedEdit}" id="editor">   
 								</p:rowEditor >
-<!-- 									<p:commandButton icon="ui-icon-trash" title="Delete this item" update="tabView:frmDropDown:frmContentItems:dataTableItems" actionListener="#{itemsBean.delete(item)}" ajax="true" /> -->
 								
    				 				<p:growl id="message" showDetail="false"/>   				 							
 								<p:dialog id="dialogEdit" height="150" width="300" widgetVar="dlgVarEdit" closable="true">
@@ -163,50 +170,46 @@
 								</div>
 							 	</p:dialog>
 							 	
- 								<p:dialog id="dialogDelete" height="150" width="300" widgetVar="dlgVarDelete" >
+ 								
+									<p:dialog id="dlgVarInsert" height="150" width="300" widgetVar="dlgVarInsert" >
  								<div>
 									<br/>
-									 	<h:outputText style="margin-left:10px;" value=" Do you want to delete this item ?"/>
+									 	<h:outputText style="margin-left:10px;" value=" Do you want to insert a new item ?"/>
 									 			 <br/><br/><br/>
-									 	<p:commandButton value="Yes" action="#{itemsBean.insertItem}" update="tabView:frmDropDown:frmContentItems:dataTableItems"/>
+									 			
+											<h:form id="newItemForm">
+									 				<h:outputText value="Name"/>
+									 				<p:inputText id="nameNew" value="#{itemsBean.itemDto.name}" >
+									 				</p:inputText>
+									 					<h:outputText value="Description"/>
+									 				<p:inputTextarea id="descriptionNew" value="#{itemsBean.itemDto.description}" >
+									 				</p:inputTextarea>
+									 				
+									 				<h:outputText value="Initial price (€)"/>
+									 				<p:inputText id="initialPrice" value="#{itemsBean.itemDto.initialPrice}" required="true" requiredMessage="Initial price is required">
+									 				</p:inputText>
+									 				
+								
+									 				<h:outputText value="Closing date"/>
+									 				<p:calendar id="closingDate" value="#{itemsBean.itemDto.biddingEndDate}" required="true" requiredMessage="Closing date is required" pattern="MM/dd/yyyy">
+									 				</p:calendar>
+									 				
+									 				<p:commandButton value="Yes"  >
+									 					<p:ajax listener="#{itemsBean.insert}"
+														update=":tabView:frmDropDown:frmContentItems:dataTableItems"
+														process="@form"></p:ajax>
+									 				</p:commandButton>
        									<h:outputText value=" "/>
        									<p:commandButton value="No" update="tabView:frmDropDown:frmContentItems:dataTableItems"/>
 								
+									 		</h:form>
+									 	
 									</div>
-									</p:dialog>
-									
-									
-									
-									
-									<p:dialog id="dlgChooseCategory" height="530px" width="440px" widgetVar="dlgChooseCategory"  style="margin-top:-80px">
- 										
-										<br/>
-									 		<h:outputText style="margin-left:10px;" value=" Choose a category "/>
-									 			 <br/><br/><br/>
-									 			 
-									 			 	<div id="treeDiv">
-														<h:form class="tree-form" id="tree-form">
-															<p:tree value="#{itemsBean.contentCategory.categoryTree.root}" var="node" selectionMode="single"
-																selection="#{treeBean.selectedNode}" id="tree" style="height:260px;width: 400px;">
-																<p:ajax event="select" listener="#{itemsBean.contentCategory.onNodeSelect}"
-																	update=":tabView:frmDropDown:frmContentItems:dataTableItems:modelCategName" />
-																<p:treeNode>
-																	<h:outputText value="#{node.getNameCategory()}" />
-																</p:treeNode>
-															</p:tree>
-															<p:commandButton value="OK" update=":tabView:frmDropDown:frmContentItems:dataTableItems" style="margin: 333px 0px 0px 180px;"/>	
-														</h:form>
-													</div>
-									 			 
-									 			 	 <br/><br/> 
-									
 									</p:dialog>
 									
 							    </p:column>
 							</p:dataTable>
-							
 						</h:form>
-
 					</h:form>
 				</div>
 			</div>

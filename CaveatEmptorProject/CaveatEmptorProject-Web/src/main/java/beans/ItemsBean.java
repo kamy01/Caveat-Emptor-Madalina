@@ -1,8 +1,8 @@
 package beans;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,19 +15,13 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.model.TreeNode;
-
-import com.dtos.CategoriesDTO;
 import com.dtos.ItemsDTO;
-
-import ServiceImplementation.Transformation;
 import ServiceInterfaces.ItemsService;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
 import utils.FacesMessagesUtil;
 import utils.ItemsOption;
+import utils.LoggerUtils;
 
 
 @ManagedBean(name = "itemsBean")
@@ -44,24 +38,37 @@ public class ItemsBean  implements Serializable{
 	private boolean renderedMyBid;
 	private boolean renderedEditButton;
 	RequestContext context;
-	List<CategoriesDTO> categoriesList;
-	CategoriesDTO categoryDto;
 			
 	@EJB
 	ItemsService itemsService;
 	
+	List<String> category;
 	
-	private Map<String, String> params=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap(); 
-	public final String userIdParameter = params.get("userId");
+	private final Map<String, String> params=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap(); 
+	private final String userIdParameter = params.get("userId");
 	
 	@ManagedProperty("#{contentCategory}")
 	private ContentCategoryBean contentCategory;
 	
 	@PostConstruct
 	public void init() throws CaveatEmptorException {
+		
 		context= RequestContext.getCurrentInstance();
-		categoryDto=new CategoriesDTO();
+		category=new ArrayList<>();
+		category=itemsService.getCategoriesNames();
 		itemDto=new ItemsDTO();
+		
+		itemDto.setBiddingStartDate(new Date());
+		itemDto.setBiddingEndDate(new Date());
+		itemDto.setInitialPrice(0D);
+		itemDto.setBestBid(null);
+		itemDto.setCategories(" ");
+		itemDto.setName("");
+		itemDto.setNrBids(0);
+		itemDto.setUserId(Long.parseLong(userIdParameter));
+
+
+		
 		renderedEditButton=true;
 		itemsListDto = new ArrayList<>();	
 		dropDownItems=new HashMap<>();
@@ -79,13 +86,12 @@ public class ItemsBean  implements Serializable{
 		}
 	}
 
-	public List<CategoriesDTO> getCategoriesList() {
-		return categoriesList;
+	public List<String> getCategory() {
+		return category;
 	}
 
-
-	public void setCategoriesList(List<CategoriesDTO> categoriesList) {
-		this.categoriesList = categoriesList;
+	public void setCategory(List<String> category) {
+		this.category = category;
 	}
 
 
@@ -166,6 +172,8 @@ public class ItemsBean  implements Serializable{
 			optionDropDown="buy";
 			context= RequestContext.getCurrentInstance();
 			itemDto=new ItemsDTO();
+			category=new ArrayList<>();
+			category=itemsService.getCategoriesNames();
 			renderedEditButton=true;
 			itemsListDto = new ArrayList<>();	
 			dropDownItems=new HashMap<>();
@@ -187,11 +195,8 @@ public class ItemsBean  implements Serializable{
 	 public void onRowEdit(RowEditEvent event) {
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgVarEdit').show();");
-		context.execute("PF('dlgChooseCategory').show()");
 		 itemDto =(ItemsDTO) event.getObject();
-		if(contentCategory.getCategoriesDto().getNameCategory()!=itemDto.getCategories()){
-			itemDto.setCategories(contentCategory.getCategoriesDto().getNameCategory());
-		}
+		
 		 itemDto.setUserId(Long.parseLong(userIdParameter));
 	 }
 	 public void onRowCancel(RowEditEvent event) {
@@ -203,36 +208,43 @@ public class ItemsBean  implements Serializable{
 				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was edited!", "");
 		 }catch(Exception e){
 		 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't edited!Try again!", "");
-				Constants.getLogger().log( Level.INFO, "Exception in updateItem method from ItemsBean" ,e.getMessage());				
+		 LoggerUtils.getLogger().log( Level.INFO, "Exception in updateItem method from ItemsBean" ,e.getMessage());				
 			}
 	 }
-	 public void delete(ItemsDTO item) throws ParseException{
-		 
-	
-		 itemDto= Transformation.populateItemDto(item);
-		 RequestContext context = RequestContext.getCurrentInstance();
-		context.execute("PF('dlgVarDelete').show();");
+//	 public void delete(ItemsDTO item) throws ParseException{
+//		 
+//	
+//		 itemDto= Transformation.populateItemDto(item);
+//		 RequestContext context = RequestContext.getCurrentInstance();
+//		context.execute("PF('dlgVarDelete').show();");
+//	 }
+	 public void insert() throws CaveatEmptorException{
+		 try{
+			 Long maxItemId = itemsService.getMaxItemId();
+			 itemDto.setUserId(Long.parseLong(userIdParameter));
+			 itemDto.setItemId(maxItemId+1);
+			 itemDto.setStatus("open");
+			 
+			 itemsService.insertItem(itemDto);
+
+			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was inserted!", "");
+			 }catch(Exception e){
+				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't inserted!Try again!", "");
+				 LoggerUtils.getLogger().log( Level.INFO, "Exception in insertItem method from ItemsBean" ,e.getMessage());				
+				}
 	 }
 	 public void insertItem() throws CaveatEmptorException{
-		 try{
-		 itemsService.insertItem(itemDto);
-		 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was deleted!", "");
-		 }catch(Exception e){
-			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't deleted!Try again!", "");
-				Constants.getLogger().log( Level.INFO, "Exception in deleteItem method from ItemsBean" ,e.getMessage());				
-			}
-	 }
-	 
-	 public void editCategory(){
-		
-		 FacesMessagesUtil.message_info("Category "+contentCategory.getCategoriesDto().getNameCategory(), "");
-
-	 }
-	 
-	 public void changeCategory(){
 		 RequestContext context = RequestContext.getCurrentInstance();
-		context.execute("PF('dlgChooseCategory').show();");
+		 context.execute("PF('dlgVarInsert').show();");
+		
 	 }
-	 
-	
+//	 public void deleteItem() throws CaveatEmptorException{
+//		 try{
+//		 itemsService.deleteItem(itemDto);
+//		 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was deleted!", "");
+//		 }catch(Exception e){
+//			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't deleted!Try again!", "");
+//				Constants.getLogger().log( Level.INFO, "Exception in deleteItem method from ItemsBean" ,e.getMessage());				
+//			}
+//	 }
 }

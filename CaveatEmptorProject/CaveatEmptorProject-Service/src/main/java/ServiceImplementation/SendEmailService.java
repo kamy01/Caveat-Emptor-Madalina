@@ -13,10 +13,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import com.dtos.UserDTO;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
+import utils.LoggerUtils;
 import utils.SessionUtils;
 
 public class SendEmailService {
+	public static final String MAIL_REGISTRATION_SITE_LINK="http://localhost:8080//CaveatEmptorProject-Web/activate.xhtml";	
 
 	public static String sendEmail(UserDTO userDto) throws CaveatEmptorException {
 		try {
@@ -28,14 +29,14 @@ public class SendEmailService {
 			return key;
 
 		} catch (MessagingException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in sendEmail method from SendEmailService" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in sendEmail method from SendEmailService" ,e.getMessage());		
 			throw new CaveatEmptorException();
 		}
 	}
 
 	private static Message buildMessage(Session session, Properties properties, UserDTO userDto, String key)
 			throws CaveatEmptorException {
-		String link = Constants.MAIL_REGISTRATION_SITE_LINK + "?username="+userDto.getUsername()+"&key=" + key;
+		String link =MAIL_REGISTRATION_SITE_LINK + "?username="+userDto.getUsername()+"&key=" + key;
 
 		Message message = new MimeMessage(session);
 		try {
@@ -45,7 +46,7 @@ public class SendEmailService {
 			message.setText("Hello " + userDto.getFirstname() + " " + userDto.getLastname() + ", "
 					+ System.lineSeparator() + "Please confirm the following link " + System.lineSeparator() + link);
 		} catch (MessagingException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in buildMessage method from SendEmailService" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in buildMessage method from SendEmailService" ,e.getMessage());		
 			throw new CaveatEmptorException();
 		}
 		return message;
@@ -59,7 +60,7 @@ public class SendEmailService {
 		try (InputStream input = SendEmailService.class.getClassLoader().getResourceAsStream(filename)) {
 			properties.load(input);
 		}catch (Exception e) {
-			Constants.getLogger().log( Level.INFO, "Exception in getProperties method from SendEmailService" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in getProperties method from SendEmailService" ,e.getMessage());		
 			throw new CaveatEmptorException();
 		}
 		return properties;

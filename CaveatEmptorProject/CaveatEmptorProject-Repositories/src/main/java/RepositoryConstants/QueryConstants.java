@@ -28,4 +28,10 @@ public class QueryConstants {
 	
 	public static final String GET_ITEMS_TO_BUY = "Items.getItemsToBuy";
 	public static final String GET_ITEMS_TO_BUY_QUERY = "SELECT item FROM Items item where item.yourBid is not null and item.userId<>:userId";
+	
+	public static final String GET_MAX_ITEMID = "Items.getMaxItemId";
+	public static final String GET_MAX_ITEMID_QUERY = "SELECT item.itemId FROM Items item where item.itemId=(SELECT max(item.itemId) from Items)";
+
+	
+
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -16,8 +17,8 @@ import com.dtos.UserDTO;
 
 import ServiceInterfaces.UserService;
 import exceptions.CaveatEmptorException;
-import utils.Constants;
 import utils.FacesMessagesUtil;
+import utils.LoggerUtils;
 
 @ManagedBean(name ="activationAccount")
 @ViewScoped
@@ -27,14 +28,18 @@ public class ActivationAccount implements Serializable {
 
 	private UserDTO userDto;
 	private String usernameURL;
-	private Timestamp current_timestamp;
+	private Timestamp currentTimestamp;
 	private Timestamp registeredDate;
-	Date date = new Date();
+	Date date ;
 	
 
 	@EJB
 	UserService userService;
 	
+	@PostConstruct
+	public void init(){
+		 date=new Date();
+	}
 		
 	public String getUsernameURL() {
 		return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("username");		 
@@ -54,9 +59,9 @@ public class ActivationAccount implements Serializable {
 		try {
 			userDto=userService.getUserByUsername(usernameURL);
 			
-			current_timestamp = new Timestamp(date.getTime());
+			currentTimestamp = new Timestamp(date.getTime());
 			registeredDate=userDto.getDateRegistered();
-			long differenceInSeconds=(current_timestamp.getTime()-registeredDate.getTime())/1000;
+			long differenceInSeconds=(currentTimestamp.getTime()-registeredDate.getTime())/1000;
 			
 			if (differenceInSeconds > 86400) 
 			{
@@ -72,7 +77,7 @@ public class ActivationAccount implements Serializable {
 				}
 			}
 		} catch (CaveatEmptorException e) {
-			Constants.getLogger().log( Level.INFO, "Exception in validateKey method from ActivationAccount" ,e.getMessage());		
+			LoggerUtils.getLogger().log( Level.INFO, "Exception in validateKey method from ActivationAccount" ,e.getMessage());		
 		}
 		catch (Exception e) {
 			FacesMessagesUtil.redirectPage("error.xhtml");

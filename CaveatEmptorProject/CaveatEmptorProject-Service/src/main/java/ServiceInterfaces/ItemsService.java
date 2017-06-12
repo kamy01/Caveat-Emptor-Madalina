@@ -13,4 +13,6 @@ public interface ItemsService {
 	public List<ItemsDTO> getItemsToBuy(Long userId) throws CaveatEmptorException;
 	public boolean updateItem(ItemsDTO itemDto) throws CaveatEmptorException;
 	public boolean insertItem(ItemsDTO itemDto) throws CaveatEmptorException;
+	public List<String> getCategoriesNames() throws CaveatEmptorException;
+	public Long getMaxItemId() throws CaveatEmptorException;
 }
