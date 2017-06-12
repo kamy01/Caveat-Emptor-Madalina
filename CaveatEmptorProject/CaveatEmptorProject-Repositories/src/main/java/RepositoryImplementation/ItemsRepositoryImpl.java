@@ -26,6 +26,7 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 		try {
 				return (List<Items>) entityManager.createNamedQuery(QueryConstants.GET_ITEMS_TO_SELL)
 						.setParameter("userId", userId).getResultList();
+
 		} catch (Exception ex) {
 			Constants.getLogger().log(Level.INFO, "Exception in getItemsToSell method from ItemsRepositoryImpl",ex.getMessage());
 			return null;
@@ -47,7 +48,7 @@ public class ItemsRepositoryImpl implements ItemsRepository{
 	public boolean updateItem(Items item) throws CaveatEmptorException{
 		return entityManager.merge(item) != null;
 	}
-	public boolean deleteItem(Items item) throws CaveatEmptorException{
+	public boolean insertItem(Items item) throws CaveatEmptorException{
 		if(item.getItemId()!=null){
 			entityManager.remove(item);
 			return true;
