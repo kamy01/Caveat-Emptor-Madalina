@@ -1,7 +1,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
 import javax.persistence.Column;
@@ -42,9 +41,9 @@ public class Items implements Serializable {
 	@Column
 	private int nrBids;
 	@Column
-	private Timestamp biddingStartDate;
+	private Date biddingStartDate;
 	@Column
-	private Timestamp biddingEndDate;
+	private Date biddingEndDate;
 	@Column
 	private String status;
 	@Column
@@ -108,23 +107,23 @@ public class Items implements Serializable {
 	}
 
 	
-	public Timestamp getBiddingStartDate() {
-		return new Timestamp(biddingStartDate.getTime());
+	public Date getBiddingStartDate() {
+		return new Date(biddingStartDate.getTime());
 		
 		
 	}
 
-	public void setBiddingStartDate(Timestamp biddingStartDate) {
+	public void setBiddingStartDate(Date biddingStartDate) {
 		this.biddingStartDate = biddingStartDate;
 	}
 
 
-	public Timestamp getBiddingEndDate() {
-		return new Timestamp(biddingEndDate.getTime());
+	public Date getBiddingEndDate() {
+		return new Date(biddingEndDate.getTime());
 		
 	}
 
-	public void setBiddingEndDate(Timestamp biddingEndDate) {
+	public void setBiddingEndDate(Date biddingEndDate) {
 		this.biddingEndDate = biddingEndDate;
 	}
 

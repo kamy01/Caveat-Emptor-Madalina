@@ -10,6 +10,6 @@ public interface ItemsRepository {
 	public List<Items> getItemsToSell(Long userId) throws CaveatEmptorException;
 	public List<Items> getItemsToBuy(Long userId) throws CaveatEmptorException;
 	public boolean updateItem(Items item) throws CaveatEmptorException;
-	public boolean deleteItem(Items item) throws CaveatEmptorException;
+	public boolean insertItem(Items item) throws CaveatEmptorException;
 
 }

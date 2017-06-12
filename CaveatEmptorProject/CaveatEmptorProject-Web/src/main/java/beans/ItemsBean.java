@@ -1,7 +1,6 @@
 package beans;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +14,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.TreeNode;
+
+import com.dtos.CategoriesDTO;
 import com.dtos.ItemsDTO;
 
 import ServiceImplementation.Transformation;
@@ -40,30 +42,32 @@ public class ItemsBean  implements Serializable{
 	private String optionDropDown;
 	private Map<String, String> dropDownItems;
 	private boolean renderedMyBid;
-	private boolean renderedEditButton=true;
-	RequestContext context = RequestContext.getCurrentInstance();
+	private boolean renderedEditButton;
+	RequestContext context;
+	List<CategoriesDTO> categoriesList;
+	CategoriesDTO categoryDto;
 			
 	@EJB
 	ItemsService itemsService;
 	
-	List<String> category;
 	
 	private Map<String, String> params=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap(); 
 	public final String userIdParameter = params.get("userId");
 	
-	@ManagedProperty("#{treeBean}")
-	TreeBean tree;
+	@ManagedProperty("#{contentCategory}")
+	private ContentCategoryBean contentCategory;
 	
 	@PostConstruct
 	public void init() throws CaveatEmptorException {
-		category=new ArrayList<>();
+		context= RequestContext.getCurrentInstance();
+		categoryDto=new CategoriesDTO();
 		itemDto=new ItemsDTO();
-		category=itemsService.getCategoriesNames();
 		renderedEditButton=true;
 		itemsListDto = new ArrayList<>();	
 		dropDownItems=new HashMap<>();
 		optionDropDown="sell";
 		renderedMyBid=false;
+		contentCategory.getCategoryTree().init();
 		itemsListDto=itemsService.getItemsToSell(Long.parseLong(userIdParameter));
 		for (ItemsDTO item : itemsListDto) {
 			if(item.getStatus().equals("closed")){
@@ -75,13 +79,13 @@ public class ItemsBean  implements Serializable{
 		}
 	}
 
-	
-	public List<String> getCategory() {
-		return category;
+	public List<CategoriesDTO> getCategoriesList() {
+		return categoriesList;
 	}
 
-	public void setCategory(List<String> category) {
-		this.category = category;
+
+	public void setCategoriesList(List<CategoriesDTO> categoriesList) {
+		this.categoriesList = categoriesList;
 	}
 
 
@@ -109,12 +113,17 @@ public class ItemsBean  implements Serializable{
 	public void setCurrentRow(Long currentRow) {
 		this.currentRow = currentRow;
 	}
-	public TreeBean getTree() {
-		return tree;
+	
+	public ContentCategoryBean getContentCategory() {
+		return contentCategory;
 	}
-	public void setTree(TreeBean tree) {
-		this.tree = tree;
+
+
+	public void setContentCategory(ContentCategoryBean contentCategory) {
+		this.contentCategory = contentCategory;
 	}
+
+
 	public List<ItemsDTO> getItemsListDto() {
 		return itemsListDto;
 	}
@@ -155,9 +164,8 @@ public class ItemsBean  implements Serializable{
 		} else if (optionDropDown.toLowerCase().equals(ItemsOption.BUY.getValue())) {
 			renderedMyBid=true;
 			optionDropDown="buy";
+			context= RequestContext.getCurrentInstance();
 			itemDto=new ItemsDTO();
-			category=new ArrayList<>();
-			category=itemsService.getCategoriesNames();
 			renderedEditButton=true;
 			itemsListDto = new ArrayList<>();	
 			dropDownItems=new HashMap<>();
@@ -179,18 +187,20 @@ public class ItemsBean  implements Serializable{
 	 public void onRowEdit(RowEditEvent event) {
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgVarEdit').show();");
+		context.execute("PF('dlgChooseCategory').show()");
 		 itemDto =(ItemsDTO) event.getObject();
-		
+		if(contentCategory.getCategoriesDto().getNameCategory()!=itemDto.getCategories()){
+			itemDto.setCategories(contentCategory.getCategoriesDto().getNameCategory());
+		}
 		 itemDto.setUserId(Long.parseLong(userIdParameter));
-		 //itemDto.setBiddingStartDate(itemDto.getBiddingStartDate());
 	 }
 	 public void onRowCancel(RowEditEvent event) {
 	 }
 
 	 public void updateItem() throws CaveatEmptorException{
 		 try{
-		 itemsService.updateItem(itemDto);
-		 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was edited!", "");
+			 	 itemsService.updateItem(itemDto);
+				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was edited!", "");
 		 }catch(Exception e){
 		 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't edited!Try again!", "");
 				Constants.getLogger().log( Level.INFO, "Exception in updateItem method from ItemsBean" ,e.getMessage());				
@@ -203,13 +213,26 @@ public class ItemsBean  implements Serializable{
 		 RequestContext context = RequestContext.getCurrentInstance();
 		context.execute("PF('dlgVarDelete').show();");
 	 }
-	 public void deleteItem() throws CaveatEmptorException{
+	 public void insertItem() throws CaveatEmptorException{
 		 try{
-		 itemsService.deleteItem(itemDto);
+		 itemsService.insertItem(itemDto);
 		 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was deleted!", "");
 		 }catch(Exception e){
 			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't deleted!Try again!", "");
 				Constants.getLogger().log( Level.INFO, "Exception in deleteItem method from ItemsBean" ,e.getMessage());				
 			}
 	 }
+	 
+	 public void editCategory(){
+		
+		 FacesMessagesUtil.message_info("Category "+contentCategory.getCategoriesDto().getNameCategory(), "");
+
+	 }
+	 
+	 public void changeCategory(){
+		 RequestContext context = RequestContext.getCurrentInstance();
+		context.execute("PF('dlgChooseCategory').show();");
+	 }
+	 
+	
 }

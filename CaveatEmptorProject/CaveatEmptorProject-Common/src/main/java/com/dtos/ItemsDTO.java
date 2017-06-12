@@ -1,7 +1,6 @@
 package com.dtos;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -19,10 +18,8 @@ public class ItemsDTO implements Serializable{
 	private Double bestBid;
 	private Double yourBid;
 	private int nrBids;
-	//private Date biddingStartDate;
-	//private Date biddingEndDate;
-	private Timestamp biddingStartDate;
-	private Timestamp biddingEndDate;
+	private Date biddingStartDate;
+	private Date biddingEndDate;
 	private String status;
 	private String winner;
 	
@@ -85,18 +82,18 @@ public class ItemsDTO implements Serializable{
 		this.nrBids = nrBids;
 	}
 
-	public Timestamp getBiddingStartDate() throws ParseException {
-		return new Timestamp(biddingStartDate.getTime());
+	public Date getBiddingStartDate() throws ParseException {
+		return new Date(biddingStartDate.getTime());
 		
 	}
-	public void setBiddingStartDate(Timestamp biddingStartDate) {
+	public void setBiddingStartDate(Date biddingStartDate) {
 		this.biddingStartDate = biddingStartDate;
 	}
 	
-	public Timestamp getBiddingEndDate() throws ParseException {
-		return new Timestamp(biddingEndDate.getTime());
+	public Date getBiddingEndDate() throws ParseException {
+		return new Date(biddingEndDate.getTime());
 	}
-	public void setBiddingEndDate(Timestamp biddingEndDate) {
+	public void setBiddingEndDate(Date biddingEndDate) {
 		this.biddingEndDate = biddingEndDate;
 	}
 	public String getStatus() {

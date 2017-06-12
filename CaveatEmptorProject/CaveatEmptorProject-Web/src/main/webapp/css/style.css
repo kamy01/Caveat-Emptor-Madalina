@@ -240,3 +240,16 @@ h1 {
 
 .ui-datatable .ui-row-editor .ui-icon-check, .ui-datatable .ui-row-editor .ui-icon-close {
 }
+
+.ui-button .ui-button-text {
+    display: block;
+    line-height: normal;
+    background-color: white;
+}
+.ui-button {
+    display: inline-block;
+    position: relative;
+    padding: 0px;
+    overflow: visible;
+    margin-left: 35px;
+}

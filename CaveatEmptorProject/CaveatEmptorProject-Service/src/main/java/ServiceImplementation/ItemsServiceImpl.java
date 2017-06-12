@@ -14,7 +14,6 @@ import com.dtos.ItemsDTO;
 import RepositoryInterfaces.CategoriesRepository;
 import RepositoryInterfaces.ItemsRepository;
 import ServiceInterfaces.ItemsService;
-import entities.Categories;
 import entities.Items;
 import exceptions.CaveatEmptorException;
 import utils.Constants;
@@ -43,18 +42,6 @@ public class ItemsServiceImpl implements ItemsService{
 			Constants.getLogger().log( Level.INFO, "Exception in getItemsToSell method from ItemsServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
 		}
-	}
-	
-	public List<String> getCategoriesNames() throws CaveatEmptorException{
-		List<Categories> categories= categoriesRepository.getCategories();
-		List<String> categoriesNames=new ArrayList<>();
-
-		for (Categories category : categories) {
-			if(category.getNameCategory()!=null || !category.getNameCategory().isEmpty()){
-				categoriesNames.add(category.getNameCategory());
-			}
-		}
-		return categoriesNames;
 	}
 	
 	public List<ItemsDTO> getItemsToBuy(Long userId) throws CaveatEmptorException {
@@ -86,11 +73,11 @@ public class ItemsServiceImpl implements ItemsService{
 		}
 		
 			}
-	public boolean deleteItem(ItemsDTO itemDto) throws CaveatEmptorException{
+	public boolean insertItem(ItemsDTO itemDto) throws CaveatEmptorException{
 		try {
 			Items item=new Items();
 			item.setItemId(itemDto.getItemId());
-			return itemsRepository.deleteItem(item);
+			return itemsRepository.insertItem(item);
 		}catch(Exception e){
 			Constants.getLogger().log( Level.INFO, "Exception in deleteItem method from ItemsServiceImpl" ,e.getMessage());		
 			throw new CaveatEmptorException();			
