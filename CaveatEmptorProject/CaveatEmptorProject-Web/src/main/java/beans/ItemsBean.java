@@ -21,6 +21,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
+import com.dtos.CategoriesDTO;
 import com.dtos.ItemsDTO;
 import ServiceInterfaces.ItemsService;
 import exceptions.CaveatEmptorException;
@@ -42,7 +43,10 @@ public class ItemsBean  implements Serializable{
 	private Map<String, String> dropDownItems;
 	private boolean renderedMyBid;
 	private boolean renderedEditButton;
-	RequestContext context;
+	
+	private boolean renderedInsertButton;
+	private String nameInsertButton;
+
 			
 	@EJB
 	ItemsService itemsService;
@@ -54,8 +58,12 @@ public class ItemsBean  implements Serializable{
 	
 	@ManagedProperty("#{contentCategory}")
 	private ContentCategoryBean contentCategory;
+
+	RequestContext context ;
 	
 public void initDto(){
+	renderedInsertButton=true;
+	nameInsertButton="Insert";
 	itemDto=new ItemsDTO();
 	itemDto.setName("");
 	itemDto.setBiddingStartDate(new Date());
@@ -69,7 +77,7 @@ public void initDto(){
 	@PostConstruct
 	public void init() throws CaveatEmptorException {
 		
-		context= RequestContext.getCurrentInstance();
+		context = RequestContext.getCurrentInstance();
 		category=new ArrayList<>();
 		category=itemsService.getCategoriesNames();
 		initDto();
@@ -90,6 +98,20 @@ public void initDto(){
 		}
 	}
 
+
+	
+	public boolean isRenderedInsertButton() {
+		return renderedInsertButton;
+	}
+	public void setRenderedInsertButton(boolean renderedInsertButton) {
+		this.renderedInsertButton = renderedInsertButton;
+	}
+	public String getNameInsertButton() {
+		return nameInsertButton;
+	}
+	public void setNameInsertButton(String nameInsertButton) {
+		this.nameInsertButton = nameInsertButton;
+	}
 	public List<String> getCategory() {
 		return category;
 	}
@@ -222,14 +244,37 @@ public void initDto(){
 			 itemDto.setUserId(Long.parseLong(userIdParameter));
 			 itemDto.setItemId(maxItemId+1);
 			 itemDto.setStatus("open");
+
+			 CategoriesDTO category=(CategoriesDTO) contentCategory.getCategoryTree().getSelectedNode().getData();
 			 
+			 itemDto.setCategories(category.getNameCategory());
+			 
+			 if(itemDto.getBiddingEndDate().getTime() < itemDto.getBiddingStartDate().getTime()){
+				 FacesMessagesUtil.message_error("Item "+itemDto.getName()+" wasn't inserted!Closing date must be bigger than opening date", "");
+			 }
+			 else if(itemDto.getName().isEmpty() || itemDto.getName()==null)
+			 {
+				 FacesMessagesUtil.message_error("Item wasn't inserted!Column name is required", "");
+
+			 }
+			 else if(itemDto.getInitialPrice()==null || itemDto.getInitialPrice().equals(""))
+			 {
+				 FacesMessagesUtil.message_error("Item wasn't inserted!Column Initial price is required", "");
+
+			 }
+			 else{
+			 nameInsertButton="Save";
 			 itemsService.insertItem(itemDto);
-			 RequestContext.getCurrentInstance().update(":tabView:frmDropDown:frmContentItems:dataTableItems");
-			    
+			 RequestContext context = RequestContext.getCurrentInstance();
+			 context.execute("PF('itemDialog').hide();");
 			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was inserted!", "");
+			
+			 }
+			    
+			
 			 }catch(Exception e){
 				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't inserted!Try again!", "");
-				 LoggerUtils.getLogger().log( Level.INFO, "Exception in insertItem method from ItemsBean" ,e.getMessage());				
+				 LoggerUtils.getLogger().log( Level.INFO, "Exception in insertItem method from ItemsBean" ,e.getMessage());	
 				}
 	 }
 	 public void insertItem() throws CaveatEmptorException{

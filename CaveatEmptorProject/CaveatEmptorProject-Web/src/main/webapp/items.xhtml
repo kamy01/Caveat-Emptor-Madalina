@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
+
 	<f:metadata>
 		<f:viewParam name="userId" value="#{itemsBean.userId}"
 			converter="javax.faces.Long"></f:viewParam>
@@ -27,13 +28,15 @@
 								listener="#{itemsBean.onDropDownChange}" />
 						</h:selectOneMenu>
 
+						
 						<p:commandButton value="Create new item"
 							action="#{itemsBean.insertItem}">
 						</p:commandButton>
 
 
 						<p:dataTable id="dataTableItems" value="#{itemsBean.itemsListDto}"
-							var="item" editable="true">
+							var="item" editable="true"  paginator="true" rows="10"
+							 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 							<p:ajax event="rowEdit" listener="#{itemsBean.onRowEdit}"
 								process="@this" update="tabView:form:dataTableItems"
 								onerror="PF('dlgVarEdit').hide()" />
@@ -230,48 +233,53 @@
 								</p:dialog>
 							</p:column>
 						</p:dataTable>
-
-						<p:dialog header="Insert new item" widgetVar="itemDialog" 
-							id="itemDlg">
+						<p:dialog header="Insert new item" widgetVar="itemDialog" id="itemDlg" style="margin-top:-138px;">
 
 
 
-						<h:panelGrid id="display"  columns="2" cellpadding="4">
+						<h:panelGrid id="display"  columns="4">
 						
 							
-								<p:inputText id="name" value="#{itemsBean.itemDto.name}"></p:inputText>
-								<p:watermark for="name" value="Item name *" />
+								<h:outputText value="Name" />
+								<p:inputText id="name" value="#{itemsBean.itemDto.name}" ></p:inputText>
+								
 						
 								
+								<h:outputText value="Description" />
 								<p:inputTextarea id="description"
 									value="#{itemsBean.itemDto.description}"></p:inputTextarea>
-									<p:watermark for="description" value="Item description *" />
+							
 						
+									<h:outputText value="Initial price (€)" />
 									<p:inputText id="initialPrice"
 									value="#{itemsBean.itemDto.initialPrice}" required="true"
 									requiredMessage="Initial price is required"></p:inputText>
-									<p:watermark for="initialPrice" value="Initial price (€)" />
+									
 								
 								
 								<h:outputText value="Opening date" />
 								<p:calendar id="openingDate"
 									value="#{itemsBean.itemDto.biddingStartDate}" required="true"
-									requiredMessage="Opening date is required" pattern="MM/dd/yyyy"></p:calendar>
-									
+									requiredMessage="Opening date is required" pattern="MM/dd/yyyy" widgetVar="startDateCalendar" >
+									</p:calendar>
+									<h:outputText value="" />
+									<h:outputText value="" />
 							
-								<h:outputText value="Closing date" />
+								<h:outputText value="Closing date"/>
+							
 								<p:calendar id="closingDate"
 									value="#{itemsBean.itemDto.biddingEndDate}" required="true"
-									requiredMessage="Closing date is required" pattern="MM/dd/yyyy"></p:calendar>
+									requiredMessage="Closing date is required" pattern="MM/dd/yyyy" widgetVar="closingDate">
+									</p:calendar>
 							
+						
 							
-							
-							
-								<h:outputText value="Categories" />	
-							<div id="treeDiv" style="width: 277px;[position:relative; border: 0px solid #fff;height: 97%;">
+<!-- 								<h:outputText value="Categories" />	<br/> -->
+								<div id="treeDiv" style="position:relative; border: 0px solid #fff;height: 97%;">
+								<p>Select a category</p>
 									<h:form class="tree-frm" id="tree-frm" >
 										<p:tree value="#{itemsBean.contentCategory.categoryTree.root}" var="node" selectionMode="single"
-											selection="#{itemsBean.contentCategory.categoryTree.selectedNode}" id="tree">
+											selection="#{itemsBean.contentCategory.categoryTree.selectedNode}" id="tree" >
 											<p:ajax event="select" listener="#{itemsBean.contentCategory.onNodeSelect}"
 												/>
 											<p:treeNode>
@@ -279,25 +287,29 @@
 											</p:treeNode>
 										</p:tree>
 									</h:form>
-							</div> 
-							
+								</div> 
+										<h:outputText value="" />
+										<br/>	<br/>	<br/>	<br/>	<br/>	<br/>
 								<p:commandButton id="insert"
-									actionListener="#{itemsBean.insert}"
-									oncomplete="itemDialog.hide()" update="tabView:form"
-									value="Yes" />
-								<p:commandButton id="cancelButton" onclick="itemDialog.hide()"
-									value="No" />	
+									actionListener="#{itemsBean.insert}" update="tabView:form:dataTableItems  msgGrowl"
+									value="Save"/>
+								<p:commandButton id="cancelButton" update="tabView:form"
+									rendered="#{itemsBean.renderedInsertButton}"
+									value="Cancel" />	
 							
+							<h:outputText value="" />
+							<h:outputText value="" />
+								
+							<p:messages id="msgs"/>
+							<p:growl id="msgGrowl"/>
+
 							</h:panelGrid>
 				
 						</p:dialog>
+
 					</h:form>
 				</div>
 			</div>
-
-		</p:layoutUnit>
-		<p:layoutUnit position="south">
-
 		</p:layoutUnit>
 	</p:layout>
 </ui:composition>
