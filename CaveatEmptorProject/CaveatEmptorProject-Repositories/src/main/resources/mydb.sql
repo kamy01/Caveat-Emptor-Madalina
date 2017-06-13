@@ -61,7 +61,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-09 18:19:39
+-- Dump completed on 2017-06-13 13:23:38
 
 
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
@@ -95,7 +95,7 @@ CREATE TABLE `categories` (
   `description` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`categoryId`),
   UNIQUE KEY `nameCategory` (`nameCategory`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,7 +104,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,NULL,NULL,NULL),(2,1,'Desktop PC','Deskktop PC description'),(3,1,'PC Components','PC Components description'),(4,1,'Laptops','Laptops description'),(5,1,'Laptop accessories','Laptop accessories description'),(6,3,'CPUs','CPUs description'),(7,3,'Storage','Storage description'),(8,3,'RAM','RAM description'),(9,6,'AMD','AMD description'),(10,6,'Intel','Intel description');
+INSERT INTO `categories` VALUES (1,NULL,'',''),(2,1,'Desktop PC','Deskktop PC description'),(3,1,'PC Components','PC Components description'),(4,1,'Laptops','Laptops description'),(5,1,'Laptop accessories','Laptop accessories description'),(6,3,'CPUs','CPUs description'),(7,3,'Storage','Storage description'),(8,3,'RAM','RAM description'),(9,6,'AMD','AMD description'),(10,6,'Intel','Intel description');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -117,8 +117,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-09 18:19:40
-
+-- Dump completed on 2017-06-13 13:23:38
 
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
@@ -165,7 +164,7 @@ CREATE TABLE `items` (
   CONSTRAINT `items_ibfk_1` FOREIGN KEY (`winner`) REFERENCES `users` (`username`),
   CONSTRAINT `items_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`),
   CONSTRAINT `items_ibfk_3` FOREIGN KEY (`categories`) REFERENCES `categories` (`nameCategory`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +173,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (1,1,'Name1','description1','Laptops',200.666,500,NULL,2,'2017-06-07','2017-06-08','open','Madalina'),(2,1,'Name2','description2','PC Components',300.77777777,400.9,NULL,2,'2017-06-07','2017-06-09','closed','Madalina'),(3,1,'Name3','description3','Laptops',200.233,500.2,100.1,2,'2017-06-07','2017-06-08','open','Madalina'),(4,1,'Name4','description4','PC Components',300.1,400.7,100.7,2,'2017-06-07','2017-06-09','closed','Madalina'),(5,2,'Name5','description3','Laptops',200,500.111,100.89,2,'2017-06-07','2017-06-08','open','Madalina'),(6,3,'Name6','description3','Laptops',200.9,500.11,100.009,2,'2017-06-07','2017-06-08','open','Madalina');
+INSERT INTO `items` VALUES (1,1,'Name1','description1','Laptops',0,500.99,NULL,2,'2017-06-12','2017-06-13','open','Madalina'),(2,1,'Name2','description2','PC Components',300.77777777,400,NULL,2,'2017-06-12','2017-06-12','closed','Madalina'),(3,1,'Name3','description3','Laptops',200.233,500.2,100.1,2,'2017-06-12','2017-06-12','open','Madalina'),(4,1,'Name4','description4','PC Components',300.1,400.7,100.7,2,'2017-06-12','2017-06-12','closed','Madalina'),(5,2,'Name5','description3','Laptops',200,500.111,100.89,2,'2017-06-12','2017-06-12','open','Madalina'),(6,3,'Name6','description3','Laptops',200.9,500.11,100.009,2,'2017-06-12','2017-06-12','open','Madalina');
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -187,4 +186,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-09 18:19:39
+-- Dump completed on 2017-06-13 13:23:38
