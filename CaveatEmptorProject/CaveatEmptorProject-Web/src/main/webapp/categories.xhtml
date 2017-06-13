@@ -32,13 +32,10 @@
 
 				<h:panelGroup id="categories-page">
 					<br />
-					
-<!-- 					<p:breadCrumb style="padding-right:1000px;"> -->
-<!--     					<p:menuitem value="Categories"  /> -->
-<!--     					<p:menuitem value="#{treeBean.selectedNode.data.getNameCategory()}" /> -->
-<!--     					<p:menuitem value="#{contentCategory.getParent()}" /> -->
-    				
-<!-- 					</p:breadCrumb> -->
+					<div class="categBreadcrumb" id="categBreadcrumb">
+						<p:breadCrumb model="#{contentCategory.model}" />
+					</div>
+
 					
 					<p:commandButton value="Create New Category" id="resetValuesBtn"
 						disabled="#{contentCategory.disableInsertButton}">
@@ -81,7 +78,7 @@
 						</p:ajax>
 
 					</p:commandButton>
-					<br />
+					
 					<p:commandButton render="@all" icon="ui-icon-check"
 						rendered="#{contentCategory.renderedInsert}">
 						<p:ajax listener="#{contentCategory.insert}"
@@ -90,7 +87,7 @@
 						</p:ajax>
 					</p:commandButton>
 
-					<br />
+				
 					<p:commandButton icon="ui-icon-closethick"
 						rendered="#{contentCategory.renderedButtonUpdateOrDelete}">
 						<p:ajax listener="#{contentCategory.cancelUpdate}"

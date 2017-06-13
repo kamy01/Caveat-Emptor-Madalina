@@ -1,6 +1,8 @@
 package beans;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -9,9 +11,15 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuModel;
+
 import com.dtos.CategoriesDTO;
 import ServiceInterfaces.CategoryService;
 import exceptions.CaveatEmptorException;
@@ -26,7 +34,9 @@ public class ContentCategoryBean {
 	private TreeBean categoryTree;
 
 	private CategoriesDTO categoriesDto;
-
+	private List<CategoriesDTO> categoriesDtoList;
+	private MenuModel model;
+	private DefaultMenuItem itemMenu;
 	private boolean disableButtonUpdateOrDelete;
 	private boolean readOnly;
 	private boolean renderedButtonUpdateOrDelete ;
@@ -43,11 +53,13 @@ public class ContentCategoryBean {
 
 	@PostConstruct
 	public void init() {
+		initializeBreadcrumb();
+		
 		disableButtonUpdateOrDelete = true;
 		readOnly = true;
+		categoriesDtoList=new ArrayList<>();
 		categoriesDto = new CategoriesDTO();
 		categoryTree.init();
-		disableButtonUpdateOrDelete = true;
 	}
 
 	public CategoriesDTO getCategoriesDto() {
@@ -56,6 +68,14 @@ public class ContentCategoryBean {
 
 	public void setCategoriesDto(CategoriesDTO categoriesDto) {
 		this.categoriesDto = categoriesDto;
+	}
+
+	public List<CategoriesDTO> getCategoriesDtoList() {
+		return categoriesDtoList;
+	}
+
+	public void setCategoriesDtoList(List<CategoriesDTO> categoriesDtoList) {
+		this.categoriesDtoList = categoriesDtoList;
 	}
 
 	public TreeBean getCategoryTree() {
@@ -72,6 +92,23 @@ public class ContentCategoryBean {
 
 	public void setDisableButtonUpdateOrDelete(boolean disableButtonUpdateOrDelete) {
 		this.disableButtonUpdateOrDelete = disableButtonUpdateOrDelete;
+	}
+	
+
+	public MenuModel getModel() {
+		return model;
+	}
+
+	public void setModel(MenuModel model) {
+		this.model = model;
+	}
+
+	public DefaultMenuItem getItemMenu() {
+		return itemMenu;
+	}
+
+	public void setItemMenu(DefaultMenuItem itemMenu) {
+		this.itemMenu = itemMenu;
 	}
 
 	public boolean isReadOnly() {
@@ -105,8 +142,39 @@ public class ContentCategoryBean {
 	public void setDisableInsertButton(boolean disableInsertButton) {
 		this.disableInsertButton = disableInsertButton;
 	}
-
 	
+	
+	private String getViewUrl(){
+		return FacesContext.getCurrentInstance().getViewRoot().getViewId();
+	}
+	
+	private void initializeBreadcrumb() {
+		model = new DefaultMenuModel();
+		itemMenu = new DefaultMenuItem("External");
+		itemMenu.setUrl("http://localhost:8080/CaveatEmptorProject-Web"+ getViewUrl());
+		model.addElement(itemMenu);
+	}
+	public void addBreadcrumbMenuItem(MenuModel model) {
+		if (categoryTree.getSelectedNode() != null) {
+			categoriesDtoList = new ArrayList<>();
+			getNodeParents(categoryTree.getSelectedNode());
+			Collections.reverse(categoriesDtoList);
+			for (CategoriesDTO category : categoriesDtoList) {
+				addElementToBreadcrumb(category);
+			}
+			addElementToBreadcrumb((CategoriesDTO)categoryTree.getSelectedNode().getData());
+		}
+	}
+
+	private void addElementToBreadcrumb(CategoriesDTO category) {
+
+		itemMenu = new DefaultMenuItem(category.getNameCategory());
+		itemMenu.setUrl("#");
+		itemMenu.setId(category.getNameCategory().toString());
+		model.addElement(itemMenu);
+
+	}
+
 
 	public void insert() throws CaveatEmptorException {
 		FlagsValues(false, true, false, false, false);
@@ -141,7 +209,18 @@ public class ContentCategoryBean {
 		expandNode(categoriesDto);
 
 	}
+	private void getNodeParents(TreeNode selectedNode) {
 
+		CategoriesDTO node = (CategoriesDTO) selectedNode.getData();
+
+		if (node.getParentId() != null) {
+
+			categoriesDtoList.add((CategoriesDTO) selectedNode.getParent().getData());
+			getNodeParents(selectedNode.getParent());
+
+		}
+
+	}
 	public void cancelInsert() {
 		FlagsValues(false, true, false, false, false);
 		categoryTree.init();
@@ -180,6 +259,7 @@ public class ContentCategoryBean {
 	}
 
 	public void resetValues() {
+		
 		categoriesDto.setCategoryId(null);
 		categoriesDto.setParentId(null);
 		categoriesDto.setNameCategory(null);
@@ -247,6 +327,9 @@ public class ContentCategoryBean {
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
+		initializeBreadcrumb();
+		addBreadcrumbMenuItem(model);
+		
 		disableButtonUpdateOrDelete = false;
 		if (createButtonClicked) {
 			resetValues();

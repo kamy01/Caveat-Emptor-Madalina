@@ -27,7 +27,6 @@
 }
 
 #footer {
-	position: absolute;
 	bottom: 0;
 	width: 99%;
 	height: 8%; 
@@ -175,19 +174,26 @@ h1 {
 }
 
 .ui-breadcrumb {
-    padding: 7px 14px;
-    padding-right: 905px;
+    /* padding: 7px 14px; */
+    /* padding-right: 905px; */
     margin: 0 1px 22px 11px;
     list-style: none;
-    background-color: #fbfbfb;
+    /* background-color: #fbfbfb; */
     background-image: -moz-linear-gradient(top, #ffffff, #f5f5f5);
     background-image: -ms-linear-gradient(top, #ffffff, #f5f5f5);
     background-image: -o-linear-gradient(top, #ffffff, #f5f5f5);
     background-image: linear-gradient(top, #ffffff, #f5f5f5);
-    border: 0px solid #fff;
+    /* border: 0px solid #fff; */
     -moz-border-radius: 3px;
     filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffff', endColorstr='#f5f5f5', GradientType=0);
     -moz-box-shadow: inset 0 1px 0 #ffffff;
+}
+
+.ui-breadcrumb {
+    /* margin: 0; */
+    /* padding: 0; */
+    /* overflow: hidden; */
+    padding: 5px 5px 7px 5px;
 }
 
 .ui-tabs.ui-tabs-top .ui-tabs-nav.ui-widget-header li.ui-state-active {
@@ -251,4 +257,30 @@ h1 {
     padding: 0px;
     overflow: visible;
     margin-left: 35px;
+}
+.ui-icon {
+    width: 16px;
+    height: 18px;
+    /* background-image: url(/CaveatEmptorProject-Web/faces/javax.faces.resource/images/ui-icons_72a7cf_256x240.png?ln=primefaces-bluesky); */
+}
+
+.ui-button-icon-only .ui-icon, .ui-button-text-icon-left .ui-icon, .ui-button-text-icon-right .ui-icon {
+    position: absolute;
+    top: 52%;
+    margin-top: -9px;
+    margin-left: -11px;
+}
+.ui-icon-check {
+    background-position: -61px -144px !important;
+    zoom: 1.6;
+    width: 17px;
+    padding: 1px 3px 0px 2px;
+    background-color: #9cea9b;
+}
+
+.ui-icon-closethick {
+    background-position: -93px -128px !important;
+    zoom: 1.6;
+    padding: 1px 6px 0 0;
+    background-color: #f59a9a;
 }
