@@ -1,25 +1,20 @@
 package beans;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
-
 import com.dtos.CategoriesDTO;
 import ServiceInterfaces.CategoryService;
 import exceptions.CaveatEmptorException;
@@ -59,6 +54,7 @@ public class ContentCategoryBean {
 
 	@PostConstruct
 	public void init() {
+		parent=new CategoriesDTO();
 		renderedParentText=false;
 		showBreadCrumb=false;
 		showBreadCrumbHiddden=true;
@@ -238,40 +234,43 @@ public class ContentCategoryBean {
 
 	}
 	
-//	boolean disableButtonUpdateOrDelete, boolean readOnly, boolean renderedButtonUpdateOrDelete,
-//	boolean disaleInsertButton, boolean renderedInsert,boolean renderedInsertChild
-	
 	public void insertChild() throws CaveatEmptorException {
 		FlagsValues(false, true, false, false, false,false);
+		parent=new CategoriesDTO();
 		try {
 			Long maxCategoryId = categoryService.getMaxCategoryId();
-			if (!IsAnyNodeSelected()) {
-				FacesMessagesUtil.message_error("Please select a parent category !", "");
+			if(IsAnyNodeSelected()==false){
 				FlagsValues(true, false, false, false, false ,true);
-				createButtonClicked=true;
-				categoryTree.init();
+				FacesMessagesUtil.message_error("Please select a parent category !", "");
 				disableButtonUpdateOrDelete=true;
-			} else {
+			}else{
+				parent=(CategoriesDTO) categoryTree.getSelectedNode().getData();
 				FlagsValues(true, false, false, false, false ,true);
 				categoriesDto.setParentId(parent.getCategoryId());
-				categoriesDto.setNameCategory(categoriesDto.getNameCategory());
 				categoriesDto.setCategoryId(maxCategoryId + 1);
-				String insertMessage = categoryService.insertCategory(categoriesDto);
-				if (insertMessage.equals("categoryExist") || insertMessage.equals("error") || insertMessage.equals("nullValues")) {
-					resetValues();
-					FacesMessagesUtil.message_error("Category already exist or invalid fields !", "Insert another category");
-					FlagsValues(true, false, false, false, false,true);
-				} else {
-					FacesMessagesUtil.message_info("Category was inserted!", "");
-					categoryTree.init();
-					createButtonClicked = false;
-					expandNode(categoriesDto);
-				}
+					String insertMessage = categoryService.insertCategory(categoriesDto);
+					if (insertMessage.equals("categoryExist") || insertMessage.equals("error") || insertMessage.equals("nullValues")) {
+						resetValuesChild();
+						FacesMessagesUtil.message_error("Category already exist or invalid fields !", "Insert another category");
+						FlagsValues(true, false, false, false, false,true);
+						disableButtonUpdateOrDelete=true;
+						disableInsertButton=true;						
+					} else {
+						FacesMessagesUtil.message_info("Category was inserted!", "");
+						renderedInsertChild=false;
+						createButtonClicked=false;
+						disableButtonUpdateOrDelete=false;
+						categoryTree.init();
+						expandNode(categoriesDto);
+					}
 			}
-			
+				
 		} catch (CaveatEmptorException e) {
 			LoggerUtils.getLogger().log(Level.INFO, "Exception in insert method from ContentCategoryBean",e.getMessage());
 		}
+	catch (Exception e) {
+		FacesMessagesUtil.redirectPage("error.xhtml");
+	}
 		
 	}
 
@@ -294,6 +293,9 @@ public class ContentCategoryBean {
 		} catch (CaveatEmptorException e) {
 			LoggerUtils.getLogger().log(Level.INFO, "Exception in insert method from ContentCategoryBean",e.getMessage());
 		}
+	catch (Exception e) {
+		FacesMessagesUtil.redirectPage("error.xhtml");
+	}
 		categoryTree.init();
 		expandNode(categoriesDto);
 	}
@@ -328,20 +330,23 @@ public class ContentCategoryBean {
 		this.renderedInsertChild=renderedInsertChild;
 	}
 
-	public void update() {
-		FlagsValues(false, true, false, false, false,false);
+	public void update() throws CaveatEmptorException{
+		FlagsValues(false, true, false, false, false, false);
 		try {
-			if(parent.getNameCategory().equals(categoriesDto.getNameCategory())&&(parent.getDescription().equals(categoriesDto.getDescription()))){
-				FacesMessagesUtil.message_info("Nothing to update!", "");
-			}
-			else if (categoryService.updateCategory(categoriesDto).equals("categoryNotExist")) {
+			 if (categoryService.updateCategory(categoriesDto).equals("categoryNotExist")){
 				FacesMessagesUtil.message_error("Category doesn't exist.Choose an existing category for update!", "");
+			//}else if(categoryService.updateCategory(categoriesDto).equals("nothingToUpdate")){
+				//FacesMessagesUtil.message_info("Nothing to update!", "");
 			}else{
 				FacesMessagesUtil.message_info("Category " + categoriesDto.getNameCategory() + " updated!", "");
 			}
-		} catch (Exception e) {
+		} catch (CaveatEmptorException e) {
 			LoggerUtils.getLogger().log(Level.INFO, "Exception in updateCategory method from ContentCategoryBean", e.getMessage());
 		}
+		catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
+		}
+		
 		categoryTree.init();
 		expandNode(categoriesDto);
 	}
@@ -353,10 +358,10 @@ public class ContentCategoryBean {
 
 	
 public void resetValuesChild() {
-		categoriesDto.setCategoryId(null);
-		categoriesDto.setParentId(null);
-		categoriesDto.setNameCategory(null);
-		categoriesDto.setDescription(null);
+//		categoriesDto.setCategoryId(null);
+//		categoriesDto.setParentId(null);
+//		categoriesDto.setNameCategory(null);
+//		categoriesDto.setDescription(null);
 		FlagsValues(true, false, false, true, false, true);
 		createButtonClicked = true;
 		categoryTree.init();
@@ -376,9 +381,9 @@ public void resetValuesChild() {
 		disabledNodesSelected();
 	}
 
-	public void removeCategory() {
+	public void removeCategory() throws CaveatEmptorException{
 		deleteOption=true;
-		
+		try{
 		if (categoriesDto.getNameCategory() == null || categoriesDto.getNameCategory().isEmpty()) {
 			FacesMessagesUtil.message_info("Empty fields!", "");
 		} else {
@@ -393,6 +398,9 @@ public void resetValuesChild() {
 			} else {
 				FacesMessagesUtil.message_info("Invalid fields!", "");
 			}
+		}
+		}catch (Exception e) {
+			FacesMessagesUtil.redirectPage("error.xhtml");
 		}
 	}
 
@@ -415,7 +423,6 @@ public void resetValuesChild() {
 			}
 		}
 	}
-	
 	private boolean IsAnyNodeSelected() {
 		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
 		boolean selected=false;
@@ -427,6 +434,7 @@ public void resetValuesChild() {
 		return selected;
 	}
 	
+	
 	private void disabledNodesSelected() {
 		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
 		for (TreeNode node : nodes) {
@@ -434,8 +442,6 @@ public void resetValuesChild() {
 		}
 	}
 	
-
-
 	private void selectNode(TreeNode node) {
 		categoryTree.setSelectedNode(node);
 		expandParent(node);
@@ -451,18 +457,17 @@ public void resetValuesChild() {
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
+		parent=(CategoriesDTO) categoryTree.getSelectedNode().getData();
 		showBreadCrumb=true;
 		showBreadCrumbHiddden=false;
 		initializeBreadcrumb();
-		addBreadcrumbMenuItem(model);
-		
+		addBreadcrumbMenuItem(model);	
 		if (createButtonClicked) {
 			disableButtonUpdateOrDelete = true;
-			resetValuesChild();
+			//resetValuesChild();
 			renderedParentText=true;
-			parent=(CategoriesDTO) categoryTree.getSelectedNode().getData();
 			parentName=parent.getNameCategory();
-			//createButtonClicked=false;
+//			createButtonClicked=false;
 		}else{
 			disableButtonUpdateOrDelete = false;
 			categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();

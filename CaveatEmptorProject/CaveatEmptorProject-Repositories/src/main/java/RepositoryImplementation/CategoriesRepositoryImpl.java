@@ -86,7 +86,10 @@ public class CategoriesRepositoryImpl implements CategoriesRepository {
 			Categories categ = getCategoryById(category.getCategoryId());
 			if (categ == null) {
 				return "categoryNotExist";
-			} else {
+			} else if((categ.getNameCategory().equals(category.getNameCategory()) &&(categ.getDescription().equals(category.getDescription())))){
+				return "nothingToUpdate";
+			}else
+			{
 				entityManager.merge(category);
 				return "categoryUpdated";
 				}
