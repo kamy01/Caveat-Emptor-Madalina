@@ -189,8 +189,10 @@
 										<h:outputText value="#{item.status}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText id="modelInputBiddingStatus"
-											value="#{item.status}" style="width:96%" />
+										<h:selectOneMenu id="dropDownStatus"
+											value="#{item.status}">
+											<f:selectItems var="statusChanged" itemValue="#{statusChanged}" itemLabel="#{statusChanged}"/>	
+								</h:selectOneMenu>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -207,7 +209,7 @@
 								</p:cellEditor>
 							</p:column>
 
-							<p:column style="width:50px">
+							<p:column style="width:65px">
 
 
 								<p:rowEditor rendered="#{item.renderedEdit}" id="editor">

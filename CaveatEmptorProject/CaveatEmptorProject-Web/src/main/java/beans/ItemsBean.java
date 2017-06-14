@@ -40,7 +40,7 @@ public class ItemsBean  implements Serializable{
 	ItemsDTO itemDto;
 	private Long currentRow;
 	private String optionDropDown;
-	private Map<String, String> dropDownItems;
+	private List<String> statusChange;
 	private boolean renderedMyBid;
 	private boolean renderedEditButton;
 	
@@ -63,6 +63,9 @@ public class ItemsBean  implements Serializable{
 	
 public void initDto(){
 	renderedInsertButton=true;
+	statusChange=new ArrayList<>();
+	statusChange.add("closed");
+	statusChange.add("abandoned");
 	nameInsertButton="Insert";
 	itemDto=new ItemsDTO();
 	itemDto.setName("");
@@ -83,23 +86,31 @@ public void initDto(){
 		initDto();
 		renderedEditButton=true;
 		itemsListDto = new ArrayList<>();	
-		dropDownItems=new HashMap<>();
 		optionDropDown="sell";
+	
 		renderedMyBid=false;
 		contentCategory.getCategoryTree().init();
 		itemsListDto=itemsService.getItemsToSell(Long.parseLong(userIdParameter));
 		for (ItemsDTO item : itemsListDto) {
-			if(item.getStatus().equals("closed")){
+			
+			if(item.getStatus().equals("closed") || item.getStatus().equals("not yet open")){
 				item.setRenderedEdit(false);
 			}
 			else{
 				item.setRenderedEdit(true);
+				//item.setStatus(statusChange);
 			}
 		}
 	}
 
 
 	
+	public List<String> getStatusChange() {
+		return statusChange;
+	}
+	public void setStatusChange(List<String> statusChange) {
+		this.statusChange = statusChange;
+	}
 	public boolean isRenderedInsertButton() {
 		return renderedInsertButton;
 	}
@@ -172,21 +183,13 @@ public void initDto(){
 	public void setItemDto(ItemsDTO itemDto) {
 		this.itemDto = itemDto;
 	}
-	public Map<String, String> getDropDownItems() {
-		return dropDownItems;
-	}
-	public void setDropDownItems(Map<String, String> dropDownItems) {
-		this.dropDownItems = dropDownItems;
-	}
-	
+
 	public boolean isRenderedMyBid() {
 		return renderedMyBid;
 	}
 	public void setRenderedMyBid(boolean renderedMyBid) {
 		this.renderedMyBid = renderedMyBid;
 	}
-
-
 
 	public void onDropDownChange() throws CaveatEmptorException {
 		if (optionDropDown.toLowerCase().equals(ItemsOption.SELL.getValue())) {
@@ -202,16 +205,16 @@ public void initDto(){
 			category=itemsService.getCategoriesNames();
 			renderedEditButton=true;
 			itemsListDto = new ArrayList<>();	
-			dropDownItems=new HashMap<>();
 			itemsListDto=itemsService.getItemsToBuy(Long.parseLong(userIdParameter));
-			for (ItemsDTO item : itemsListDto) {
-				if(item.getStatus().equals("closed")){
-					item.setRenderedEdit(false);
-				}
-				else{
-					item.setRenderedEdit(true);
-				}
-			}
+//			for (ItemsDTO item : itemsListDto) {
+//				if(item.getStatus().equals("closed") || item.getStatus().equals("abandoned")){
+//					item.setRenderedEdit(false);
+//				}
+//				else{
+//					item.setRenderedEdit(false);
+//					item.setStatus(statusChange);
+//				}
+//			}
 		}
 		else{
 			itemsListDto = new ArrayList<>();	

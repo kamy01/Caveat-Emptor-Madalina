@@ -261,7 +261,6 @@ h1 {
 .ui-icon {
     width: 16px;
     height: 18px;
-    /* background-image: url(/CaveatEmptorProject-Web/faces/javax.faces.resource/images/ui-icons_72a7cf_256x240.png?ln=primefaces-bluesky); */
 }
 
 .ui-button-icon-only .ui-icon, .ui-button-text-icon-left .ui-icon, .ui-button-text-icon-right .ui-icon {
@@ -270,17 +269,27 @@ h1 {
     margin-top: -9px;
     margin-left: -11px;
 }
+.ui-button-icon-only {
+    width: 2.45em !important;
+}
 .ui-icon-check {
     background-position: -61px -144px !important;
-    zoom: 1.6;
+    zoom: 1.4;
     width: 17px;
-    padding: 1px 3px 0px 2px;
-    background-color: #9cea9b;
+    padding: 1px 4px 0px 2px;
+
 }
 
 .ui-icon-closethick {
     background-position: -93px -128px !important;
-    zoom: 1.6;
+    zoom: 1.4;
     padding: 1px 6px 0 0;
-    background-color: #f59a9a;
+
+}
+.ui-button-icon-only {
+    width: 3.4em;
+}
+.ui-icon-close {
+    background-position: -80px -128px;
+    zoom: 1.4;
 }
