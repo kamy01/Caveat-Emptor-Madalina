@@ -190,8 +190,10 @@
 									</f:facet>
 									<f:facet name="input">
 										<h:selectOneMenu id="dropDownStatus"
-											value="#{item.status}">
-											<f:selectItems var="statusChanged" itemValue="#{statusChanged}" itemLabel="#{statusChanged}"/>	
+											value="#{itemsBean.statusChange}">
+											<f:selectItem itemLabel=" open " itemValue="open" />
+											<f:selectItem itemLabel=" closed " itemValue="closed" />
+											<f:selectItem itemLabel=" abandoned " itemValue="abandoned" />
 								</h:selectOneMenu>
 									</f:facet>
 								</p:cellEditor>

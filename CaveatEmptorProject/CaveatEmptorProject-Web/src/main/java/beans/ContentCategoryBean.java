@@ -43,7 +43,13 @@ public class ContentCategoryBean {
 	private boolean createButtonClicked ;
 	private boolean renderedInsert ;
 	private boolean disableInsertButton ;
-
+	private boolean showBreadCrumb;
+	private boolean showBreadCrumbHiddden;
+	private boolean renderedParentText;
+	private boolean renderedInsertChild;
+	private CategoriesDTO parent;
+	private String parentName;
+	
 	@SuppressWarnings("unused")
 	private boolean deleteOption;
 
@@ -53,14 +59,67 @@ public class ContentCategoryBean {
 
 	@PostConstruct
 	public void init() {
+		renderedParentText=false;
+		showBreadCrumb=false;
+		showBreadCrumbHiddden=true;
 		initializeBreadcrumb();
-		
 		disableButtonUpdateOrDelete = true;
 		readOnly = true;
 		categoriesDtoList=new ArrayList<>();
 		categoriesDto = new CategoriesDTO();
 		categoryTree.init();
 	}
+
+	
+	public boolean isRenderedInsertChild() {
+		return renderedInsertChild;
+	}
+
+
+	public String getParentName() {
+		return parentName;
+	}
+
+
+	public boolean isRenderedParentText() {
+		return renderedParentText;
+	}
+
+
+	public void setRenderedParentText(boolean renderedParentText) {
+		this.renderedParentText = renderedParentText;
+	}
+
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+
+	public CategoriesDTO getParent() {
+		return parent;
+	}
+
+
+	public void setParent(CategoriesDTO parent) {
+		this.parent = parent;
+	}
+
+
+	public void setRenderedInsertChild(boolean renderedInsertChild) {
+		this.renderedInsertChild = renderedInsertChild;
+	}
+
+
+	public boolean isShowBreadCrumbHiddden() {
+		return showBreadCrumbHiddden;
+	}
+
+
+	public void setShowBreadCrumbHiddden(boolean showBreadCrumbHiddden) {
+		this.showBreadCrumbHiddden = showBreadCrumbHiddden;
+	}
+
 
 	public CategoriesDTO getCategoriesDto() {
 		return categoriesDto;
@@ -72,6 +131,14 @@ public class ContentCategoryBean {
 
 	public List<CategoriesDTO> getCategoriesDtoList() {
 		return categoriesDtoList;
+	}
+
+	public boolean isShowBreadCrumb() {
+		return showBreadCrumb;
+	}
+
+	public void setShowBreadCrumb(boolean showBreadCrumb) {
+		this.showBreadCrumb = showBreadCrumb;
 	}
 
 	public void setCategoriesDtoList(List<CategoriesDTO> categoriesDtoList) {
@@ -143,15 +210,11 @@ public class ContentCategoryBean {
 		this.disableInsertButton = disableInsertButton;
 	}
 	
-	
-	private String getViewUrl(){
-		return FacesContext.getCurrentInstance().getViewRoot().getViewId();
-	}
-	
 	private void initializeBreadcrumb() {
 		model = new DefaultMenuModel();
 		itemMenu = new DefaultMenuItem("External");
-		itemMenu.setUrl("http://localhost:8080/CaveatEmptorProject-Web"+ getViewUrl());
+		itemMenu.setUrl("#");
+		itemMenu.setIcon("ui-icon-home");
 		model.addElement(itemMenu);
 	}
 	public void addBreadcrumbMenuItem(MenuModel model) {
@@ -174,41 +237,68 @@ public class ContentCategoryBean {
 		model.addElement(itemMenu);
 
 	}
-
-
-	public void insert() throws CaveatEmptorException {
-		FlagsValues(false, true, false, false, false);
+	
+//	boolean disableButtonUpdateOrDelete, boolean readOnly, boolean renderedButtonUpdateOrDelete,
+//	boolean disaleInsertButton, boolean renderedInsert,boolean renderedInsertChild
+	
+	public void insertChild() throws CaveatEmptorException {
+		FlagsValues(false, true, false, false, false,false);
 		try {
 			Long maxCategoryId = categoryService.getMaxCategoryId();
-			if (categoriesDto.getCategoryId() == null) {
+			if (!IsAnyNodeSelected()) {
+				FacesMessagesUtil.message_error("Please select a parent category !", "");
+				FlagsValues(true, false, false, false, false ,true);
+				createButtonClicked=true;
+				categoryTree.init();
+				disableButtonUpdateOrDelete=true;
+			} else {
+				FlagsValues(true, false, false, false, false ,true);
+				categoriesDto.setParentId(parent.getCategoryId());
+				categoriesDto.setNameCategory(categoriesDto.getNameCategory());
+				categoriesDto.setCategoryId(maxCategoryId + 1);
+				String insertMessage = categoryService.insertCategory(categoriesDto);
+				if (insertMessage.equals("categoryExist") || insertMessage.equals("error") || insertMessage.equals("nullValues")) {
+					resetValues();
+					FacesMessagesUtil.message_error("Category already exist or invalid fields !", "Insert another category");
+					FlagsValues(true, false, false, false, false,true);
+				} else {
+					FacesMessagesUtil.message_info("Category was inserted!", "");
+					categoryTree.init();
+					createButtonClicked = false;
+					expandNode(categoriesDto);
+				}
+			}
+			
+		} catch (CaveatEmptorException e) {
+			LoggerUtils.getLogger().log(Level.INFO, "Exception in insert method from ContentCategoryBean",e.getMessage());
+		}
+		
+	}
+
+	public void insert() throws CaveatEmptorException {
+		FlagsValues(false, true, false, false, false,false);
+		try {
+			Long maxCategoryId = categoryService.getMaxCategoryId();
+				categoriesDto.setCategoryId(null);
 				categoriesDto.setParentId(1L);
-			} else {
-				categoriesDto.setParentId(categoriesDto.getCategoryId());
-			}
-			categoriesDto.setCategoryId(maxCategoryId + 1);
-			String insertMessage = categoryService.insertCategory(categoriesDto);
-			if (insertMessage.equals("categoryExist") || insertMessage.equals("error") || insertMessage.equals("nullValues")) {
-				resetValues();
-				FacesMessagesUtil.message_error("Category already exist or invalid fields !", "");
-				FlagsValues(false, true, false, false, false);
-			} else {
-				FacesMessagesUtil.message_info("Category was inserted!", "");
-			}
+				categoriesDto.setCategoryId(maxCategoryId + 1);			
+				String insertMessage = categoryService.insertCategory(categoriesDto);
+				if (insertMessage.equals("categoryExist") || insertMessage.equals("error") || insertMessage.equals("nullValues")) {
+					resetValues();
+					FacesMessagesUtil.message_error("Category already exist or invalid fields !", "");
+					FlagsValues(false, true, false, false, false,false);
+				} else {
+					FacesMessagesUtil.message_info("Category was inserted!", "");
+				}
+			
 		} catch (CaveatEmptorException e) {
 			LoggerUtils.getLogger().log(Level.INFO, "Exception in insert method from ContentCategoryBean",e.getMessage());
 		}
 		categoryTree.init();
-		createButtonClicked = false;
 		expandNode(categoriesDto);
 	}
 
-	public void cancelUpdate() {
-		FlagsValues(false, true, false, false, false);
-		categoryTree.init();
-		createButtonClicked = false;
-		expandNode(categoriesDto);
 
-	}
 	private void getNodeParents(TreeNode selectedNode) {
 
 		CategoriesDTO node = (CategoriesDTO) selectedNode.getData();
@@ -221,26 +311,30 @@ public class ContentCategoryBean {
 		}
 
 	}
-	public void cancelInsert() {
-		FlagsValues(false, true, false, false, false);
+	public void cancel() {
+		FlagsValues(false, true, false, false, false,false);
 		categoryTree.init();
-		createButtonClicked = false;
+		createButtonClicked=false;
 		expandNode(categoriesDto);
 	}
 
 	public void FlagsValues(boolean disableButtonUpdateOrDelete, boolean readOnly, boolean renderedButtonUpdateOrDelete,
-			boolean disaleInsertButton, boolean renderedInsert) {
+			boolean disaleInsertButton, boolean renderedInsert,boolean renderedInsertChild) {
 		this.disableButtonUpdateOrDelete = disableButtonUpdateOrDelete;
 		this.readOnly = readOnly;
 		this.renderedButtonUpdateOrDelete = renderedButtonUpdateOrDelete;
 		this.disableInsertButton = disaleInsertButton;
 		this.renderedInsert = renderedInsert;
+		this.renderedInsertChild=renderedInsertChild;
 	}
 
 	public void update() {
-		FlagsValues(false, true, false, false, false);
+		FlagsValues(false, true, false, false, false,false);
 		try {
-			if (categoryService.updateCategory(categoriesDto).equals("categoryNotExist")) {
+			if(parent.getNameCategory().equals(categoriesDto.getNameCategory())&&(parent.getDescription().equals(categoriesDto.getDescription()))){
+				FacesMessagesUtil.message_info("Nothing to update!", "");
+			}
+			else if (categoryService.updateCategory(categoriesDto).equals("categoryNotExist")) {
 				FacesMessagesUtil.message_error("Category doesn't exist.Choose an existing category for update!", "");
 			}else{
 				FacesMessagesUtil.message_info("Category " + categoriesDto.getNameCategory() + " updated!", "");
@@ -249,14 +343,26 @@ public class ContentCategoryBean {
 			LoggerUtils.getLogger().log(Level.INFO, "Exception in updateCategory method from ContentCategoryBean", e.getMessage());
 		}
 		categoryTree.init();
-		createButtonClicked = false;
 		expandNode(categoriesDto);
 	}
 
 	public void updateCategory() {
-		FlagsValues(true, false, true, true, false);
+		FlagsValues(true, false, true, true, false,false);
 		expandNode(categoriesDto);
 	}
+
+	
+public void resetValuesChild() {
+		categoriesDto.setCategoryId(null);
+		categoriesDto.setParentId(null);
+		categoriesDto.setNameCategory(null);
+		categoriesDto.setDescription(null);
+		FlagsValues(true, false, false, true, false, true);
+		createButtonClicked = true;
+		categoryTree.init();
+		renderedParentText=false;
+		expandNode(categoriesDto);
+}
 
 	public void resetValues() {
 		
@@ -264,10 +370,10 @@ public class ContentCategoryBean {
 		categoriesDto.setParentId(null);
 		categoriesDto.setNameCategory(null);
 		categoriesDto.setDescription(null);
-		FlagsValues(true, false, false, true, true);
-		createButtonClicked = true;
+		FlagsValues(true, false, false, true, true, false);
 		categoryTree.init();
 		expandNode(categoriesDto);
+		disabledNodesSelected();
 	}
 
 	public void removeCategory() {
@@ -310,6 +416,24 @@ public class ContentCategoryBean {
 		}
 	}
 	
+	private boolean IsAnyNodeSelected() {
+		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
+		boolean selected=false;
+		for (TreeNode node : nodes) {
+			if( node.isSelected()){
+				selected =true;
+			}
+		}
+		return selected;
+	}
+	
+	private void disabledNodesSelected() {
+		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
+		for (TreeNode node : nodes) {
+				node.setSelectable(false);
+		}
+	}
+	
 
 
 	private void selectNode(TreeNode node) {
@@ -327,15 +451,25 @@ public class ContentCategoryBean {
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
+		showBreadCrumb=true;
+		showBreadCrumbHiddden=false;
 		initializeBreadcrumb();
 		addBreadcrumbMenuItem(model);
 		
-		disableButtonUpdateOrDelete = false;
 		if (createButtonClicked) {
-			resetValues();
+			disableButtonUpdateOrDelete = true;
+			resetValuesChild();
+			renderedParentText=true;
+			parent=(CategoriesDTO) categoryTree.getSelectedNode().getData();
+			parentName=parent.getNameCategory();
+			//createButtonClicked=false;
+		}else{
+			disableButtonUpdateOrDelete = false;
+			categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();
+			parent=(CategoriesDTO) categoryTree.getSelectedNode().getData();
 		}
-		categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();
 		expandNode(categoriesDto);
+		
 	}
 	
 	

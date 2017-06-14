@@ -5,7 +5,6 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
- 		
 		
 	<p:layout style="width:100%;height:600px;">
 
@@ -27,14 +26,17 @@
 
 		<p:layoutUnit position="center">
 			<!-- 	<br/> -->
-			<h:form id="frmContent" style="padding-left:15px;">
+			<h:form id="frmContent" style="padding-left:15px;position: relative;">
 				<p:growl id="message" showDetail="true" />
 
 				<h:panelGroup id="categories-page">
 					<br />
-					<div class="categBreadcrumb" id="categBreadcrumb">
-						<p:breadCrumb model="#{contentCategory.model}" />
-					</div>
+					<h:form rendered="#{contentCategory.showBreadCrumb}">
+						<p:breadCrumb model="#{contentCategory.model}"   />
+					</h:form>
+						<h:form rendered="#{contentCategory.showBreadCrumbHiddden}">
+						<br />	<br /><br /><br />
+						</h:form>
 
 					
 					<p:commandButton value="Create New Category" id="resetValuesBtn"
@@ -43,9 +45,19 @@
 							update="tabView:frmContent :tabView:tree-form:tree"
 							process="@form"></p:ajax>
 					</p:commandButton>
+					
+					<p:commandButton value="Create Child Category" id="resetValuesBtnChild"
+						disabled="#{contentCategory.disableInsertButton}">
+						<p:ajax listener="#{contentCategory.resetValuesChild}"
+							update="tabView:frmContent :tabView:tree-form:tree"
+							process="@form"></p:ajax>
+					</p:commandButton>
 					<br />
 					<br />	<br /><br />
 
+
+					<p:outputLabel value="Parent: #{contentCategory.parentName}"  style="font-weight:bold" rendered="#{contentCategory.renderedParentText}"/>
+					<br/><br/>
 					<p:inputText label="nameCategory" placeholder="Name"
 						value="#{contentCategory.categoriesDto.nameCategory}"
 						readonly="#{contentCategory.readOnly}"></p:inputText>
@@ -86,11 +98,19 @@
 							process="@form">
 						</p:ajax>
 					</p:commandButton>
+					
+						<p:commandButton render="@all" icon="ui-icon-check"
+						rendered="#{contentCategory.renderedInsertChild}">
+						<p:ajax listener="#{contentCategory.insertChild}"
+							update=":tabView:frmContent :tabView:tree-form:tree"
+							process="@form">
+						</p:ajax>
+					</p:commandButton>
+					
 
-				
 					<p:commandButton icon="ui-icon-closethick"
 						rendered="#{contentCategory.renderedButtonUpdateOrDelete}">
-						<p:ajax listener="#{contentCategory.cancelUpdate}"
+						<p:ajax listener="#{contentCategory.cancel}"
 							update=":tabView:frmContent :tabView:tree-form:tree"
 							process="@form">
 
@@ -99,7 +119,16 @@
 
 					<p:commandButton icon="ui-icon-closethick"
 						rendered="#{contentCategory.renderedInsert}">
-						<p:ajax listener="#{contentCategory.cancelInsert}"
+						<p:ajax listener="#{contentCategory.cancel}"
+							update=":tabView:frmContent :tabView:tree-form:tree"
+							process="@form">
+
+						</p:ajax>
+					</p:commandButton>
+					
+					<p:commandButton icon="ui-icon-closethick"
+						rendered="#{contentCategory.renderedInsertChild}">
+						<p:ajax listener="#{contentCategory.cancel}"
 							update=":tabView:frmContent :tabView:tree-form:tree"
 							process="@form">
 
@@ -107,7 +136,7 @@
 					</p:commandButton>
 
 
-				<p:dialog id="myDialogDelete" header="Confirmation" widgetVar="myDialogDelete"  height="110" >
+				<p:dialog id="myDialogDelete" header="Confirmation" widgetVar="myDialogDelete"  height="110">
 			
 				 <h:outputText value="Do you want to delete this category? "/>
 			 <br/> <br/> <br/>

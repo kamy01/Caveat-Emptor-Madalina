@@ -40,7 +40,7 @@ public class ItemsBean  implements Serializable{
 	ItemsDTO itemDto;
 	private Long currentRow;
 	private String optionDropDown;
-	private List<String> statusChange;
+	private String statusChange;
 	private boolean renderedMyBid;
 	private boolean renderedEditButton;
 	
@@ -63,9 +63,6 @@ public class ItemsBean  implements Serializable{
 	
 public void initDto(){
 	renderedInsertButton=true;
-	statusChange=new ArrayList<>();
-	statusChange.add("closed");
-	statusChange.add("abandoned");
 	nameInsertButton="Insert";
 	itemDto=new ItemsDTO();
 	itemDto.setName("");
@@ -87,28 +84,27 @@ public void initDto(){
 		renderedEditButton=true;
 		itemsListDto = new ArrayList<>();	
 		optionDropDown="sell";
-	
 		renderedMyBid=false;
 		contentCategory.getCategoryTree().init();
 		itemsListDto=itemsService.getItemsToSell(Long.parseLong(userIdParameter));
 		for (ItemsDTO item : itemsListDto) {
-			
+			statusChange=item.getStatus();
 			if(item.getStatus().equals("closed") || item.getStatus().equals("not yet open")){
 				item.setRenderedEdit(false);
 			}
 			else{
 				item.setRenderedEdit(true);
-				//item.setStatus(statusChange);
+				item.setStatus(statusChange);
 			}
 		}
 	}
 
 
 	
-	public List<String> getStatusChange() {
+	public String getStatusChange() {
 		return statusChange;
 	}
-	public void setStatusChange(List<String> statusChange) {
+	public void setStatusChange(String statusChange) {
 		this.statusChange = statusChange;
 	}
 	public boolean isRenderedInsertButton() {
