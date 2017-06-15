@@ -90,7 +90,7 @@ public void initDto(){
 			}
 			else{
 				item.setRenderedEdit(true);
-				item.setStatus(statusChange);
+				//item.setStatus(statusChange);
 				//itemDto=item;
 			}
 		}
@@ -177,6 +177,13 @@ public void initDto(){
 		this.renderedMyBid = renderedMyBid;
 	}
 
+	public void onStatusChange(){
+		switch(statusChange.toLowerCase()){
+		case "open":statusChange="open"; break;
+		case "closed":statusChange="closed"; break;
+		case "abandoned":statusChange="abandoned"; break;
+		}
+	}
 	public void onDropDownChange() throws CaveatEmptorException {
 		if (optionDropDown.toLowerCase().equals(ItemsOption.SELL.getValue())) {
 			renderedMyBid=false;		
@@ -198,14 +205,26 @@ public void initDto(){
 		}
 	}
 	
-	
-	 public void onRowEdit(RowEditEvent event) throws ParseException {
+//	public void hideDialog(){
+//		RequestContext context = RequestContext.getCurrentInstance();
+//		context.execute("PF('dialogValidateDates').hide();");
+//	}
+	 public void onRowEdit(RowEditEvent event) throws ParseException, CaveatEmptorException {
 		RequestContext context = RequestContext.getCurrentInstance();
 		itemToUpdate=new ItemsDTO();
 		itemDto =(ItemsDTO) event.getObject();
 		itemDto.setUserId(Long.parseLong(userIdParameter));
+		itemDto.setStatus(statusChange);
 		itemToUpdate=Transformation.populateItemDto(itemDto);
+		 if(itemToUpdate.getBiddingStartDate().getTime() > itemToUpdate.getBiddingEndDate().getTime()){
+			 FacesMessagesUtil.message_info("Closing date must be bigger than opening date!", "");
+			 init();
+			// context.execute("PF('dialogValidateDates').show();");
+			// context.execute("PF('dlgVarEdit').hide();");
+			// context.update("tabView:form:dataTableItems:dialogEdit");
+		}else{
 			context.execute("PF('dlgVarEdit').show();");
+		}
 
 	 }
 	 public void onRowCancel(RowEditEvent event) {
@@ -217,15 +236,10 @@ public void initDto(){
 
 	 public void updateItem() throws CaveatEmptorException{
 		 try{
-			 
-			 if(itemToUpdate.getBiddingStartDate().getTime() > itemToUpdate.getBiddingEndDate().getTime()){
-				 FacesMessagesUtil.message_info("Closing date must be bigger than opening date!", "");	
-			}else{
-				
 			 	 itemsService.updateItem(itemToUpdate);
 				 FacesMessagesUtil.message_info("Item "+itemToUpdate.getName()+" was edited!", "");
 				 itemDto=Transformation.populateItemDto(itemToUpdate);
-			}
+			
 			 init();
 		 }catch(Exception e){
 			 	FacesMessagesUtil.message_info("Item "+itemToUpdate.getName()+" wasn't edited!Try again!", "");
