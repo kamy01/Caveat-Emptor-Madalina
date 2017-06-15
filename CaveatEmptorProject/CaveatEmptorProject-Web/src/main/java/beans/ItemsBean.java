@@ -3,24 +3,17 @@ package beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-
 import com.dtos.CategoriesDTO;
 import com.dtos.ItemsDTO;
 import ServiceInterfaces.ItemsService;
@@ -65,12 +58,12 @@ public void initDto(){
 	renderedInsertButton=true;
 	nameInsertButton="Insert";
 	itemDto=new ItemsDTO();
-	itemDto.setName("");
+	//itemDto.setName("");
 	itemDto.setBiddingStartDate(new Date());
 	itemDto.setBiddingEndDate(new Date());
 	itemDto.setInitialPrice(0D);
 	itemDto.setBestBid(null);
-	itemDto.setCategories(" ");
+	//itemDto.setCategories(" ");
 	itemDto.setNrBids(0);
 	itemDto.setUserId(Long.parseLong(userIdParameter));
 }
@@ -98,8 +91,6 @@ public void initDto(){
 			}
 		}
 	}
-
-
 	
 	public String getStatusChange() {
 		return statusChange;
@@ -202,15 +193,6 @@ public void initDto(){
 			renderedEditButton=true;
 			itemsListDto = new ArrayList<>();	
 			itemsListDto=itemsService.getItemsToBuy(Long.parseLong(userIdParameter));
-//			for (ItemsDTO item : itemsListDto) {
-//				if(item.getStatus().equals("closed") || item.getStatus().equals("abandoned")){
-//					item.setRenderedEdit(false);
-//				}
-//				else{
-//					item.setRenderedEdit(false);
-//					item.setStatus(statusChange);
-//				}
-//			}
 		}
 		else{
 			itemsListDto = new ArrayList<>();	
@@ -230,6 +212,7 @@ public void initDto(){
 	 public void updateItem() throws CaveatEmptorException{
 		 try{
 			 	 itemsService.updateItem(itemDto);
+			 	 
 				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was edited!", "");
 		 }catch(Exception e){
 			 	FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't edited!Try again!", "");
@@ -266,6 +249,7 @@ public void initDto(){
 			 itemsService.insertItem(itemDto);
 			 RequestContext context = RequestContext.getCurrentInstance();
 			 context.execute("PF('itemDialog').hide();");
+			 init();
 			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was inserted!", "");
 			
 			 }

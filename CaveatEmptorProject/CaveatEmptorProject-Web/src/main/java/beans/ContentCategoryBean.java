@@ -335,8 +335,6 @@ public class ContentCategoryBean {
 		try {
 			 if (categoryService.updateCategory(categoriesDto).equals("categoryNotExist")){
 				FacesMessagesUtil.message_error("Category doesn't exist.Choose an existing category for update!", "");
-			//}else if(categoryService.updateCategory(categoriesDto).equals("nothingToUpdate")){
-				//FacesMessagesUtil.message_info("Nothing to update!", "");
 			}else{
 				FacesMessagesUtil.message_info("Category " + categoriesDto.getNameCategory() + " updated!", "");
 			}
@@ -358,10 +356,6 @@ public class ContentCategoryBean {
 
 	
 public void resetValuesChild() {
-//		categoriesDto.setCategoryId(null);
-//		categoriesDto.setParentId(null);
-//		categoriesDto.setNameCategory(null);
-//		categoriesDto.setDescription(null);
 		FlagsValues(true, false, false, true, false, true);
 		createButtonClicked = true;
 		categoryTree.init();
@@ -464,10 +458,8 @@ public void resetValuesChild() {
 		addBreadcrumbMenuItem(model);	
 		if (createButtonClicked) {
 			disableButtonUpdateOrDelete = true;
-			//resetValuesChild();
 			renderedParentText=true;
 			parentName=parent.getNameCategory();
-//			createButtonClicked=false;
 		}else{
 			disableButtonUpdateOrDelete = false;
 			categoriesDto = (CategoriesDTO) categoryTree.getSelectedNode().getData();

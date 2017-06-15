@@ -83,7 +83,7 @@ public class ItemsDTO implements Serializable{
 	}
 
 	public Date getBiddingStartDate() throws ParseException {
-		return new Date(biddingStartDate.getTime());
+		return (Date) biddingStartDate.clone();
 		
 	}
 	public void setBiddingStartDate(Date biddingStartDate) {
@@ -91,7 +91,7 @@ public class ItemsDTO implements Serializable{
 	}
 	
 	public Date getBiddingEndDate() throws ParseException {
-		return new Date(biddingEndDate.getTime());
+		return (Date) biddingEndDate.clone();
 	}
 	public void setBiddingEndDate(Date biddingEndDate) {
 		this.biddingEndDate = biddingEndDate;

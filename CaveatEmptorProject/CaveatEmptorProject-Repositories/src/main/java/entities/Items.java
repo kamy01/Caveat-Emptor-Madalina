@@ -110,7 +110,7 @@ public class Items implements Serializable {
 
 	
 	public Date getBiddingStartDate() {
-		return new Date(biddingStartDate.getTime());
+		return (Date) biddingStartDate.clone();
 		
 		
 	}
@@ -121,7 +121,7 @@ public class Items implements Serializable {
 
 
 	public Date getBiddingEndDate() {
-		return new Date(biddingEndDate.getTime());
+		return (Date) biddingEndDate.clone();
 		
 	}
 

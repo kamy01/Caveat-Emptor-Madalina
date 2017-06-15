@@ -28,15 +28,16 @@
 								listener="#{itemsBean.onDropDownChange}" />
 						</h:selectOneMenu>
 
-						
+
 						<p:commandButton value="Create new item"
 							action="#{itemsBean.insertItem}">
 						</p:commandButton>
 
 
 						<p:dataTable id="dataTableItems" value="#{itemsBean.itemsListDto}"
-							var="item" editable="true"  paginator="true" rows="10"
-							 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+							var="item" editable="true" paginator="true" rows="10"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10, 15, 20, 25">
 							<p:ajax event="rowEdit" listener="#{itemsBean.onRowEdit}"
 								process="@this" update="tabView:form:dataTableItems"
 								onerror="PF('dlgVarEdit').hide()" />
@@ -55,9 +56,9 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:inputText id="modelInputName" value="#{item.name}"
-											style="width:96%" required="true"
+											style="width:100%;height:100%;" required="true"
 											requiredMessage="Empty Name column.Value is required!"
-											label="Name">
+											label="Name" >
 										</p:inputText>
 
 									</f:facet>
@@ -73,7 +74,7 @@
 
 									<f:facet name="input">
 										<h:selectOneMenu id="dropDownCategories"
-											value="#{item.categories}">
+											value="#{item.categories}" style="width:100%;height:100%;">
 
 											<f:selectItems value="#{itemsBean.category}" var="categ"
 												itemValue="#{categ}" itemLabel="#{categ}" />
@@ -92,7 +93,7 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:inputText id="modelInputInitialPrice"
-											value="#{item.initialPrice}" style="width:96%"
+											value="#{item.initialPrice}" style="width:100%;height:100%;"
 											requiredMessage="Wrong format for Initial price column.Only digits are allowed!"
 											label="InitialPrice">
 										</p:inputText>
@@ -107,7 +108,7 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:inputText id="modelInputBestBid" value="#{item.bestBid}"
-											style="width:96%"
+											style="width:100%;height:100%;"
 											requiredMessage="Wrong format for Best Bid column.Only digits are allowed!"
 											label="BestBid">
 										</p:inputText>
@@ -123,7 +124,7 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:inputText id="modelInputYourBid" value="#{item.yourBid}"
-											style="width:96%"
+											style="width:100%;height:100%;"
 											requiredMessage="Wrong format for My Bid column.Only digits are allowed!"
 											label="myBid">
 										</p:inputText>
@@ -140,7 +141,7 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:inputText id="modelInputNrBids" value="#{item.nrBids}"
-											style="width:96%"
+											style="width:100%;height:100%;"
 											requiredMessage="Wrong format for Bids column.Only numbers are allowed!"
 											label="bids">
 										</p:inputText>
@@ -157,11 +158,12 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:calendar id="modelInputBiddingStartDate" required="true"
-											value="#{item.biddingStartDate}" style="width:96%"
+											value="#{item.biddingStartDate}" style="width:100%;height:100%;"
 											pattern="MM/dd/yyyy"
 											requiredMessage="Empty Opening date column.Select a date!"
 											label="openingDate">
 										</p:calendar>
+										<br/>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -174,7 +176,7 @@
 									</f:facet>
 									<f:facet name="input">
 										<p:calendar id="modelInputBiddingEndDate" required="true"
-											value="#{item.biddingEndDate}" style="width:96%"
+											value="#{item.biddingEndDate}" style="width:100%;height:100%;"
 											pattern="MM/dd/yyyy"
 											requiredMessage="Empty Closing date column.Select a date!"
 											label="closingDate">
@@ -189,12 +191,12 @@
 										<h:outputText value="#{item.status}" />
 									</f:facet>
 									<f:facet name="input">
-										<h:selectOneMenu id="dropDownStatus"
+										<h:selectOneMenu id="dropDownStatus" style="width:100%;height:100%;"
 											value="#{itemsBean.statusChange}">
 											<f:selectItem itemLabel=" open " itemValue="open" />
 											<f:selectItem itemLabel=" closed " itemValue="closed" />
 											<f:selectItem itemLabel=" abandoned " itemValue="abandoned" />
-								</h:selectOneMenu>
+										</h:selectOneMenu>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -225,9 +227,7 @@
 										<br />
 										<h:outputText style="margin-left:10px;"
 											value=" Do you want to update this item ?" />
-										<br />
-										<br />
-										<br />
+										<br /> <br /> <br />
 										<p:commandButton value="Yes" action="#{itemsBean.updateItem}"
 											update="tabView:form" />
 										<h:outputText value=" " />
@@ -237,78 +237,80 @@
 								</p:dialog>
 							</p:column>
 						</p:dataTable>
-						<p:dialog header="Insert new item" widgetVar="itemDialog" id="itemDlg" style="margin-top:-138px;">
+						<p:dialog header="Insert new item" widgetVar="itemDialog"
+							id="itemDlg" style="margin-top:-70px;">
 
+							<h:panelGrid id="display" columns="4">
 
-
-						<h:panelGrid id="display"  columns="4">
-						
-							
 								<h:outputText value="Name" />
-								<p:inputText id="name" value="#{itemsBean.itemDto.name}" ></p:inputText>
-								
-						
-								
+								<p:inputText id="name" value="#{itemsBean.itemDto.name}"></p:inputText>
+
 								<h:outputText value="Description" />
 								<p:inputTextarea id="description"
 									value="#{itemsBean.itemDto.description}"></p:inputTextarea>
-							
-						
-									<h:outputText value="Initial price (€)" />
-									<p:inputText id="initialPrice"
+
+								<h:outputText value="Initial price (€)" />
+								<p:inputText id="initialPrice"
 									value="#{itemsBean.itemDto.initialPrice}" required="true"
 									requiredMessage="Initial price is required"></p:inputText>
-									
-								
-								
+
 								<h:outputText value="Opening date" />
 								<p:calendar id="openingDate"
 									value="#{itemsBean.itemDto.biddingStartDate}" required="true"
-									requiredMessage="Opening date is required" pattern="MM/dd/yyyy" widgetVar="startDateCalendar" >
-									</p:calendar>
-									<h:outputText value="" />
-									<h:outputText value="" />
-							
-								<h:outputText value="Closing date"/>
-							
+									requiredMessage="Opening date is required" pattern="MM/dd/yyyy"
+									widgetVar="startDateCalendar">
+								</p:calendar>
+								<h:outputText value="" />
+								<h:outputText value="" />
+
+								<h:outputText value="Closing date" />
+
 								<p:calendar id="closingDate"
 									value="#{itemsBean.itemDto.biddingEndDate}" required="true"
-									requiredMessage="Closing date is required" pattern="MM/dd/yyyy" widgetVar="closingDate">
-									</p:calendar>
-							
-						
-							
-<!-- 								<h:outputText value="Categories" />	<br/> -->
-								<div id="treeDiv" style="position:relative; border: 0px solid #fff;height: 97%;">
-								<p>Select a category</p>
-									<h:form class="tree-frm" id="tree-frm" >
-										<p:tree value="#{itemsBean.contentCategory.categoryTree.root}" var="node" selectionMode="single"
-											selection="#{itemsBean.contentCategory.categoryTree.selectedNode}" id="tree" >
-											<p:ajax event="select" listener="#{itemsBean.contentCategory.onNodeSelect}"
-												/>
+									requiredMessage="Closing date is required" pattern="MM/dd/yyyy"
+									widgetVar="closingDate">
+								</p:calendar>
+
+								<div id="treeDiv"
+									style="position: relative; border: 0px solid #fff; height: 97%;">
+									<p>Select a category</p>
+									<h:form class="tree-frm" id="tree-frm">
+										<p:tree value="#{itemsBean.contentCategory.categoryTree.root}"
+											var="node" selectionMode="single"
+											selection="#{itemsBean.contentCategory.categoryTree.selectedNode}"
+											id="tree">
+											<p:ajax event="select"
+												listener="#{itemsBean.contentCategory.onNodeSelect}" />
 											<p:treeNode>
 												<h:outputText value="#{node.getNameCategory()}" />
 											</p:treeNode>
 										</p:tree>
 									</h:form>
-								</div> 
-										<h:outputText value="" />
-										<br/>	<br/>	<br/>	<br/>	<br/>	<br/>
+								</div>
+								<h:outputText value="" />
+								<br />
+								<br />
+								<br />
+								<br />
+								<br />
+								<br />
 								<p:commandButton id="insert"
-									actionListener="#{itemsBean.insert}" update="tabView:form:dataTableItems  msgGrowl"
-									value="Save"/>
+									update="tabView:form:dataTableItems  msgGrowl" value="Save" style="color: #04c526;border: 1px solid #ffffff;">
+								<p:ajax listener="#{itemsBean.insert}"
+									update="@form"
+									process="@form"></p:ajax>
+								</p:commandButton>
 								<p:commandButton id="cancelButton" update="tabView:form"
-									rendered="#{itemsBean.renderedInsertButton}"
-									value="Cancel" />	
-							
-							<h:outputText value="" />
-							<h:outputText value="" />
-								
-							<p:messages id="msgs"/>
-							<p:growl id="msgGrowl"/>
+									rendered="#{itemsBean.renderedInsertButton}" value="Cancel" style="color: #f95050;border: 1px solid #ffffff;" />
+
+								<h:outputText value="" />
+								<h:outputText value="" />
+
+								<p:messages id="msgs" />
+								<p:growl id="msgGrowl" />
 
 							</h:panelGrid>
-				
+
 						</p:dialog>
 
 					</h:form>

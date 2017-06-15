@@ -179,8 +179,9 @@ h1 {
     color: #000000;
     font-weight: bold;
     padding: 0px 2px 4px 4px;
-    margin: 0 0 36px -33px;
+    margin: 0 0 0px -33px;
 }
+
 
 .ui-tabs.ui-tabs-top .ui-tabs-nav.ui-widget-header li.ui-state-active {
     border-color: #5777d4 #5777d4 transparent #5777d4 !important;
@@ -229,9 +230,6 @@ h1 {
     font-size: 1.5em;
 }
 
-.ui-datatable .ui-row-editor .ui-icon-check, .ui-datatable .ui-row-editor .ui-icon-close {
-}
-
 .ui-button .ui-button-text {
     display: block;
     line-height: normal;
@@ -243,6 +241,9 @@ h1 {
     padding: 0px;
     overflow: visible;
     margin-left: 35px;
+}
+.ui-button-text-only .ui-button-text {
+    padding: 0.3em 2em;
 }
 .ui-icon {
     width: 16px;
@@ -293,4 +294,9 @@ h1 {
     padding: 0.4em 0.4em 0.4em 3em;
     position: relative;
     border: 0;
+}
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: -0.8em 0px;
+    margin: 0 0 0 0px;
 }
