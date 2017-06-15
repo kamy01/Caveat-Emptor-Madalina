@@ -107,11 +107,7 @@
 										<h:outputText value="#{item.bestBid}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText id="modelInputBestBid" value="#{item.bestBid}"
-											style="width:100%;height:100%;"
-											requiredMessage="Wrong format for Best Bid column.Only digits are allowed!"
-											label="BestBid">
-										</p:inputText>
+									<h:outputText value="#{item.bestBid}" style="width:100%;height:100%;" readonly="true" />
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -140,11 +136,7 @@
 										<h:outputText value="#{item.nrBids}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText id="modelInputNrBids" value="#{item.nrBids}"
-											style="width:100%;height:100%;"
-											requiredMessage="Wrong format for Bids column.Only numbers are allowed!"
-											label="bids">
-										</p:inputText>
+										<h:outputText value="#{item.nrBids}" style="width:100%;height:100%;" readonly="true" />
 									</f:facet>
 
 								</p:cellEditor>
@@ -157,7 +149,7 @@
 										<h:outputText value="#{item.biddingStartDate}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:calendar id="modelInputBiddingStartDate" required="true"
+										<p:calendar id="modelInputBiddingStartDate" required="true" showOn="button"
 											value="#{item.biddingStartDate}" style="width:100%;height:100%;"
 											pattern="MM/dd/yyyy"
 											requiredMessage="Empty Opening date column.Select a date!"
@@ -174,9 +166,9 @@
 									<f:facet name="output">
 										<h:outputText value="#{item.biddingEndDate}" />
 									</f:facet>
-									<f:facet name="input">
-										<p:calendar id="modelInputBiddingEndDate" required="true"
-											value="#{item.biddingEndDate}" style="width:100%;height:100%;"
+									<f:facet name="input"  style="width:80%;">
+										<p:calendar id="modelInputBiddingEndDate" required="true" showOn="button"
+											value="#{item.biddingEndDate}" style="width:80%;height:100%;"
 											pattern="MM/dd/yyyy"
 											requiredMessage="Empty Closing date column.Select a date!"
 											label="closingDate">
@@ -207,8 +199,7 @@
 										<h:outputText value="#{item.winner}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText id="modelInputWinner" value="#{item.winner}"
-											style="width:96%" />
+									<h:outputText value="#{item.winner}" style="width:100%;height:100%;" readonly="true" />
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -231,7 +222,7 @@
 										<p:commandButton value="Yes" action="#{itemsBean.updateItem}"
 											update="tabView:form" />
 										<h:outputText value=" " />
-										<p:commandButton value="No" update="tabView:form" />
+										<p:commandButton value="No" update="tabView:form:dataTableItems" action="#{itemsBean.cancelUpdateItem}"/>
 
 									</div>
 								</p:dialog>
@@ -251,13 +242,13 @@
 
 								<h:outputText value="Initial price (€)" />
 								<p:inputText id="initialPrice"
-									value="#{itemsBean.itemDto.initialPrice}" required="true"
-									requiredMessage="Initial price is required"></p:inputText>
+									value="#{itemsBean.itemDto.initialPrice}" required="true" requiredMessage="Column Initial price is required!">
+								</p:inputText>
 
 								<h:outputText value="Opening date" />
 								<p:calendar id="openingDate"
 									value="#{itemsBean.itemDto.biddingStartDate}" required="true"
-									requiredMessage="Opening date is required" pattern="MM/dd/yyyy"
+									requiredMessage="Opening date is required!" pattern="MM/dd/yyyy"
 									widgetVar="startDateCalendar">
 								</p:calendar>
 								<h:outputText value="" />
@@ -267,7 +258,7 @@
 
 								<p:calendar id="closingDate"
 									value="#{itemsBean.itemDto.biddingEndDate}" required="true"
-									requiredMessage="Closing date is required" pattern="MM/dd/yyyy"
+									requiredMessage="Closing date is required!" pattern="MM/dd/yyyy"
 									widgetVar="closingDate">
 								</p:calendar>
 
@@ -295,19 +286,23 @@
 								<br />
 								<br />
 								<p:commandButton id="insert"
-									update="tabView:form:dataTableItems  msgGrowl" value="Save" style="color: #04c526;border: 1px solid #ffffff;">
+									value="Save" style="color: #04c526;border: 1px solid #ffffff;">
 								<p:ajax listener="#{itemsBean.insert}"
-									update="@form"
+									update="tabView:form:dataTableItems tabView:form:display msgs"
 									process="@form"></p:ajax>
 								</p:commandButton>
-								<p:commandButton id="cancelButton" update="tabView:form"
-									rendered="#{itemsBean.renderedInsertButton}" value="Cancel" style="color: #f95050;border: 1px solid #ffffff;" />
-
+								
+								<p:commandButton id="cancelButton"
+									rendered="#{itemsBean.renderedInsertButton}" value="Cancel" style="color: #f95050;border: 1px solid #ffffff;" >
+								<p:ajax listener="#{itemsBean.cancelInsert}"
+									update="tabView:form itemDlg display"
+									process="@form"></p:ajax>
+								</p:commandButton>
 								<h:outputText value="" />
 								<h:outputText value="" />
 
-								<p:messages id="msgs" />
-								<p:growl id="msgGrowl" />
+<!-- 								<p:messages id="msgs" /> -->
+<!-- 								<p:growl id="msgGrowl" autoUpdate="false" /> -->
 
 							</h:panelGrid>
 

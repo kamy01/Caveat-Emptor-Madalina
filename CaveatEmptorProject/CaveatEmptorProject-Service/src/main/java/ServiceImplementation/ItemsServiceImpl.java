@@ -75,10 +75,8 @@ public class ItemsServiceImpl implements ItemsService{
 	
 	
 	public boolean updateItem(ItemsDTO itemDto) throws CaveatEmptorException{
-		Items item=new Items();
 		try {
-			item = Transformation.itemDtoToEntity(itemDto);
-			return itemsRepository.updateItem(item);
+			return itemsRepository.updateItem(Transformation.itemDtoToEntity(itemDto));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return false;

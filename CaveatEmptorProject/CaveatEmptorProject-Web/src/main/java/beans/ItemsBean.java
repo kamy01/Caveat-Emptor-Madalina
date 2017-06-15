@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import com.dtos.CategoriesDTO;
 import com.dtos.ItemsDTO;
+
+import ServiceImplementation.Transformation;
 import ServiceInterfaces.ItemsService;
 import exceptions.CaveatEmptorException;
 import utils.FacesMessagesUtil;
@@ -30,8 +33,7 @@ public class ItemsBean  implements Serializable{
 	
 	private Long userId;
 	private List<ItemsDTO> itemsListDto;
-	ItemsDTO itemDto;
-	private Long currentRow;
+	ItemsDTO itemDto,itemToUpdate;
 	private String optionDropDown;
 	private String statusChange;
 	private boolean renderedMyBid;
@@ -58,18 +60,19 @@ public void initDto(){
 	renderedInsertButton=true;
 	nameInsertButton="Insert";
 	itemDto=new ItemsDTO();
-	//itemDto.setName("");
 	itemDto.setBiddingStartDate(new Date());
 	itemDto.setBiddingEndDate(new Date());
 	itemDto.setInitialPrice(0D);
 	itemDto.setBestBid(null);
-	//itemDto.setCategories(" ");
+	itemDto.setWinner("");
 	itemDto.setNrBids(0);
 	itemDto.setUserId(Long.parseLong(userIdParameter));
 }
+
+
 	@PostConstruct
 	public void init() throws CaveatEmptorException {
-		
+		itemDto=new ItemsDTO();
 		context = RequestContext.getCurrentInstance();
 		category=new ArrayList<>();
 		category=itemsService.getCategoriesNames();
@@ -88,6 +91,7 @@ public void initDto(){
 			else{
 				item.setRenderedEdit(true);
 				item.setStatus(statusChange);
+				//itemDto=item;
 			}
 		}
 	}
@@ -137,12 +141,7 @@ public void initDto(){
 	public void setOptionDropDown(String optionDropDown) {
 		this.optionDropDown = optionDropDown;
 	}
-	public Long getCurrentRow() {
-		return currentRow;
-	}
-	public void setCurrentRow(Long currentRow) {
-		this.currentRow = currentRow;
-	}
+
 	
 	public ContentCategoryBean getContentCategory() {
 		return contentCategory;
@@ -200,24 +199,43 @@ public void initDto(){
 	}
 	
 	
-	 public void onRowEdit(RowEditEvent event) {
+	 public void onRowEdit(RowEditEvent event) throws ParseException {
 		RequestContext context = RequestContext.getCurrentInstance();
-		context.execute("PF('dlgVarEdit').show();");
+		itemToUpdate=new ItemsDTO();
 		itemDto =(ItemsDTO) event.getObject();
 		itemDto.setUserId(Long.parseLong(userIdParameter));
+		itemToUpdate=Transformation.populateItemDto(itemDto);
+			context.execute("PF('dlgVarEdit').show();");
+
 	 }
 	 public void onRowCancel(RowEditEvent event) {
+	 }
+	 
+	 public void cancelUpdateItem() throws CaveatEmptorException{
+		 init();
 	 }
 
 	 public void updateItem() throws CaveatEmptorException{
 		 try{
-			 	 itemsService.updateItem(itemDto);
-			 	 
-				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was edited!", "");
+			 
+			 if(itemToUpdate.getBiddingStartDate().getTime() > itemToUpdate.getBiddingEndDate().getTime()){
+				 FacesMessagesUtil.message_info("Closing date must be bigger than opening date!", "");	
+			}else{
+				
+			 	 itemsService.updateItem(itemToUpdate);
+				 FacesMessagesUtil.message_info("Item "+itemToUpdate.getName()+" was edited!", "");
+				 itemDto=Transformation.populateItemDto(itemToUpdate);
+			}
+			 init();
 		 }catch(Exception e){
-			 	FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't edited!Try again!", "");
+			 	FacesMessagesUtil.message_info("Item "+itemToUpdate.getName()+" wasn't edited!Try again!", "");
+			 	init();
 			 	LoggerUtils.getLogger().log( Level.INFO, "Exception in updateItem method from ItemsBean" ,e.getMessage());				
 			}
+	 }
+	 
+	 public void cancelInsert()throws CaveatEmptorException{
+		 initDto();
 	 }
 
 	 public void insert() throws CaveatEmptorException{
@@ -227,6 +245,9 @@ public void initDto(){
 			 itemDto.setItemId(maxItemId+1);
 			 itemDto.setStatus("open");
 
+			 if(!contentCategory.IsAnyNodeSelected()){
+				 FacesMessagesUtil.message_error("Select a category!", "");
+			 }else{
 			 CategoriesDTO category=(CategoriesDTO) contentCategory.getCategoryTree().getSelectedNode().getData();
 			 
 			 itemDto.setCategories(category.getNameCategory());
@@ -239,9 +260,14 @@ public void initDto(){
 				 FacesMessagesUtil.message_error("Item wasn't inserted!Column name is required", "");
 
 			 }
+			 else if(itemDto.getDescription().isEmpty() || itemDto.getDescription()==null)
+			 {
+				 FacesMessagesUtil.message_error("Item wasn't inserted!Column description is required", "");
+
+			 }
 			 else if(itemDto.getInitialPrice()==null || itemDto.getInitialPrice().equals(""))
 			 {
-				 FacesMessagesUtil.message_error("Item wasn't inserted!Column Initial price is required", "");
+				 FacesMessagesUtil.message_error("Column Initial price is required", "");
 
 			 }
 			 else{
@@ -249,12 +275,12 @@ public void initDto(){
 			 itemsService.insertItem(itemDto);
 			 RequestContext context = RequestContext.getCurrentInstance();
 			 context.execute("PF('itemDialog').hide();");
-			 init();
 			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was inserted!", "");
-			
+			 init();
+			 initDto();
 			 }
 			    
-			
+			 }
 			 }catch(Exception e){
 				 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" wasn't inserted!Try again!", "");
 				 LoggerUtils.getLogger().log( Level.INFO, "Exception in insertItem method from ItemsBean" ,e.getMessage());	

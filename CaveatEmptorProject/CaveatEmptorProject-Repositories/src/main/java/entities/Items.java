@@ -164,7 +164,6 @@ public class Items implements Serializable {
 	public static Double formatDouble(Double value) throws ParseException{
 		DecimalFormat df = new DecimalFormat(".##");
 		df.setRoundingMode(RoundingMode.DOWN);
-		
 		if(value!=null){
 		if(value % 1 == 0 || (value.toString().contains("0.00") ))
 		{

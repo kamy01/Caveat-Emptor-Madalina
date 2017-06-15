@@ -417,7 +417,7 @@ public void resetValuesChild() {
 			}
 		}
 	}
-	private boolean IsAnyNodeSelected() {
+	public boolean IsAnyNodeSelected() {
 		List<TreeNode> nodes = categoryTree.getChildrenForATreeNode(categoryTree.getRoot());
 		boolean selected=false;
 		for (TreeNode node : nodes) {
