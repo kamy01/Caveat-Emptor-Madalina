@@ -301,9 +301,7 @@ h1 {
     margin: 0 0 0 0px;
 }
 .ui-datatable table {
-    border-collapse: collapse;
-    width: 100%;
-    table-layout: auto;
+
 }
 .ui-button-icon-only {
     width: 3.4em;
@@ -311,7 +309,7 @@ h1 {
 }
 
 .ui-datatable .ui-row-editing .ui-cell-editor .ui-cell-editor-input {
-    display: block;
-    padding-left: 10px;
-    padding-top: 0px;
+ display: block;
+    padding-left: 8px;
+    padding-top: -6px;
 }

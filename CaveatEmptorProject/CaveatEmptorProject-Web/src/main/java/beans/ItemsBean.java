@@ -13,8 +13,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+
 import com.dtos.CategoriesDTO;
 import com.dtos.ItemsDTO;
 
@@ -33,14 +37,16 @@ public class ItemsBean  implements Serializable{
 	
 	private Long userId;
 	private List<ItemsDTO> itemsListDto;
+	private List<ItemsDTO> filtredItems;
 	ItemsDTO itemDto,itemToUpdate;
 	private String optionDropDown;
 	private String statusChange;
 	private boolean renderedMyBid;
-	private boolean renderedEditButton;
-	
+	private boolean renderedEditButton;	
 	private boolean renderedInsertButton;
 	private String nameInsertButton;
+	private Date minEndDate;
+	private Date endDate,endDateInsert;
 
 			
 	@EJB
@@ -77,6 +83,7 @@ public void initDto(){
 		category=new ArrayList<>();
 		category=itemsService.getCategoriesNames();
 		initDto();
+		endDateInsert=new Date();
 		renderedEditButton=true;
 		itemsListDto = new ArrayList<>();	
 		optionDropDown="sell";
@@ -85,17 +92,62 @@ public void initDto(){
 		itemsListDto=itemsService.getItemsToSell(Long.parseLong(userIdParameter));
 		for (ItemsDTO item : itemsListDto) {
 			statusChange=item.getStatus();
+			try {
+				minEndDate=item.getBiddingStartDate();
+				endDate=item.getBiddingEndDate();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			if(item.getStatus().equals("closed") || item.getStatus().equals("not yet open")){
 				item.setRenderedEdit(false);
 			}
 			else{
 				item.setRenderedEdit(true);
-				//item.setStatus(statusChange);
-				//itemDto=item;
 			}
 		}
 	}
 	
+	
+	public List<ItemsDTO> getFiltredItems() {
+		return filtredItems;
+	}
+
+
+	public void setFiltredItems(List<ItemsDTO> filtredItems) {
+		this.filtredItems = filtredItems;
+	}
+
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+
+	public Date getEndDateInsert() {
+		return endDateInsert;
+	}
+
+
+	public void setEndDateInsert(Date endDateInsert) {
+		this.endDateInsert = endDateInsert;
+	}
+
+
+	public Date getMinEndDate() {
+		return minEndDate;
+	}
+
+
+	public void setMinEndDate(Date minEndDate) {
+		this.minEndDate = minEndDate;
+	}
+
+
 	public String getStatusChange() {
 		return statusChange;
 	}
@@ -204,27 +256,44 @@ public void initDto(){
 			itemsListDto = new ArrayList<>();	
 		}
 	}
+
+	public void onStartDateSelect(SelectEvent event){
+		minEndDate=(Date) event.getObject();
+		if(minEndDate.getTime()>endDate.getTime()){
+			endDate=minEndDate;
+			minEndDate=(Date) event.getObject();
+		}
+		itemDto.setBiddingEndDate(minEndDate);	
+	}
+	public void onStartDateSelectInsert(SelectEvent event){
+		minEndDate=(Date) event.getObject();
+		if(minEndDate.getTime()>endDateInsert.getTime()){
+			endDateInsert=minEndDate;
+			minEndDate=(Date) event.getObject();
+		}
+		itemDto.setBiddingEndDate(minEndDate);	
+	}
 	
-//	public void hideDialog(){
-//		RequestContext context = RequestContext.getCurrentInstance();
-//		context.execute("PF('dialogValidateDates').hide();");
-//	}
+	
+	public void onChangeEndDate(SelectEvent event){
+		endDate=(Date) event.getObject();
+		itemDto.setBiddingEndDate(endDate);	
+	}
+	public void onChangeEndDateInsert(SelectEvent event){
+		endDateInsert=(Date) event.getObject();
+		itemDto.setBiddingEndDate(endDateInsert);	
+	}
+
+
 	 public void onRowEdit(RowEditEvent event) throws ParseException, CaveatEmptorException {
 		RequestContext context = RequestContext.getCurrentInstance();
 		itemToUpdate=new ItemsDTO();
 		itemDto =(ItemsDTO) event.getObject();
 		itemDto.setUserId(Long.parseLong(userIdParameter));
 		itemDto.setStatus(statusChange);
+		itemDto.setBiddingEndDate(minEndDate);
 		itemToUpdate=Transformation.populateItemDto(itemDto);
-		 if(itemToUpdate.getBiddingStartDate().getTime() > itemToUpdate.getBiddingEndDate().getTime()){
-			 FacesMessagesUtil.message_info("Closing date must be bigger than opening date!", "");
-			 init();
-			// context.execute("PF('dialogValidateDates').show();");
-			// context.execute("PF('dlgVarEdit').hide();");
-			// context.update("tabView:form:dataTableItems:dialogEdit");
-		}else{
-			context.execute("PF('dlgVarEdit').show();");
-		}
+		context.execute("PF('dlgVarEdit').show();");
 
 	 }
 	 public void onRowCancel(RowEditEvent event) {
@@ -239,8 +308,7 @@ public void initDto(){
 			 	 itemsService.updateItem(itemToUpdate);
 				 FacesMessagesUtil.message_info("Item "+itemToUpdate.getName()+" was edited!", "");
 				 itemDto=Transformation.populateItemDto(itemToUpdate);
-			
-			 init();
+				 init();
 		 }catch(Exception e){
 			 	FacesMessagesUtil.message_info("Item "+itemToUpdate.getName()+" wasn't edited!Try again!", "");
 			 	init();
@@ -289,6 +357,8 @@ public void initDto(){
 			 itemsService.insertItem(itemDto);
 			 RequestContext context = RequestContext.getCurrentInstance();
 			 context.execute("PF('itemDialog').hide();");
+			 context.execute("PF('dtWidget').paginator.setPage(PF('dtWidget').paginator.cfg.pageCount - 1);");
+
 			 FacesMessagesUtil.message_info("Item "+itemDto.getName()+" was inserted!", "");
 			 init();
 			 initDto();
